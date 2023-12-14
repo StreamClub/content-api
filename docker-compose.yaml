@@ -1,0 +1,9 @@
+version: '3'
+services:
+  capi_service:
+      container_name: capi_container
+      build: .
+      volumes:
+        -   ${VOLUME_DIR}:/app
+      ports:
+        - ${EXTERNAL_PORT}:${PORT}
