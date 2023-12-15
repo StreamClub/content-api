@@ -1,5 +1,5 @@
 import AppDependencies from "appDependencies";
-import { MovieDb } from 'moviedb-promise'
+import { MovieDb, WatchProvider } from 'moviedb-promise'
 
 export class TmdbService {
     private tmdb: MovieDb;
@@ -8,11 +8,10 @@ export class TmdbService {
         this.tmdb = new MovieDb(process.env.TMDB_API_KEY);
     }
 
-    public async getMovie(movieId: string, country: string = 'AR') {
+    public async getMovie(movieId: string, country: string) {
         const movie = await this.tmdb.movieInfo({ id: movieId, language: this.language });
         const platforms = await this.tmdb.movieWatchProviders({ id: movieId });
         const credits = await this.tmdb.movieCredits({ id: movieId });
-
         const countryPlatforms = Object.entries(platforms.results).filter(([key, _]) => {
             return key === country;
         });

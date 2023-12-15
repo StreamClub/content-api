@@ -15,7 +15,7 @@ export function MovieRouter(dependencies: AppDependencies) {
 
     router.get(
         "/:movieId",
-        validateSchema(GetMovieSchema, [FieldOptions.params]),
+        validateSchema(GetMovieSchema, [FieldOptions.params, FieldOptions.query]),
         handleRequest(
             (req) => movieController.getMovie(req),
             StatusCodes.OK
