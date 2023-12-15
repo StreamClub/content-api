@@ -16,4 +16,9 @@ export class MovieController {
         return await this.tmdbService.getMovie(req.params.movieId, country);
     }
 
+    public async searchMovie(req: Request<GetMovieDto>) {
+        const query = req.query.query as string;
+        return await this.tmdbService.searchMovie(query);
+    }
+
 }

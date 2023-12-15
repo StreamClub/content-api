@@ -1,4 +1,3 @@
-import { countries } from "@config";
 import { validateCountry } from "@utils";
 import Joi from "joi";
 
