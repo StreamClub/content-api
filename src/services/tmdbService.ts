@@ -12,8 +12,9 @@ export class TmdbService {
     public async getMovie(movieId: string, country: string) {
         const movie = await this.tmdb.movieInfo({
             id: movieId, language: this.language,
-            append_to_response: 'credits,watch/providers'
+            append_to_response: 'credits,watch/providers,recommendations'
         }) as TmdbMovie;
+        console.log(movie.recommendations)
         return new Movie(movie, country);
     }
 }

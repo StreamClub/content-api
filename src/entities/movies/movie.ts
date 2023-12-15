@@ -1,5 +1,6 @@
 import { Cast, WatchProvider } from "moviedb-promise";
 import { TmdbMovie } from "./tmdbMovie";
+import { SimilarMovie } from "./similarMovie";
 
 export class Movie {
     id: number;
@@ -13,9 +14,10 @@ export class Movie {
     budget: number;
     revenue: number;
     status: string;
-    platforms: Array<WatchProvider>;
+    platforms: WatchProvider[];
     director: string[];
-    cast: Array<Cast>;
+    cast: Cast[];
+    similar: SimilarMovie[];
 
 
     constructor(tmdbMovie: TmdbMovie, country: string) {
@@ -33,10 +35,10 @@ export class Movie {
         this.platforms = this.getPlatforms(tmdbMovie, country);
         this.director = tmdbMovie.credits.crew.filter((crew) => crew.job === 'Director').map((crew) => crew.name);
         this.cast = tmdbMovie.credits.cast.slice(0, 10);
+        this.similar = tmdbMovie.recommendations.results.slice(0, 10).map((movie) => new SimilarMovie(movie));
     }
 
     private getPlatforms(tmdbMovie: TmdbMovie, country: string) {
-        console.log(tmdbMovie["watch/providers"])
         const countryPlatforms = Object.entries(tmdbMovie["watch/providers"].results).filter(([key, _]) => {
             return key === country;
         });
