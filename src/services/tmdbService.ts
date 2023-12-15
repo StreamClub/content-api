@@ -14,7 +14,6 @@ export class TmdbService {
             id: movieId, language: this.language,
             append_to_response: 'credits,watch/providers,recommendations,videos'
         }) as TmdbMovie;
-        console.log(movie.videos);
         return new Movie(movie, country);
     }
 
