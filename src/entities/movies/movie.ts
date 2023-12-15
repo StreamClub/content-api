@@ -1,4 +1,4 @@
-import { Cast, WatchProvider } from "moviedb-promise";
+import { Cast, Video, WatchProvider } from "moviedb-promise";
 import { TmdbMovie } from "./tmdbMovie";
 import { SimilarMovie } from "./similarMovie";
 
@@ -15,9 +15,10 @@ export class Movie {
     revenue: number;
     status: string;
     platforms: WatchProvider[];
-    director: string[];
+    directors: string[];
     cast: Cast[];
     similar: SimilarMovie[];
+    trailers: Video[];
 
 
     constructor(tmdbMovie: TmdbMovie, country: string) {
@@ -33,9 +34,10 @@ export class Movie {
         this.revenue = tmdbMovie.revenue;
         this.status = tmdbMovie.status;
         this.platforms = this.getPlatforms(tmdbMovie, country);
-        this.director = tmdbMovie.credits.crew.filter((crew) => crew.job === 'Director').map((crew) => crew.name);
+        this.directors = tmdbMovie.credits.crew.filter((crew) => crew.job === 'Director').map((crew) => crew.name);
         this.cast = tmdbMovie.credits.cast.slice(0, 10);
         this.similar = tmdbMovie.recommendations.results.slice(0, 10).map((movie) => new SimilarMovie(movie));
+        this.trailers = this.getTrailers(tmdbMovie);
     }
 
     private getPlatforms(tmdbMovie: TmdbMovie, country: string) {
@@ -43,5 +45,10 @@ export class Movie {
             return key === country;
         });
         return countryPlatforms.length > 0 && countryPlatforms[0][1].flatrate ? countryPlatforms[0][1].flatrate : null;
+    }
+
+    private getTrailers(tmdbMovie: TmdbMovie) {
+        const youtubeTrailers = tmdbMovie.videos.results.filter((video) => video.site === 'YouTube' && video.type === 'Trailer');
+        return youtubeTrailers.length > 0 ? youtubeTrailers : null;
     }
 }
