@@ -9,6 +9,8 @@
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "cSpell.words": [
+    "flatrate",
+    "moviedb",
     "sqlite"
   ]
 }
