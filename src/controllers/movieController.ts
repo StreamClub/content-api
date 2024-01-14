@@ -18,7 +18,8 @@ export class MovieController {
 
     public async searchMovie(req: Request<GetMovieDto>) {
         const query = req.query.query as string;
-        return await this.tmdbService.searchMovie(query);
+        const page = parseInt(req.query.page as string || '1');
+        return await this.tmdbService.searchMovie(query, page);
     }
 
 }
