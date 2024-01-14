@@ -1,5 +1,4 @@
-import { Movie, TmdbMovie } from "@entities";
-import { MovieResume } from "@entities/movies/movieResume";
+import { Movie, TmdbMovie, MovieResume } from "@entities";
 import { NotFoundException } from "@exceptions";
 import AppDependencies from "appDependencies";
 import { MovieDb, MovieResult } from 'moviedb-promise'
@@ -29,6 +28,7 @@ export class TmdbService {
 
     public async searchMovie(query: string, page: number) {
         const result = await this.tmdb.searchMovie({ query, language: this.language, page });
+        console.log(result)
         const movies = result.results.map((movie: MovieResult) => new MovieResume(movie));
         return {
             page: result.page,
