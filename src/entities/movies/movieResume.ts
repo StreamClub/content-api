@@ -1,6 +1,4 @@
 import { MovieResult } from "moviedb-promise";
-import { randomInt } from "node:crypto";
-
 
 export class MovieResume {
     id: number;
