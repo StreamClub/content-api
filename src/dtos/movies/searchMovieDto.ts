@@ -1,4 +1,4 @@
-import { MAX_STRING_LENGTH } from "@config";
+import { MAX_STRING_LENGTH, MIN_PAGE } from "@config";
 import Joi from "joi";
 
 export class SearchMovieDto {
@@ -8,5 +8,5 @@ export class SearchMovieDto {
 
 export const SearchMovieSchema = Joi.object({
     query: Joi.string().max(MAX_STRING_LENGTH).required(),
-    page: Joi.number().min(1),
+    page: Joi.number().min(MIN_PAGE),
 });
