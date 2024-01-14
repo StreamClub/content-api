@@ -26,7 +26,7 @@ export class TmdbService {
         }
     }
 
-    public async searchMovie(query: string) {
-        return await this.tmdb.searchMovie({ query, language: this.language });
+    public async searchMovie(query: string, page: number) {
+        return await this.tmdb.searchMovie({ query, language: this.language, page });
     }
 }
