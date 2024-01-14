@@ -14,7 +14,7 @@ export function MovieRouter(dependencies: AppDependencies) {
     const movieController = new MovieController(dependencies);
 
     router.get(
-        "/search",
+        "/",
         validateSchema(SearchMovieSchema, [FieldOptions.query]),
         handleRequest(
             (req) => movieController.searchMovie(req),
