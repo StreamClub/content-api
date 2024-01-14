@@ -1,6 +1,7 @@
 import { NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from '@models';
+import { parseToCamelCase } from './camelCaseConverter';
 
 export function handleRequest<T, U>(
   handler: (req: Request<T>) => Promise<U>,
@@ -12,8 +13,8 @@ export function handleRequest<T, U>(
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const resObject = await handler(req);
-      resObject ? res.status(statusCode).json(resObject) : res.status(statusCode).send();
+      const resObject = (await handler(req)) as object;
+      resObject ? res.status(statusCode).json(parseToCamelCase(resObject)) : res.status(statusCode).send();
     } catch (error) {
       next(error);
     }
