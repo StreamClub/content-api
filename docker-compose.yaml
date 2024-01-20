@@ -7,3 +7,13 @@ services:
         -   ${VOLUME_DIR}:/app
       ports:
         - ${EXTERNAL_PORT}:${PORT}
+      depends_on:
+      - mongo
+
+  mongo:
+    container_name: capi-db
+    image: mongo
+    ports:
+      - "${DB_PORT}:27017"
+    volumes:
+      - ${DB_VOLUME}:/data/db
