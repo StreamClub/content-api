@@ -1,27 +1,25 @@
-import express from "express";
-import cors from "cors";
-import mongoose from "mongoose";
-import { exceptionToHttpError } from '@middlewares';
-import { registerRouters } from "@routes";
-import AppDependencies from "./appDependencies";
-import { toCamelCase } from "@middlewares";
-import { config } from "@config";
+import express from 'express'
+import cors from 'cors'
+import { exceptionToHttpError } from '@middlewares'
+import { registerRouters } from '@routes'
+import AppDependencies from './appDependencies'
+import { toCamelCase } from '@middlewares'
 
 export class App {
-    private dependencies: AppDependencies;
+    private dependencies: AppDependencies
     public constructor(dependencies: AppDependencies) {
-        this.dependencies = dependencies;
+        this.dependencies = dependencies
     }
 
-    public async start(production = true) {
-        if (production) await mongoose.connect(config.dbUrl);
-        const app = express();
+    public async start() {
+        await this.dependencies.db.start()
+        const app = express()
 
-        app.use(cors());
-        app.use(express.json());
+        app.use(cors())
+        app.use(express.json())
         app.use(toCamelCase())
-        registerRouters(app, this.dependencies);
-        app.use(exceptionToHttpError);
-        return app;
+        registerRouters(app, this.dependencies)
+        app.use(exceptionToHttpError)
+        return app
     }
 }
