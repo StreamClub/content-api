@@ -29,6 +29,7 @@
     "pg": "^8.11.3",
     "prettier": "^3.0.3",
     "supertest": "^6.3.3",
+    "ts-case-convert": "^2.0.6",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

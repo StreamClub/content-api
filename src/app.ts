@@ -3,6 +3,7 @@ import cors from "cors";
 import { exceptionToHttpError } from '@middlewares';
 import { registerRouters } from "@routes";
 import AppDependencies from "./appDependencies";
+import { toCamelCase } from "@middlewares";
 
 export class App {
     private dependencies: AppDependencies;
@@ -15,6 +16,7 @@ export class App {
 
         app.use(cors());
         app.use(express.json());
+        app.use(toCamelCase())
         registerRouters(app, this.dependencies);
         app.use(exceptionToHttpError);
         return app;
