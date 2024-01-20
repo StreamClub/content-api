@@ -1,6 +1,12 @@
-
+import mongoose from 'mongoose'
 
 export class Db {
-    public constructor(database: string, logging: boolean) {
+    private dbUrl: string
+    public constructor(database: string) {
+        this.dbUrl = database
+    }
+
+    public async start() {
+        await mongoose.connect(this.dbUrl)
     }
 }
