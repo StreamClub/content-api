@@ -1,9 +1,11 @@
 import express from "express";
 import cors from "cors";
+import mongoose from "mongoose";
 import { exceptionToHttpError } from '@middlewares';
 import { registerRouters } from "@routes";
 import AppDependencies from "./appDependencies";
 import { toCamelCase } from "@middlewares";
+import { config } from "@config";
 
 export class App {
     private dependencies: AppDependencies;
@@ -12,6 +14,7 @@ export class App {
     }
 
     public async start(production = true) {
+        if (production) await mongoose.connect(config.dbUrl);
         const app = express();
 
         app.use(cors());
