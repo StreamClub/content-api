@@ -1,17 +1,14 @@
-import { Db } from "../../src/dal/dbConnection";
+import { Db } from '../../src/dal/dbConnection'
 export class TestDb extends Db {
-
     public constructor() {
-        super('sqlite::memory:', false);
+        super('')
     }
 
-    public async initTestDb(): Promise<void> {
-    }
+    public async start(): Promise<void> {}
 
-    public async clearDatabase(): Promise<void> {
-    }
+    public async initTestDb(): Promise<void> {}
 
-    public async closeDatabase(): Promise<void> {
-    }
+    public async clearDatabase(): Promise<void> {}
 
+    public async closeDatabase(): Promise<void> {}
 }
