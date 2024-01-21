@@ -1,4 +1,4 @@
-import { Watchlist } from '@dtos'
+import { Watchlist } from '@entities'
 import { WatchlistModel } from './watchlistModel'
 
 export default class WatchlistRepository {

@@ -1,4 +1,4 @@
-import { MongoObject } from "../mongoObject";
+import { MongoObject } from "../../dtos/mongoObject";
 
 export class Watchlist extends MongoObject {
     userId: string;

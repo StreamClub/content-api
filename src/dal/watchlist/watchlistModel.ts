@@ -1,4 +1,4 @@
-import { Watchlist } from '@dtos'
+import { Watchlist } from '@entities'
 import { Document, model, Schema } from 'mongoose'
 
 type WatchlistType = Watchlist & Document
