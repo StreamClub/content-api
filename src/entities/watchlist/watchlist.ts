@@ -2,7 +2,7 @@ import { MongoObject } from "../../dtos/mongoObject";
 import { WatchlistItem } from "./watchlistItem";
 
 export class Watchlist extends MongoObject {
-    userId: string;
+    userId: number;
     movies: WatchlistItem[];
     series: WatchlistItem[];
 

@@ -5,7 +5,7 @@ type WatchlistType = Watchlist & Document
 
 const WatchlistSchema = new Schema<WatchlistType>({
     userId: {
-        type: String,
+        type: Number,
         required: true,
         unique: true,
     },
