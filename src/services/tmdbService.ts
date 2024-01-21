@@ -1,5 +1,5 @@
 import { contentTypes } from "@config";
-import WatchlistRepository from "@dal/watchlist/watchlistRepository";
+import { WatchlistRepository } from "@dal";
 import { Movie, TmdbMovie, MovieResume } from "@entities";
 import { NotFoundException } from "@exceptions";
 import AppDependencies from "appDependencies";

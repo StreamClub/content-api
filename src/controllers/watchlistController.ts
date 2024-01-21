@@ -4,7 +4,7 @@ import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { AlreadyExistsException, NotFoundException } from '@exceptions';
 import { Watchlist } from '@entities';
-import WatchlistRepository from '@dal/watchlist/watchlistRepository';
+import { WatchlistRepository } from '@dal';
 
 export class WatchlistController {
     private watchlistRepository: WatchlistRepository;

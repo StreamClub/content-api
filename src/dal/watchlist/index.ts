@@ -1,2 +1,1 @@
-export * from './watchlistRepository'
-export * from './watchlistModel'
+export * from './watchlistRepository';
