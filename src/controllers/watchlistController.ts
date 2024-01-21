@@ -11,8 +11,7 @@ export class WatchlistController {
         this.watchlistService = new WatchlistService(dependencies);
     }
 
-    //TODO MEJORAR EL TIPO DE REQUEST
-    public async create(req: Request<GetWatchlistDto>, res: Response<any>) {
+    public async create(req: Request<any>, res: Response<any>) {
         const userId = res.locals.userId;
         return await this.watchlistService.create(userId);
     }
