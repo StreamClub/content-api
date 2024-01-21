@@ -1,7 +1,7 @@
 import { Watchlist } from '@entities'
 import { WatchlistModel } from './watchlistModel'
 
-export class WatchlistRepository {
+class WatchlistRepository {
     async create(userId: string): Promise<Watchlist> {
         const watchlist = new WatchlistModel({ userId });
         await watchlist.save();
@@ -71,3 +71,5 @@ export class WatchlistRepository {
         return watchlist !== null;
     }
 }
+
+export const watchlistRepository = new WatchlistRepository();

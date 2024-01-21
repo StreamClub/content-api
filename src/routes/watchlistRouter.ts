@@ -12,7 +12,7 @@ export function WatchlistRouter(dependencies: AppDependencies) {
     router.post(
         '/',
         loadUserContext,
-        handleRequest((req, res) => watchlistController.create(req, res), StatusCodes.OK)
+        handleRequest((req, res) => watchlistController.create(req, res), StatusCodes.CREATED)
     )
 
     router.get(
