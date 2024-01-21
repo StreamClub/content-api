@@ -19,4 +19,8 @@ export class WatchlistController {
         }
         return await this.watchlistRepository.create(req.body.userId);
     }
+
+    public async get(req: Request<GetWatchlistDto>) {
+        return await this.watchlistRepository.get(req.params.userId);
+    }
 }
