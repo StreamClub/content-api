@@ -12,10 +12,13 @@ const endpoint = '/watchlist';
 describe('Create Watchlist', () => {
     setupBeforeAndAfter();
 
-    it('should return 201 when provided with a token of a new user with no watchlist', async () => {
-        const testJwt = generateTestJwt(1, "test@test.com");
+    it('should create an empty watchlist when provided with a token of a new user with no watchlist', async () => {
+        const userId = 1;
+        const testJwt = generateTestJwt(userId, "test@test.com");
         const response = await server.post(endpoint).set('Authorization', `Bearer ${testJwt}`);
         expect(response.status).toBe(201);
+        expect(response.body.userId).toBe(userId);
+        expect(response.body.watchlist).toEqual([]);
     });
 
     it('should return 409 when provided with a token of a new user with a watchlist', async () => {

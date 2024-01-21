@@ -24,6 +24,7 @@ export class WatchlistService {
         return {
             userId: watchlist.userId,
             results: watchlist.watchlist,
+            page: pageNumber,
             totalResults,
             totalPages,
         };
