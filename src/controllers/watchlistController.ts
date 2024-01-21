@@ -3,7 +3,8 @@ import { GetWatchlistDto } from '@dtos';
 import AppDependencies from 'appDependencies';
 import { Request } from '@models';
 import WatchlistRepository from '@dal/watchlist/watchlistRepository';
-import { AlreadyExistsException } from '@exceptions';
+import { AlreadyExistsException, NotFoundException } from '@exceptions';
+import { Watchlist } from '@entities';
 
 export class WatchlistController {
     private watchlistRepository: WatchlistRepository;
@@ -21,6 +22,14 @@ export class WatchlistController {
     }
 
     public async get(req: Request<GetWatchlistDto>) {
-        return await this.watchlistRepository.get(req.params.userId);
+        const watchlist = await this.watchlistRepository.get(req.params.userId);
+        if (!watchlist) {
+            throw new NotFoundException('Watchlist does not exist');
+        }
+        return new Watchlist(watchlist);
+    }
+
+    public async addMovie(req: Request<GetWatchlistDto>) {
+        return await this.watchlistRepository.addMovie(req.params.userId, req.params.movieId);
     }
 }

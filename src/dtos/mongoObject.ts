@@ -1,7 +1,7 @@
 export class MongoObject {
     id: string;
     _id: string;
-    constructor(mongoObject: any) {
+    constructor(mongoObject: MongoObject) {
         this.id = mongoObject._id.toString();
     }
 }

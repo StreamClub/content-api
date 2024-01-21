@@ -2,7 +2,7 @@ import { FieldOptions, handleRequest, validateSchema } from '@middlewares'
 import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import AppDependencies from 'appDependencies'
-import { GetWatchlistSchema } from '@dtos'
+import { AddMovieSchema, GetWatchlistSchema } from '@dtos'
 import { WatchlistController } from '@controllers'
 
 export function WatchlistRouter(dependencies: AppDependencies) {
@@ -19,6 +19,12 @@ export function WatchlistRouter(dependencies: AppDependencies) {
         '/:userId',
         validateSchema(GetWatchlistSchema, [FieldOptions.params]),
         handleRequest((req) => watchlistController.get(req), StatusCodes.OK)
+    )
+
+    router.put(
+        '/:userId/movies/:movieId',
+        validateSchema(AddMovieSchema, [FieldOptions.params]),
+        handleRequest((req) => watchlistController.addMovie(req), StatusCodes.OK)
     )
 
     return router
