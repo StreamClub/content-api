@@ -12,22 +12,27 @@ export default class WatchlistRepository {
         return await WatchlistModel.findOne({ userId });
     }
 
-    async addMovie(userId: string, movieId: string): Promise<void> {
+    async addContent(userId: string, contentId: string, contentType: string): Promise<void> {
         await WatchlistModel.updateOne(
             {
                 userId,
-                'movies.id': { $ne: movieId }
+                'watchlist': {
+                    $not: {
+                        $elemMatch: {
+                            id: contentId,
+                            contentType
+                        }
+                    }
+                }
             },
             {
                 $push: {
-                    movies: {
-                        $each: [{ id: movieId, createdAt: new Date() }],
+                    watchlist: {
+                        $each: [{ id: contentId, createdAt: new Date(), contentType }],
                         $position: 0
                     }
                 }
             },
-            { upsert: true }
         );
-        return;
     }
 }

@@ -3,13 +3,12 @@ import { WatchlistItem } from "./watchlistItem";
 
 export class Watchlist extends MongoObject {
     userId: number;
-    movies: WatchlistItem[];
+    watchlist: WatchlistItem[];
     series: WatchlistItem[];
 
     constructor(watchlist: Watchlist) {
         super(watchlist);
         this.userId = watchlist.userId;
-        this.movies = watchlist.movies.map((movie) => new WatchlistItem(movie));
-        this.series = watchlist.series.map((series) => new WatchlistItem(series));
+        this.watchlist = watchlist.watchlist.map((content) => new WatchlistItem(content));
     }
 }

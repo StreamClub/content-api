@@ -22,14 +22,20 @@ export class WatchlistController {
     }
 
     public async get(req: Request<GetWatchlistDto>) {
-        const watchlist = await this.watchlistRepository.get(req.params.userId);
-        if (!watchlist) {
-            throw new NotFoundException('Watchlist does not exist');
-        }
+        const watchlist = await this.failIfWatchlistDoesNotExist(req.params.userId);
         return new Watchlist(watchlist);
     }
 
-    public async addMovie(req: Request<AddMovieDto>) {
-        return await this.watchlistRepository.addMovie(req.params.userId, req.body.contentId);
+    public async addContent(req: Request<AddMovieDto>) {
+        await this.failIfWatchlistDoesNotExist(req.params.userId);
+        return await this.watchlistRepository.addContent(req.params.userId, req.body.contentId, req.body.contentType);
+    }
+
+    private async failIfWatchlistDoesNotExist(userId: string) {
+        const watchlist = await this.watchlistRepository.get(userId);
+        if (!watchlist) {
+            throw new NotFoundException('Watchlist does not exist');
+        }
+        return watchlist;
     }
 }

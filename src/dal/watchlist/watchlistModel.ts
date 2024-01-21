@@ -1,4 +1,4 @@
-import { Watchlist, WatchlistItem } from '@entities'
+import { Watchlist } from '@entities'
 import { Document, model, Schema } from 'mongoose'
 
 type WatchlistType = Watchlist & Document
@@ -9,20 +9,14 @@ const WatchlistSchema = new Schema<WatchlistType>({
         required: true,
         unique: true,
     },
-    movies: {
+    watchlist: {
         type: [{
-            id: String,
+            id: Number,
             createdAt: Date,
+            contentType: String,
         }],
         default: [],
-    },
-    series: {
-        type: [{
-            id: String,
-            createdAt: Date,
-        }],
-        default: [],
-    },
+    }
 })
 WatchlistSchema.index({ userId: 1 })
 
