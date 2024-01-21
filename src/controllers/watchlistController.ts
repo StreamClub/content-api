@@ -1,5 +1,5 @@
 
-import { AddMovieDto, GetWatchlistDto } from '@dtos';
+import { AddContentDto, GetWatchlistDto } from '@dtos';
 import AppDependencies from 'appDependencies';
 import { Request } from '@models';
 import WatchlistRepository from '@dal/watchlist/watchlistRepository';
@@ -26,9 +26,14 @@ export class WatchlistController {
         return new Watchlist(watchlist);
     }
 
-    public async addContent(req: Request<AddMovieDto>) {
+    public async addContent(req: Request<AddContentDto>) {
         await this.failIfWatchlistDoesNotExist(req.params.userId);
         return await this.watchlistRepository.addContent(req.params.userId, req.body.contentId, req.body.contentType);
+    }
+
+    public async removeContent(req: Request<AddContentDto>) {
+        await this.failIfWatchlistDoesNotExist(req.params.userId);
+        return await this.watchlistRepository.removeContent(req.params.userId, req.body.contentId, req.body.contentType);
     }
 
     private async failIfWatchlistDoesNotExist(userId: string) {

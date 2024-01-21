@@ -1,2 +1,2 @@
 export * from './getWatchlistDto'
-export * from './addMovieDto'
+export * from './addContentDto'

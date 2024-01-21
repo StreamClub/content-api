@@ -35,4 +35,26 @@ export default class WatchlistRepository {
             },
         );
     }
+
+    async removeContent(userId: string, contentId: string, contentType: string): Promise<void> {
+        await WatchlistModel.updateOne(
+            {
+                userId,
+                'watchlist': {
+                    $elemMatch: {
+                        id: contentId,
+                        contentType
+                    }
+                }
+            },
+            {
+                $pull: {
+                    watchlist: {
+                        id: contentId,
+                        contentType
+                    }
+                }
+            },
+        );
+    }
 }
