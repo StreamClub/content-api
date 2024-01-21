@@ -24,6 +24,7 @@
     "jsonwebtoken": "^9.0.2",
     "module-alias": "^2.2.3",
     "moment": "^2.29.4",
+    "mongodb-memory-server": "^9.1.6",
     "mongoose": "^8.1.0",
     "moviedb-promise": "^4.0.3",
     "nodemon": "^2.0.15",
