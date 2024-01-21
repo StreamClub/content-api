@@ -23,8 +23,19 @@ export class WatchlistController {
     }
 
     public async get(req: Request<GetWatchlistDto>) {
-        const watchlist = await this.failIfWatchlistDoesNotExist(req.params.userId);
-        return new Watchlist(watchlist);
+        const pageSize = Number(req.query.pageSize) || 20;
+        const pageNumber = Number(req.query.page) || 1;
+        const foundWatchlist = await this.failIfWatchlistDoesNotExist(req.params.userId);
+        const watchlist = new Watchlist(foundWatchlist);
+        const totalResults = watchlist.watchlist.length;
+        const totalPages = Math.ceil(totalResults / pageSize);
+        watchlist.watchlist = watchlist.watchlist.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+        return {
+            userId: watchlist.userId,
+            results: watchlist.watchlist,
+            totalResults,
+            totalPages,
+        };
     }
 
     public async addContent(req: Request<AddContentDto>, res: Response<any>) {

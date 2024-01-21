@@ -18,7 +18,7 @@ export function WatchlistRouter(dependencies: AppDependencies) {
     router.get(
         '/:userId',
         loadUserContext,
-        validateSchema(GetWatchlistSchema, [FieldOptions.params]),
+        validateSchema(GetWatchlistSchema, [FieldOptions.params, FieldOptions.query]),
         handleRequest((req) => watchlistController.get(req), StatusCodes.OK)
     )
 
