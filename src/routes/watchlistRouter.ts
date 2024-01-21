@@ -22,8 +22,8 @@ export function WatchlistRouter(dependencies: AppDependencies) {
     )
 
     router.put(
-        '/:userId/movies/:movieId',
-        validateSchema(AddMovieSchema, [FieldOptions.params]),
+        '/:userId',
+        validateSchema(AddMovieSchema, [FieldOptions.params, FieldOptions.body]),
         handleRequest((req) => watchlistController.addMovie(req), StatusCodes.OK)
     )
 

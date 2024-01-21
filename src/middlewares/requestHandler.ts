@@ -14,7 +14,6 @@ export function handleRequest<T, U>(
   ): Promise<void> => {
     try {
       const resObject = (await handler(req)) as object;
-      console.log(resObject);
       resObject ? res.status(statusCode).json(parseToCamelCase(resObject)) : res.status(statusCode).send();
     } catch (error) {
       next(error);

@@ -19,10 +19,14 @@ export default class WatchlistRepository {
                 'movies.id': { $ne: movieId }
             },
             {
-                $addToSet: {
-                    movies: { id: movieId, createdAt: new Date() }
+                $push: {
+                    movies: {
+                        $each: [{ id: movieId, createdAt: new Date() }],
+                        $position: 0
+                    }
                 }
-            }
+            },
+            { upsert: true }
         );
         return;
     }

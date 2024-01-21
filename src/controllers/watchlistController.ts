@@ -1,5 +1,5 @@
 
-import { GetWatchlistDto } from '@dtos';
+import { AddMovieDto, GetWatchlistDto } from '@dtos';
 import AppDependencies from 'appDependencies';
 import { Request } from '@models';
 import WatchlistRepository from '@dal/watchlist/watchlistRepository';
@@ -29,7 +29,7 @@ export class WatchlistController {
         return new Watchlist(watchlist);
     }
 
-    public async addMovie(req: Request<GetWatchlistDto>) {
-        return await this.watchlistRepository.addMovie(req.params.userId, req.params.movieId);
+    public async addMovie(req: Request<AddMovieDto>) {
+        return await this.watchlistRepository.addMovie(req.params.userId, req.body.contentId);
     }
 }
