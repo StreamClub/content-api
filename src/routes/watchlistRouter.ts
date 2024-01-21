@@ -1,4 +1,4 @@
-import { FieldOptions, handleRequest, validateSchema } from '@middlewares'
+import { FieldOptions, handleRequest, loadUserContext, validateSchema } from '@middlewares'
 import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import AppDependencies from 'appDependencies'
@@ -11,26 +11,29 @@ export function WatchlistRouter(dependencies: AppDependencies) {
 
     router.post(
         '/',
-        validateSchema(GetWatchlistSchema, [FieldOptions.body]),
-        handleRequest((req) => watchlistController.create(req), StatusCodes.OK)
+        loadUserContext,
+        handleRequest((req, res) => watchlistController.create(req, res), StatusCodes.OK)
     )
 
     router.get(
         '/:userId',
+        loadUserContext,
         validateSchema(GetWatchlistSchema, [FieldOptions.params]),
         handleRequest((req) => watchlistController.get(req), StatusCodes.OK)
     )
 
     router.put(
-        '/:userId',
+        '/',
+        loadUserContext,
         validateSchema(AddContentSchema, [FieldOptions.params, FieldOptions.body]),
-        handleRequest((req) => watchlistController.addContent(req), StatusCodes.OK)
+        handleRequest((req, res) => watchlistController.addContent(req, res), StatusCodes.OK)
     )
 
     router.delete(
-        '/:userId',
+        '/',
+        loadUserContext,
         validateSchema(AddContentSchema, [FieldOptions.params, FieldOptions.body]),
-        handleRequest((req) => watchlistController.removeContent(req), StatusCodes.OK)
+        handleRequest((req, res) => watchlistController.removeContent(req, res), StatusCodes.OK)
     )
 
     return router

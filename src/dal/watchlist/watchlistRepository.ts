@@ -57,4 +57,17 @@ export default class WatchlistRepository {
             },
         );
     }
+
+    async isInWatchlist(userId: string, contentId: string, contentType: string): Promise<boolean> {
+        const watchlist = await WatchlistModel.findOne({
+            userId,
+            'watchlist': {
+                $elemMatch: {
+                    id: contentId,
+                    contentType
+                }
+            }
+        });
+        return watchlist !== null;
+    }
 }

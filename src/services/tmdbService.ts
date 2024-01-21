@@ -1,3 +1,5 @@
+import { contentTypes } from "@config";
+import WatchlistRepository from "@dal/watchlist/watchlistRepository";
 import { Movie, TmdbMovie, MovieResume } from "@entities";
 import { NotFoundException } from "@exceptions";
 import AppDependencies from "appDependencies";
@@ -5,9 +7,11 @@ import { MovieDb, MovieResult } from 'moviedb-promise'
 
 export class TmdbService {
     private tmdb: MovieDb;
+    private watchlistRepository: WatchlistRepository
     private language = 'es';
     public constructor(dependencies: AppDependencies) {
         this.tmdb = new MovieDb(process.env.TMDB_API_KEY);
+        this.watchlistRepository = new WatchlistRepository();
     }
 
     public async getMovie(movieId: string, country: string): Promise<Movie> {
@@ -26,9 +30,14 @@ export class TmdbService {
         }
     }
 
-    public async searchMovie(query: string, page: number) {
+    public async searchMovie(userId: string, query: string, page: number) {
         const result = await this.tmdb.searchMovie({ query, language: this.language, page });
-        const movies = result.results.map((movie: MovieResult) => new MovieResume(movie));
+        const movies = await Promise.all(result.results.map(async (movie: MovieResult) => {
+            const movieResume = new MovieResume(movie)
+            movieResume.inWatchlist = await this
+                .watchlistRepository.isInWatchlist(userId, movie.id.toString(), contentTypes.MOVIE);
+            return movieResume;
+        }));
         return {
             page: result.page,
             total_pages: result.total_pages,

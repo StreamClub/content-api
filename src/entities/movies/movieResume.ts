@@ -18,6 +18,5 @@ export class MovieResume {
         this.releaseDate = movie.release_date;
         this.score = movie.vote_average; //TODO: cambiar el score por el de la base de datos
         this.seen = Math.round(Math.random() * 1) == 1;; //TODO: cambiar el seen por el de la base de datos
-        this.inWatchlist = Math.round(Math.random() * 1) == 1; //TODO: cambiar el inWatchlist por el de la base de datos
     }
 }
