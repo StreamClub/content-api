@@ -7,11 +7,11 @@ module.exports = {
         'ts-jest': {
             transformerConfig: {
                 transformIgnorePatterns: [
-                    '<rootDir>/node_modules/(react-clone-referenced-element|@react-native-community|react-navigation|@react-navigation/.*|@unimodules/.*|native-base|react-native-code-push)',
+                    './src/node_modules/(react-clone-referenced-element|@react-native-community|react-navigation|@react-navigation/.*|@unimodules/.*|native-base|react-native-code-push)',
                     'jest-runner',
                 ],
             },
         },
     },
-    testPathIgnorePatterns: ['<rootDir>/node_modules/'],
+    testPathIgnorePatterns: ['./src/node_modules/'],
 }
