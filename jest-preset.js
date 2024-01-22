@@ -4,4 +4,5 @@ module.exports = {
     transform: {
         '.(ts|tsx)': 'babel-jest',
     },
+    transformIgnorePatterns: ['/node_modules/(?!(mongoose)/)'],
 }
