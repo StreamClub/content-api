@@ -4,7 +4,7 @@
 */
 
 import { mockMovieInfo, server, setupBeforeAndAfter } from '../../setup/testsSetup';
-import { testMovie1 } from '../../helpers';
+import { generateTestJwt, testMovie1 } from '../../helpers';
 import { Movie } from '@entities';
 
 const endpoint = '/movies';
@@ -21,18 +21,21 @@ describe('Get Movie', () => {
 
     invalidQueryCases.forEach(([status, field, value, description]) => {
         it(`should return ${status} when provided with an ${description} ${field}`, async () => {
+            const testJwt = generateTestJwt(1, "test@test.com")
             const id = 2150;
-            const response = await server.get(`${endpoint}/${id}`).query({ [field]: value });
+            const response = await
+                server.get(`${endpoint}/${id}`).query({ [field]: value }).set('Authorization', `Bearer ${testJwt}`);
             expect(response.status).toBe(status);
         });
     });
 
     it('should return a Movie with the correct format', async () => {
         mockMovieInfo.mockReturnValue(testMovie1);
+        const testJwt = generateTestJwt(1, "test@test.com")
         const id = 2150;
         const country = 'AR';
         const response = await server.get(`${endpoint}/${id}`)
-            .query({ country });
+            .query({ country }).set('Authorization', `Bearer ${testJwt}`);
         const movie = response.body as Movie;
         expect(response.status).toBe(200);
         expect(movie.id).toBe(testMovie1.id);
@@ -57,10 +60,11 @@ describe('Get Movie', () => {
 
     it('should return a 404 if the movie does not exist', async () => {
         mockMovieInfo.mockRejectedValue({ response: { status: 404 } });
+        const testJwt = generateTestJwt(1, "test@test.com")
         const id = 0;
         const country = 'AR';
         const response = await server.get(`${endpoint}/${id}`)
-            .query({ country });
+            .query({ country }).set('Authorization', `Bearer ${testJwt}`);
         expect(response.status).toBe(404);
     });
 });

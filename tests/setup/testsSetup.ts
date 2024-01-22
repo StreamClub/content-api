@@ -12,12 +12,12 @@ export function setupBeforeAndAfter() {
     beforeAll(async () => {
         setUpMocks()
         db = new TestDb()
+        await db.initTestDb()
         const app = new App({ db })
         server = request(await app.start())
     })
-    afterEach(async () => {
-        jest.resetAllMocks()
-    })
+    afterEach(async () => await db.clearDatabase());
+    afterAll(async () => await db.closeDatabase());
 }
 
 const setUpMocks = () => {
