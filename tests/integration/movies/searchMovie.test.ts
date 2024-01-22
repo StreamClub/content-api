@@ -5,7 +5,7 @@
 
 import { MAX_STRING_LENGTH } from '@config';
 import { mockSearchMovie, server, setupBeforeAndAfter } from '../../setup/testsSetup';
-import { movieSearch1 } from '../../helpers';
+import { generateTestJwt, movieSearch1 } from '../../helpers';
 
 const endpoint = '/movies';
 
@@ -24,8 +24,10 @@ describe('Search Movie', () => {
 
     invalidQueryCases.forEach(([status, field, value, description]) => {
         it(`should return ${status} when provided with an ${description} ${field}`, async () => {
-            const id = 2150;
-            const response = await server.get(`${endpoint}`).query({ [field]: value });
+            const testJwt = generateTestJwt(1, "test@test.com");
+            const response = await server.get(`${endpoint}`)
+                .query({ [field]: value })
+                .set('Authorization', `Bearer ${testJwt}`);
             expect(response.status).toBe(status);
         });
     });
@@ -33,9 +35,10 @@ describe('Search Movie', () => {
     it('should return a list of movies with the correct format', async () => {
         mockSearchMovie.mockReturnValue(movieSearch1);
         const query = 'test';
+        const testJwt = generateTestJwt(1, "test@test.com");
         const page = 1;
         const response = await server.get(`${endpoint}`)
-            .query({ query, page });
+            .query({ query, page }).set('Authorization', `Bearer ${testJwt}`);
         const movies = response.body.results;
         expect(response.status).toBe(200);
         expect(movies.length).toBeLessThanOrEqual(20);

@@ -2,7 +2,7 @@ import { validateCountry } from "@utils";
 import Joi from "joi";
 
 export class GetMovieDto {
-    movieId: string;
+    movieId: number;
     country: string;
 }
 
