@@ -12,6 +12,7 @@ export function loadUserContext(req: Request, res: Response, next: NextFunction)
         res.locals.userId = userContext.userId;
         next();
     } catch (err) {
+        console.log(err)
         throw new UnauthorizedException('Invalid auth token');
     }
 }
