@@ -7,6 +7,6 @@ export class AddContentDto {
 }
 
 export const AddContentSchema = Joi.object({
-    contentId: Joi.number().required(),
+    contentId: Joi.number().required().integer().min(1),
     contentType: Joi.string().custom(validateContentType).required(),
 });
