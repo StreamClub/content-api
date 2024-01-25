@@ -3,9 +3,10 @@
 * @group movies
 */
 
-import { mockMovieInfo, server, setupBeforeAndAfter } from '../../setup/testsSetup';
+import { mockGetRedirectLinks, mockMovieInfo, server, setupBeforeAndAfter } from '../../setup/testsSetup';
 import { generateTestJwt, testMovie1 } from '../../helpers';
 import { Movie } from '@entities';
+import { testProviders01 } from '../../helpers/testProviders';
 
 const endpoint = '/movies';
 
@@ -31,6 +32,7 @@ describe('Get Movie', () => {
 
     it('should return a Movie with the correct format', async () => {
         mockMovieInfo.mockReturnValue(testMovie1);
+        mockGetRedirectLinks.mockResolvedValue(testProviders01);
         const testJwt = generateTestJwt(1, "test@test.com")
         const id = 2150;
         const country = 'AR';
