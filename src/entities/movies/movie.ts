@@ -1,6 +1,7 @@
-import { Cast, Video, WatchProvider } from "moviedb-promise";
+import { Cast, Video } from "moviedb-promise";
 import { TmdbMovie } from "./tmdbMovie";
 import { SimilarMovie } from "./similarMovie";
+import { Platform, Provider } from "@entities";
 
 export class Movie {
     id: number;
@@ -14,14 +15,14 @@ export class Movie {
     budget: number;
     revenue: number;
     status: string;
-    platforms: WatchProvider[];
+    platforms: Platform[];
     directors: string[];
     cast: Cast[];
     similar: SimilarMovie[];
     trailers: Video[];
 
 
-    constructor(tmdbMovie: TmdbMovie, country: string) {
+    constructor(tmdbMovie: TmdbMovie, country: string, provider: Provider) {
         this.id = tmdbMovie.id;
         this.title = tmdbMovie.title;
         this.overview = tmdbMovie.overview;
@@ -33,22 +34,39 @@ export class Movie {
         this.budget = tmdbMovie.budget;
         this.revenue = tmdbMovie.revenue;
         this.status = tmdbMovie.status;
-        this.platforms = this.getPlatforms(tmdbMovie, country);
+        this.getPlatforms(tmdbMovie, country, provider);
         this.directors = tmdbMovie.credits.crew.filter((crew) => crew.job === 'Director').map((crew) => crew.name);
         this.cast = tmdbMovie.credits.cast.slice(0, 10);
         this.similar = tmdbMovie.recommendations.results.slice(0, 10).map((movie) => new SimilarMovie(movie));
         this.trailers = this.getTrailers(tmdbMovie);
     }
 
-    private getPlatforms(tmdbMovie: TmdbMovie, country: string) {
+    private getPlatforms(tmdbMovie: TmdbMovie, country: string, provider: Provider) {
         const countryPlatforms = Object.entries(tmdbMovie["watch/providers"].results).filter(([key, _]) => {
             return key === country;
         });
-        return countryPlatforms.length > 0 && countryPlatforms[0][1].flatrate ? countryPlatforms[0][1].flatrate : null;
+        const platforms = [];
+        if (countryPlatforms.length > 0 && countryPlatforms[0][1].flatrate) {
+            for (const platform of countryPlatforms[0][1].flatrate) {
+                platforms.push(new Platform(platform));
+            }
+        }
+        this.platforms = platforms;
+        this.setProvidersData(provider)
     }
 
     private getTrailers(tmdbMovie: TmdbMovie) {
         const youtubeTrailers = tmdbMovie.videos.results.filter((video) => video.site === 'YouTube' && video.type === 'Trailer');
         return youtubeTrailers.length > 0 ? youtubeTrailers : null;
+    }
+
+    private setProvidersData(provider: Provider) {
+        for (const platform of this.platforms) {
+            const logoPath = platform.logoPath;
+            const matchingKey = Object.keys(provider).find(key => key.endsWith(logoPath));
+            if (matchingKey) {
+                platform.link = provider[matchingKey].link;
+            }
+        }
     }
 }
