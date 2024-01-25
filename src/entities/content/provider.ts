@@ -1,4 +1,4 @@
-export class Provider {
+export class ProvidersDictionary {
     [key: string]: {
         link: string;
     }

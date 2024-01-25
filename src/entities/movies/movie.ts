@@ -1,7 +1,7 @@
 import { Cast, Video } from "moviedb-promise";
 import { TmdbMovie } from "./tmdbMovie";
 import { SimilarMovie } from "./similarMovie";
-import { Platform, Provider } from "@entities";
+import { Platform, ProvidersDictionary } from "@entities";
 
 export class Movie {
     id: number;
@@ -22,7 +22,7 @@ export class Movie {
     trailers: Video[];
 
 
-    constructor(tmdbMovie: TmdbMovie, country: string, provider: Provider) {
+    constructor(tmdbMovie: TmdbMovie, country: string, provider: ProvidersDictionary) {
         this.id = tmdbMovie.id;
         this.title = tmdbMovie.title;
         this.overview = tmdbMovie.overview;
@@ -41,7 +41,7 @@ export class Movie {
         this.trailers = this.getTrailers(tmdbMovie);
     }
 
-    private getPlatforms(tmdbMovie: TmdbMovie, country: string, provider: Provider) {
+    private getPlatforms(tmdbMovie: TmdbMovie, country: string, provider: ProvidersDictionary) {
         const countryPlatforms = Object.entries(tmdbMovie["watch/providers"].results).filter(([key, _]) => {
             return key === country;
         });
@@ -60,7 +60,7 @@ export class Movie {
         return youtubeTrailers.length > 0 ? youtubeTrailers : null;
     }
 
-    private setProvidersData(provider: Provider) {
+    private setProvidersData(provider: ProvidersDictionary) {
         for (const platform of this.platforms) {
             const logoPath = platform.logoPath;
             const matchingKey = Object.keys(provider).find(key => key.endsWith(logoPath));
