@@ -39,12 +39,7 @@ export class TmdbService {
                 .isInWatchlist(userId, movie.id.toString(), contentTypes.MOVIE);
             return movieResume;
         }));
-        return {
-            page: result.page,
-            total_pages: result.total_pages,
-            total_results: result.total_results,
-            results: movies
-        };
+        return new PaginatedResult(result.page, result.total_pages, result.total_results, movies);
     }
 
     public async searchSeries(userId: string, query: string, page: number) {
