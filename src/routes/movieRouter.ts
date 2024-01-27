@@ -8,7 +8,7 @@ import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
 import { MovieController } from "@controllers";
-import { GetMovieSchema, SearchMovieSchema } from "@dtos";
+import { GetMovieSchema, SearchContentSchema } from "@dtos";
 
 export function MovieRouter(dependencies: AppDependencies) {
     const router = Router();
@@ -17,7 +17,7 @@ export function MovieRouter(dependencies: AppDependencies) {
     router.get(
         "/",
         loadUserContext,
-        validateSchema(SearchMovieSchema, [FieldOptions.query]),
+        validateSchema(SearchContentSchema, [FieldOptions.query]),
         handleRequest(
             (req, res) => movieController.searchMovie(req, res),
             StatusCodes.OK
@@ -33,7 +33,6 @@ export function MovieRouter(dependencies: AppDependencies) {
             StatusCodes.OK
         )
     );
-
 
     return router;
 }
