@@ -3,7 +3,8 @@
 * @group movies
 */
 
-import { mockGetRedirectLinks, mockMovieInfo, server, setupBeforeAndAfter } from '../../setup/testsSetup';
+import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
+import { mockGetRedirectLinks, mockMovieInfo } from '../../setup/mocksSetUp';
 import { generateTestJwt, testMovie1 } from '../../helpers';
 import { Movie } from '@entities';
 import { testProviders01 } from '../../helpers/testProviders';

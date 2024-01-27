@@ -4,7 +4,8 @@
 */
 
 import { MAX_STRING_LENGTH } from '@config';
-import { mockSearchMovie, server, setupBeforeAndAfter } from '../../setup/testsSetup';
+import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
+import { mockSearchMovie } from '../../setup/mocksSetUp';
 import { generateTestJwt, movieSearch1 } from '../../helpers';
 
 const endpoint = '/movies';

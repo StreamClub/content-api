@@ -1,10 +1,10 @@
 import { contentTypes } from "@config";
 import { watchlistRepository } from "@dal";
-import { Movie, TmdbMovie, MovieResume } from "@entities";
+import { Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult } from "@entities";
 import { NotFoundException } from "@exceptions";
 import { getRedirectLinks } from "@utils";
 import AppDependencies from "appDependencies";
-import { MovieDb, MovieResult } from 'moviedb-promise'
+import { MovieDb, MovieResult, TvResult } from 'moviedb-promise'
 
 export class TmdbService {
     private tmdb: MovieDb;
@@ -46,6 +46,21 @@ export class TmdbService {
             results: movies
         };
     }
+
+    public async searchSeries(userId: string, query: string, page: number) {
+        const result = await this.tmdb.searchTv({ query, language: this.language, page });
+        const series = await Promise.all(result.results.map(async (serie: TvResult) => {
+            const serieResume = new SeriesResume(serie)
+            serieResume.inWatchlist = await watchlistRepository
+                .isInWatchlist(userId, serie.id.toString(), contentTypes.SERIES);
+            const showDetails = await this.tmdb.tvInfo({ id: serie.id, language: this.language });
+            serieResume.status = showDetails.status;
+            serieResume.lastEpisodeReleaseDate = showDetails.last_episode_to_air?.air_date;
+            return serieResume;
+        }));
+        return new PaginatedResult(result.page, result.total_pages, result.total_results, series);
+    }
+
 
     private getMovieProvidersUrl(movieId: string, country: string) {
         return `https://www.themoviedb.org/movie/${movieId}/watch?locale=${country}`;

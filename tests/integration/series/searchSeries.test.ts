@@ -4,8 +4,10 @@
 */
 
 import { MAX_STRING_LENGTH } from '@config';
-import { mockSearchMovie, server, setupBeforeAndAfter } from '../../setup/testsSetup';
-import { generateTestJwt, movieSearch1 } from '../../helpers';
+import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
+import { generateTestJwt } from '../../helpers';
+import { mockGetShowDetails, mockSearchSeries } from '../../setup/mocksSetUp';
+import { testSearchSeries01, testSeries01 } from '../../helpers/testSeries';
 
 const endpoint = '/series';
 
@@ -32,28 +34,31 @@ describe('Search Series', () => {
         });
     });
 
-    // it('should return a list of movies with the correct format', async () => {
-    //     mockSearchMovie.mockReturnValue(movieSearch1);
-    //     const query = 'test';
-    //     const testJwt = generateTestJwt(1, "test@test.com");
-    //     const page = 1;
-    //     const response = await server.get(`${endpoint}`)
-    //         .query({ query, page }).set('Authorization', `Bearer ${testJwt}`);
-    //     const movies = response.body.results;
-    //     expect(response.status).toBe(200);
-    //     expect(movies.length).toBeLessThanOrEqual(20);
-    //     for (const movie of movies) {
-    //         expect(movie.id).toBeDefined();
-    //         expect(movie.title).toBeDefined();
-    //         expect(movie.poster).toBeDefined();
-    //         expect(movie.available).toBeDefined();
-    //         expect(movie.releaseDate).toBeDefined();
-    //         expect(movie.score).toBeDefined();
-    //         expect(movie.seen).toBeDefined();
-    //         expect(movie.inWatchlist).toBeDefined();
-    //     }
-    //     expect(response.body.page).toBeGreaterThanOrEqual(1);
-    //     expect(response.body.totalPages).toBeGreaterThanOrEqual(0);
-    //     expect(response.body.totalResults).toBeGreaterThanOrEqual(0);
-    // });
+    it('should return a list of series with the correct format', async () => {
+        mockSearchSeries.mockReturnValue(testSearchSeries01);
+        mockGetShowDetails.mockReturnValue(testSeries01);
+        const query = 'test';
+        const testJwt = generateTestJwt(1, "test@test.com");
+        const page = 1;
+        const response = await server.get(`${endpoint}`)
+            .query({ query, page }).set('Authorization', `Bearer ${testJwt}`);
+        const series = response.body.results;
+        expect(response.status).toBe(200);
+        expect(series.length).toBeLessThanOrEqual(20);
+        for (const serie of series) {
+            expect(serie.id).toBeDefined();
+            expect(serie.title).toBeDefined();
+            expect(serie.poster).toBeDefined();
+            expect(serie.available).toBeDefined();
+            expect(serie.score).toBeDefined();
+            expect(serie.seen).toBeDefined();
+            expect(serie.inWatchlist).toBeDefined();
+            expect(serie.releaseDate).toBeDefined();
+            expect(serie.status).toBeDefined();
+            expect(serie.lastEpisodeReleaseDate).toBeDefined();
+        }
+        expect(response.body.page).toBeGreaterThanOrEqual(1);
+        expect(response.body.totalPages).toBeGreaterThanOrEqual(0);
+        expect(response.body.totalResults).toBeGreaterThanOrEqual(0);
+    });
 });
