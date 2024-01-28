@@ -19,35 +19,25 @@ export class TmdbService {
     }
 
     public async getMovie(movieId: string, country: string): Promise<Movie> {
-        try {
+        return await this.getContentSafely(async () => {
             const movie = await this.tmdb.movieInfo({
                 id: movieId, language: this.language,
                 append_to_response: 'credits,watch/providers,recommendations,videos'
             }) as TmdbMovie;
             const providersData = await this.getProvidersData(this.contentTypes.MOVIE, movieId, country);
             return new Movie(movie, country, providersData);
-        } catch (error) {
-            if (error.response.status === 404) {
-                throw new NotFoundException('La película no existe');
-            }
-            throw error;
-        }
+        })
     }
 
     public async getSeries(userId: string, seriesId: string, country: string) {
-        try {
+        return await this.getContentSafely(async () => {
             const serie = await this.tmdb.tvInfo({
                 id: seriesId, language: this.language,
                 append_to_response: 'credits,watch/providers,recommendations,videos'
             }) as TmdbSeries;
             const providersData = await this.getProvidersData(this.contentTypes.SERIES, seriesId, country);
             return new Series(serie, country, providersData);
-        } catch (error) {
-            if (error?.response?.status === 404) {
-                throw new NotFoundException('La serie no existe');
-            }
-            throw error;
-        }
+        })
     }
 
     public async searchMovie(userId: string, query: string, page: number) {
@@ -79,4 +69,16 @@ export class TmdbService {
         const providersUrl = `https://www.themoviedb.org/${contentType}/${contentId}/watch?locale=${country}`;
         return await getRedirectLinks(providersUrl);
     }
+
+    private async getContentSafely(callback: Function) {
+        try {
+            return await callback();
+        } catch (error) {
+            if (error?.response?.status === 404) {
+                throw new NotFoundException('La serie no existe');
+            }
+            throw error;
+        }
+    }
+
 }
