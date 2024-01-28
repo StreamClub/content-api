@@ -18,4 +18,10 @@ export class SeriesController {
         return await this.tmdbService.searchSeries(userId, query, page);
     }
 
+    public async getSeries(req: Request<GetMovieDto>, res: Response<any>) {
+        const userId = res.locals.userId;
+        const country = req.query.country as string;
+        return await this.tmdbService.getSeries(userId, req.params.seriesId, country);
+    }
+
 }
