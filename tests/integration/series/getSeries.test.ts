@@ -8,6 +8,7 @@ import { mockGetRedirectLinks, mockGetShowDetails } from '../../setup/mocksSetUp
 import { generateTestJwt, testSeries01 } from '../../helpers';
 import { Series } from '@entities';
 import { testProviders01 } from '../../helpers/testProviders';
+import { seriesStatus } from '@config';
 
 const endpoint = '/series';
 
@@ -47,7 +48,7 @@ describe('Get Movie', () => {
         expect(series.poster).toBe(testSeries01.poster_path);
         expect(series.backdrop).toBe(testSeries01.backdrop_path);
         expect(series.genres).toStrictEqual(testSeries01.genres.map((genre) => genre.name));
-        expect(series.status).toBe(testSeries01.status);
+        expect(series.status).toBe(seriesStatus[testSeries01.status]);
         expect(series.createdBy).toStrictEqual(testSeries01.created_by.map((creator) => creator.name));
         expect(series.lastAirDate).toBe(testSeries01.last_air_date);
         expect(series.numberOfEpisodes).toBe(testSeries01.number_of_episodes);

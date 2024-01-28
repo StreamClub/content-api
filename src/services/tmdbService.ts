@@ -1,4 +1,4 @@
-import { contentTypes } from "@config";
+import { contentTypes, seriesStatus } from "@config";
 import { watchlistRepository } from "@dal";
 import { Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult, TmdbSeries, Series } from "@entities";
 import { NotFoundException } from "@exceptions";
@@ -58,7 +58,7 @@ export class TmdbService {
             serieResume.inWatchlist = await watchlistRepository
                 .isInWatchlist(userId, serie.id.toString(), contentTypes.SERIES);
             const showDetails = await this.tmdb.tvInfo({ id: serie.id, language: this.language });
-            serieResume.status = showDetails.status;
+            serieResume.status = seriesStatus[showDetails.status];
             serieResume.lastEpisodeReleaseDate = showDetails.last_episode_to_air?.air_date;
             return serieResume;
         }));
