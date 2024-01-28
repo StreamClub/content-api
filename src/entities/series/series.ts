@@ -3,6 +3,7 @@ import { NextEpisode } from "./nextEpisode";
 import { TmdbSeries } from "./tmdbSeries";
 import { SimilarSeries } from "./similarSeries";
 import { SeasonResume } from "./seasonResume";
+import { seriesStatus as seriesStatus } from "@config";
 
 export class Series extends Content {
     status: string;
@@ -17,7 +18,7 @@ export class Series extends Content {
     constructor(tmdbShow: TmdbSeries, country: string, provider: ProvidersDictionary) {
         super(tmdbShow, country, provider);
         this.title = tmdbShow.name;
-        this.status = tmdbShow.status;
+        this.status = seriesStatus[tmdbShow.status];
         this.createdBy = tmdbShow.created_by.map((creator) => creator.name);
         this.lastAirDate = tmdbShow.last_air_date;
         this.numberOfEpisodes = tmdbShow.number_of_episodes;
