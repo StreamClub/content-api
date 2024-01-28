@@ -15,7 +15,7 @@ export class Series extends Content {
     nextEpisode: NextEpisode;
     similar: SimilarSeries[];
 
-    constructor(tmdbShow: TmdbSeries, country: string, provider: ProvidersDictionary) {
+    constructor(tmdbShow: TmdbSeries, country: string, provider: ProvidersDictionary, nextEpisode: NextEpisode) {
         super(tmdbShow, country, provider);
         this.title = tmdbShow.name;
         this.status = seriesStatus[tmdbShow.status];
@@ -26,6 +26,6 @@ export class Series extends Content {
         this.seasons = tmdbShow.seasons.map((season) => new SeasonResume(season));
         this.similar = tmdbShow.recommendations.results.slice(0, 10).map((series) => new SimilarSeries(series));
         this.releaseDate = tmdbShow.first_air_date;
-        //nextEpisode
+        this.nextEpisode = nextEpisode;
     }
 }

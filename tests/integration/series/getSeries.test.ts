@@ -4,8 +4,8 @@
 */
 
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
-import { mockGetRedirectLinks, mockGetShowDetails } from '../../setup/mocksSetUp';
-import { generateTestJwt, testSeries01 } from '../../helpers';
+import { mockGetRedirectLinks, mockGetSeasonDetails, mockGetShowDetails } from '../../setup/mocksSetUp';
+import { generateTestJwt, testSeason01, testSeries01 } from '../../helpers';
 import { Series } from '@entities';
 import { testProviders01 } from '../../helpers/testProviders';
 import { seriesStatus } from '@config';
@@ -34,6 +34,7 @@ describe('Get Movie', () => {
 
     it('should return a Series with the correct format', async () => {
         mockGetShowDetails.mockReturnValue(testSeries01);
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
         mockGetRedirectLinks.mockResolvedValue(testProviders01);
         const testJwt = generateTestJwt(1, "test@test.com")
         const id = 2150;

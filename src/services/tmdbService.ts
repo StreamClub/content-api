@@ -1,10 +1,10 @@
 import { contentTypes, seriesStatus } from "@config";
 import { watchlistRepository } from "@dal";
-import { Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult, TmdbSeries, Series } from "@entities";
+import { Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult, TmdbSeries, Series, NextEpisode } from "@entities";
 import { NotFoundException } from "@exceptions";
 import { getRedirectLinks } from "@utils";
 import AppDependencies from "appDependencies";
-import { MovieDb, MovieResult, TvResult } from 'moviedb-promise'
+import { MovieDb, MovieResult, TvResult, TvSeasonResponse } from 'moviedb-promise'
 
 export class TmdbService {
     private tmdb: MovieDb;
@@ -35,9 +35,23 @@ export class TmdbService {
                 id: seriesId, language: this.language,
                 append_to_response: 'credits,watch/providers,recommendations,videos'
             }) as TmdbSeries;
+            const nextEpisode = await this.getNextEpisode(serie.id, serie.seasons);
             const providersData = await this.getProvidersData(this.contentTypes.SERIES, seriesId, country);
-            return new Series(serie, country, providersData);
+            return new Series(serie, country, providersData, nextEpisode);
         })
+    }
+
+    private async getNextEpisode(serieId: number, seasons: TvSeasonResponse[]) {
+        const filtered = seasons.filter(season => season.season_number > 0);
+        if (filtered.length > 0) {
+            const season = await this.getSeason(serieId, filtered[0].season_number);
+            return new NextEpisode(season.episodes[0]);
+        }
+    }
+
+    public async getSeason(serieId: number, seasonNumber: number) {
+        const season = await this.tmdb.seasonInfo({ id: serieId, season_number: seasonNumber, language: this.language });
+        return season;
     }
 
     public async searchMovie(userId: string, query: string, page: number) {

@@ -484,7 +484,7 @@ export const testSeries01 = {
             "name": "Especiales",
             "overview": "",
             "poster_path": "/7SNa37SSXdiCeHoeIioqDDMZfOO.jpg",
-            "season_number": 0,
+            "season_number": 1,
             "vote_average": 0
         }
     ],
@@ -806,4 +806,290 @@ export const testSeries01 = {
             }
         ]
     }
+}
+
+
+export const testSeason01 = {
+    "_id": "5258eb44760ee34661897a3a",
+    "air_date": "1999-10-20",
+    "episodes": [
+        {
+            "air_date": "1999-10-20",
+            "episode_number": 1,
+            "episode_type": "standard",
+            "id": 852692,
+            "name": "I'm Luffy! The Man Who Will Become the Pirate King!",
+            "overview": "A group of pirates lead by Alvida plunder a ship, only to find a barrel which contains a strange boy named Luffy. Luffy is on a mission to find the legendary treasure \"One Piece\" and he befriends the ship's cabin-boy, Coby, who actually wants to become a marine officer. Luffy defeats Alvida and the two journey on in search of crewmates.",
+            "production_code": "1",
+            "runtime": 25,
+            "season_number": 1,
+            "show_id": 37854,
+            "still_path": "/jQFsHzYKQDxvIpX42PqszYUmpn5.jpg",
+            "vote_average": 8.1,
+            "vote_count": 24,
+            "crew": [
+                {
+                    "job": "Director",
+                    "department": "Directing",
+                    "credit_id": "5d9c2201439be1002879137a",
+                    "adult": false,
+                    "gender": 2,
+                    "id": 225571,
+                    "known_for_department": "Directing",
+                    "name": "Konosuke Uda",
+                    "original_name": "Konosuke Uda",
+                    "popularity": 23.411,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "6069cf12699fb7006fc63406",
+                    "adult": false,
+                    "gender": 0,
+                    "id": 122766,
+                    "known_for_department": "Visual Effects",
+                    "name": "Kazuya Hisada",
+                    "original_name": "Kazuya Hisada",
+                    "popularity": 1.242,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "6199b303528b2e00629b761f",
+                    "adult": false,
+                    "gender": 2,
+                    "id": 122767,
+                    "known_for_department": "Visual Effects",
+                    "name": "Masahiro Shimanuki",
+                    "original_name": "Masahiro Shimanuki",
+                    "popularity": 2.856,
+                    "profile_path": null
+                },
+                {
+                    "job": "Writer",
+                    "department": "Writing",
+                    "credit_id": "637ffe3aa410c800d00ab32f",
+                    "adult": false,
+                    "gender": 2,
+                    "id": 201835,
+                    "known_for_department": "Writing",
+                    "name": "Junki Takegami",
+                    "original_name": "Junki Takegami",
+                    "popularity": 33.227,
+                    "profile_path": "/vQmOJqsZPZkPSI8MTkAYUsF62zb.jpg"
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637ffe5260620a00830db849",
+                    "adult": false,
+                    "gender": 0,
+                    "id": 3781472,
+                    "known_for_department": "Visual Effects",
+                    "name": "Tomekichi Takeuchi",
+                    "original_name": "Tomekichi Takeuchi",
+                    "popularity": 2.033,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637ffe62a4af8f00ca0a1b40",
+                    "adult": false,
+                    "gender": 1,
+                    "id": 1845993,
+                    "known_for_department": "Visual Effects",
+                    "name": "Yoko Iizuka",
+                    "original_name": "Yoko Iizuka",
+                    "popularity": 4.119,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637ffe71229ae215b45d620d",
+                    "adult": false,
+                    "gender": 2,
+                    "id": 102294,
+                    "known_for_department": "Visual Effects",
+                    "name": "Naoki Tate",
+                    "original_name": "Naoki Tate",
+                    "popularity": 4.969,
+                    "profile_path": null
+                },
+                {
+                    "job": "Animation Director",
+                    "department": "Visual Effects",
+                    "credit_id": "637ffe86a410c800c88424d5",
+                    "adult": false,
+                    "gender": 0,
+                    "id": 122766,
+                    "known_for_department": "Visual Effects",
+                    "name": "Kazuya Hisada",
+                    "original_name": "Kazuya Hisada",
+                    "popularity": 1.242,
+                    "profile_path": null
+                }
+            ],
+            "guest_stars": [
+                {
+                    "character": "Coby (voice)",
+                    "credit_id": "5258eb54760ee34661899c27",
+                    "order": 501,
+                    "adult": false,
+                    "gender": 1,
+                    "id": 76396,
+                    "known_for_department": "Acting",
+                    "name": "Mika Doi",
+                    "original_name": "Mika Doi",
+                    "popularity": 10.861,
+                    "profile_path": "/h5ereBl1UqJC7qH0sLxHJqnJ6Ai.jpg"
+                }
+            ]
+        },
+        {
+            "air_date": "1999-11-17",
+            "episode_number": 2,
+            "episode_type": "standard",
+            "id": 852693,
+            "name": "The Great Swordsman Appears! Pirate Hunter, Roronoa Zoro",
+            "overview": "Luffy and Coby arrive at Shell Island, a Marine base. They meet the bounty hunter Roronoa Zoro, held under arrest by the infamous marine, Captain Morgan, and his son Helmeppo.",
+            "production_code": "2",
+            "runtime": 25,
+            "season_number": 1,
+            "show_id": 37854,
+            "still_path": "/him2IAMOhTToCMGwCzBxHCD9cPf.jpg",
+            "vote_average": 8.1,
+            "vote_count": 18,
+            "crew": [
+                {
+                    "job": "Writer",
+                    "department": "Writing",
+                    "credit_id": "637ffedc229ae21554266dc0",
+                    "adult": false,
+                    "gender": 1,
+                    "id": 1079038,
+                    "known_for_department": "Writing",
+                    "name": "Michiru Shimada",
+                    "original_name": "Michiru Shimada",
+                    "popularity": 14.637,
+                    "profile_path": "/zwkdRhuEKK9ro6DF4Ht1Dhy2kh5.jpg"
+                },
+                {
+                    "job": "Director",
+                    "department": "Directing",
+                    "credit_id": "637ffee6514c4a008459df15",
+                    "adult": false,
+                    "gender": 2,
+                    "id": 1682771,
+                    "known_for_department": "Directing",
+                    "name": "Tetsuharu Nakamura",
+                    "original_name": "Tetsuharu Nakamura",
+                    "popularity": 3.875,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637ffef760620a00bbb19726",
+                    "adult": false,
+                    "gender": 0,
+                    "id": 3082551,
+                    "known_for_department": "Visual Effects",
+                    "name": "Tetsuya Saeki",
+                    "original_name": "Tetsuya Saeki",
+                    "popularity": 3.963,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637ffeffa410c8008cd2e7ba",
+                    "adult": false,
+                    "gender": 0,
+                    "id": 2234461,
+                    "known_for_department": "Visual Effects",
+                    "name": "Yutaka Matsubara",
+                    "original_name": "Yutaka Matsubara",
+                    "popularity": 2.46,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637fff0aa4af8f007eec6e57",
+                    "adult": false,
+                    "gender": 0,
+                    "id": 2790204,
+                    "known_for_department": "Visual Effects",
+                    "name": "Fujio Inose",
+                    "original_name": "Fujio Inose",
+                    "popularity": 5.379,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637fff196e938a008716bb88",
+                    "adult": false,
+                    "gender": 0,
+                    "id": 3217375,
+                    "known_for_department": "Visual Effects",
+                    "name": "Hitoshi Inaba",
+                    "original_name": "Hitoshi Inaba",
+                    "popularity": 5.086,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637fff202a09bc007dc53630",
+                    "adult": false,
+                    "gender": 1,
+                    "id": 2797991,
+                    "known_for_department": "Visual Effects",
+                    "name": "Shiho Tamai",
+                    "original_name": "Shiho Tamai",
+                    "popularity": 13.915,
+                    "profile_path": null
+                }
+            ],
+            "guest_stars": [
+                {
+                    "character": "Coby (voice)",
+                    "credit_id": "5258eb54760ee34661899c27",
+                    "order": 501,
+                    "adult": false,
+                    "gender": 1,
+                    "id": 76396,
+                    "known_for_department": "Acting",
+                    "name": "Mika Doi",
+                    "original_name": "Mika Doi",
+                    "popularity": 10.861,
+                    "profile_path": "/h5ereBl1UqJC7qH0sLxHJqnJ6Ai.jpg"
+                },
+                {
+                    "character": "",
+                    "credit_id": "5258eb48760ee34661898379",
+                    "order": 510,
+                    "adult": false,
+                    "gender": 1,
+                    "id": 1244351,
+                    "known_for_department": "Acting",
+                    "name": "Machiko Toyoshima",
+                    "original_name": "Machiko Toyoshima",
+                    "popularity": 16.762,
+                    "profile_path": "/kgLd4bMXwEFxeH3UAmqVjVkUDEY.jpg"
+                }
+            ]
+        }
+    ],
+    "name": "East Blue",
+    "overview": "Influenced by Shanks, Luffy starts his journey to become the Pirate King. At the beginning of his journey, he meets a boy named Koby, who wants to become a Marine. They reach Shells Town, where they meet corrupt Marine captain Axe-Hand Morgan, his son Helmeppo, and the pirate hunter Roronoa Zoro.",
+    "id": 49188,
+    "poster_path": "/9hW62RDq5Dno8vLABXscddjEq9M.jpg",
+    "season_number": 1,
+    "vote_average": 8.4
 }
