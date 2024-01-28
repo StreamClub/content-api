@@ -71,6 +71,7 @@ describe('Get Movie', () => {
         }
         expect(series.releaseDate).toBe(testSeries01.first_air_date);
         expect(series.trailers).toBeDefined();
+        expect(series.nextEpisode).toBeDefined();
     });
 
     it('should return a 404 if the series does not exist', async () => {
