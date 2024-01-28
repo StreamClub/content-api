@@ -1,5 +1,3 @@
-import { TmdbMovie } from "@entities";
-
 export const testMovie1 = {
     "adult": false,
     "backdrop_path": "/sRvXNDItGlWCqtO3j6wks52FmbD.jpg",
