@@ -34,6 +34,5 @@ export function SeriesRouter(dependencies: AppDependencies) {
         )
     );
 
-
     return router;
 }
