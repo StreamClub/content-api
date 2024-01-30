@@ -7,7 +7,7 @@ import {
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
-import { SearchContentSchema } from "@dtos";
+import { GetSeriesSchema, SearchContentSchema } from "@dtos";
 import { SeriesController } from "@controllers";
 
 export function SeriesRouter(dependencies: AppDependencies) {
@@ -24,6 +24,15 @@ export function SeriesRouter(dependencies: AppDependencies) {
         )
     );
 
+    router.get(
+        "/:seriesId",
+        loadUserContext,
+        validateSchema(GetSeriesSchema, [FieldOptions.query, FieldOptions.params]),
+        handleRequest(
+            (req, res) => seriesController.getSeries(req, res),
+            StatusCodes.OK
+        )
+    );
 
     return router;
 }
