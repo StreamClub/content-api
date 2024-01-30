@@ -414,8 +414,9 @@ export const testSearchSeries01 = {
 }
 
 
-export const testSeries01: ShowResponse = {
-    "backdrop_path": "/eDxBkRZRmbzwCxVqY1oSyTKNIid.jpg",
+export const testSeries01 = {
+    "adult": false,
+    "backdrop_path": "'/eDxBkRZRmbzwCxVqY1oSyTKNIid.jpg'",
     "created_by": [
         {
             "id": 17835,
@@ -423,52 +424,33 @@ export const testSeries01: ShowResponse = {
             "name": "Ricky Gervais",
             "gender": 2,
             "profile_path": "/2mAjcq9AQA9peQxNoeEW76DPIju.jpg"
-        },
-        {
-            "id": 39189,
-            "credit_id": "525730af760ee3776a344e8f",
-            "name": "Stephen Merchant",
-            "gender": 2,
-            "profile_path": "/6WM2rK6390Nwk398syJbGcPvRct.jpg"
-        },
-        {
-            "id": 1216630,
-            "credit_id": "525730af760ee3776a344e95",
-            "name": "Greg Daniels",
-            "gender": 2,
-            "profile_path": "/2Hi7Tw0fyYFOZex8BuGsHS8Q4KD.jpg"
         }
     ],
-    "episode_run_time": [],
-    "first_air_date": "2005-03-24",
-    "genres": [
-        {
-            "id": 35,
-            "name": "Comedy"
-        }
-    ],
+    "episode_run_time": [24],
+    "first_air_date": "'2005-03-24'",
+    "genres": [{ "id": 35, "name": "Comedia" }],
     "homepage": "http://www.nbc.com/The_Office/",
     "id": 2316,
     "in_production": false,
-    "languages": [
-        "en"
-    ],
+    "languages": ["en"],
     "last_air_date": "2013-05-16",
     "last_episode_to_air": {
         "id": 170335,
-        "name": "Finale",
-        "overview": "One year later, Dunder Mifflin employees past and present reunite for a panel discussion about the documentary and to attend Dwight and Angela's wedding.",
+        "name": "Final",
+        "overview": "Último episodio de \"The Office\" en el que los trabajadores de la oficina responden a las preguntas sobre el documental. Además, todos ellos acuden a la boda de Dwight y Angela en la granja Schrute.",
         "vote_average": 9.156,
         "vote_count": 32,
         "air_date": "2013-05-16",
         "episode_number": 23,
+        "episode_type": "finale",
         "production_code": "",
+        "runtime": 44,
         "season_number": 9,
         "show_id": 2316,
         "still_path": "/1pJtFmAS3TJuWoCaUrY904pqNFE.jpg"
     },
     "name": "The Office",
-    "next_episode_to_air": null,
+    "next_episode_to_air": "null",
     "networks": [
         {
             "id": 6,
@@ -479,153 +461,635 @@ export const testSeries01: ShowResponse = {
     ],
     "number_of_episodes": 186,
     "number_of_seasons": 9,
-    "origin_country": [
-        "US"
-    ],
+    "origin_country": ["US"],
     "original_language": "en",
     "original_name": "The Office",
-    "overview": "The everyday lives of office employees in the Scranton, Pennsylvania branch of the fictional Dunder Mifflin Paper Company.",
+    "overview": "Steve Carell protagoniza The Office, un fresco y divertido vistazo, con formato pseudo-documental, al día a día en la vida de unos excéntricos trabajadores de la empresa Dunder Mifflin. El serio pero despistadísimo director Michael Scott se considera un magnífico jefe y mentor, pero realmente inspira más críticas que respeto a sus empleados.",
     "popularity": 458.844,
-    "poster_path": "/7DJKHzAi83BmQrWLrYYOqcoKfhR.jpg",
+    "poster_path": "/5uwetbr0X8BPRy3Wmh63S9EhsiY.jpg",
     "production_companies": [
         {
             "id": 26727,
-            "logo_path": "/jeTxdjXhzgKZyLr3l9MllkTn3fy.png",
-            "name": "Universal Television",
-            "origin_country": "US"
-        },
-        {
-            "id": 59845,
-            "logo_path": null,
-            "name": "Deedle-Dee Productions",
-            "origin_country": "US"
-        },
-        {
-            "id": 6383,
-            "logo_path": "/bQVIn5JphAADvT4hljIMuzgm3sz.png",
-            "name": "Reveille Productions",
-            "origin_country": "US"
-        },
-        {
-            "id": 215547,
-            "logo_path": "/bLfxRVYgDEFMPI5G2Kwezw3YsOr.png",
-            "name": "Shine America",
-            "origin_country": "US"
-        },
-        {
-            "id": 8301,
-            "logo_path": "/zrcVDabl14MNfPwxL8DC2IyR12t.png",
-            "name": "Universal Media Studios",
-            "origin_country": "US"
+            "logo_path": "'/jeTxdjXhzgKZyLr3l9MllkTn3fy.png'",
+            "name": "'Universal Television'",
+            "origin_country": "'US'"
         }
     ],
-    "production_countries": [
-        {
-            "iso_3166_1": "US",
-            "name": "United States of America"
-        }
-    ],
+    "production_countries": [{ "iso_3166_1": "'US'", "name": "'United States of America'" }],
     "seasons": [
         {
-            "air_date": "2006-07-13",
+            "air_date": "2006 - 07 - 13",
             "episode_count": 91,
             "id": 7246,
-            "name": "Specials",
+            "name": "Especiales",
             "overview": "",
-            "poster_path": "/qeJJZoHAXJwb1PQjrxxpPYZZ60V.jpg",
-            "season_number": 0,
-        },
-        {
-            "air_date": "2005-03-24",
-            "episode_count": 6,
-            "id": 7240,
-            "name": "Season 1",
-            "overview": "This season introduced the main characters, and established the general plot, which revolves around Michael Scott, regional manager of the Scranton branch office, trying to convince the filmmakers of the documentary that he presides over a happy, well-running office. Meanwhile, sales rep Jim Halpert finds methods to undermine his cube-mate, Dwight Schrute; receptionist Pam Beesly tries to deal with Michael's insensitivities and flubs; and temporary employee Ryan Howard is acting mostly as an observer of the insanity around him.",
-            "poster_path": "/d71JQWhX75ZE2D383DlIsHVH1In.jpg",
+            "poster_path": "/7SNa37SSXdiCeHoeIioqDDMZfOO.jpg",
             "season_number": 1,
-        },
-        {
-            "air_date": "2005-09-20",
-            "episode_count": 22,
-            "id": 7241,
-            "name": "Season 2",
-            "overview": "Beginning with \"The Dundies\", the second season further developed into the plot of the fear of company downsizing, along with the introduction of new characters and developing some of the minor ones—especially that of Dwight Schrute. Michael Scott soon starts a relationship with his boss Jan Levenson and, Pam Beesley and Jim Halpert’s relationship become one of the focal points of the season. Their compatibility becomes more obvious as Jim’s feelings for Pam continue to grow, while she struggles with her relationship with the warehouse worker Roy Anderson.",
-            "poster_path": "/sAd3RhOjhTuaIBpyiI1QmB0YUq8.jpg",
-            "season_number": 2,
-        },
-        {
-            "air_date": "2006-09-21",
-            "episode_count": 23,
-            "id": 7242,
-            "name": "Season 3",
-            "overview": "The season marked the move of main character Jim Halpert from Scranton to Stamford, and also introduced Rashida Jones as Karen Filippelli, and Ed Helms as Andy Bernard—both members of Dunder Mifflin Stamford—as recurring characters. The main plot for the early episodes of the season deals with a recurring problem in seasons one and two—the problem of company downsizing—while in the last half of the season, inter-office relationships also became a major plot point.",
-            "poster_path": "/1SR5ZR0KNHTRvAzFayaKbhKAFSu.jpg",
-            "season_number": 3,
-        },
-        {
-            "air_date": "2007-09-27",
-            "episode_count": 14,
-            "id": 7245,
-            "name": "Season 4",
-            "overview": "Season four marked the departure of Karen Filippelli as a regular character, although she appeared for a few seconds in the first episode, \"Fun Run\" and in the sixth episode, \"Branch Wars\", as the regional manager of the Utica branch. Relationships again emerged as the main theme of the season, with Jim Halpert and Pam Beesley's rising, and Michael Scott and Jan Levinson's, as well as Dwight Schrute and Angela Martin's declining. Technology was another prevalent theme as the office staff struggled with initiatives introduced by Ryan Howard to modernize the company.",
-            "poster_path": "/zunFI6wdYJQRHnfXnziArUTs2e2.jpg",
-            "season_number": 4,
-        },
-        {
-            "air_date": "2008-09-25",
-            "episode_count": 26,
-            "id": 7244,
-            "name": "Season 5",
-            "overview": "The fifth season of the American television comedy The Office premiered in the United States in the 2008–2009 television season on NBC on September 25, 2008 and concluded on May 14, 2009. The fifth season consisted of 28 half-hours of material, divided into 24 half-hour episodes and two hour-long episodes.",
-            "poster_path": "/hwlQxOPGIybqBz5TYYIe6XtOfi4.jpg",
-            "season_number": 5,
-        },
-        {
-            "air_date": "2009-09-17",
-            "episode_count": 24,
-            "id": 7243,
-            "name": "Season 6",
-            "overview": "The sixth season of the American television comedy The Office premiered in the United States on NBC on September 17, 2009, and concluded on May 20, 2010. The season consisted of 22 half-hour episodes, and 2 hour-long episodes.",
-            "poster_path": "/hk3a9U26J726oV8nHTdeMTtH91B.jpg",
-            "season_number": 6,
-        },
-        {
-            "air_date": "2010-09-23",
-            "episode_count": 24,
-            "id": 7247,
-            "name": "Season 7",
-            "overview": "The seventh season of the American television comedy The Office premiered on September 23, 2010 and concluded on May 19, 2011. The season consisted of 26 half-hours of material, divided into 22 half-hour episodes and two hour-long episodes.",
-            "poster_path": "/uR3y9BwPA8gnk2nmB6ncQejEe8k.jpg",
-            "season_number": 7,
-        },
-        {
-            "air_date": "2011-09-22",
-            "episode_count": 24,
-            "id": 7248,
-            "name": "Season 8",
-            "overview": "The eighth season largely centers around Andy Bernard's ascension to regional manager, as well as the antics of Robert California, the new CEO of Sabre, a fictional printer company that owns Dunder Mifflin. Halfway through the season, Dwight Schrute —along with Jim Halpert, Stanley Hudson, Ryan Howard, Erin Hannon, and Cathy —travel to Florida to help set up a Sabre Store, where Nellie Bertram is introduced.",
-            "poster_path": "/sQLtAEBbQNIXGZyTUt3IK9gX4VE.jpg",
-            "season_number": 8,
-        },
-        {
-            "air_date": "2012-09-20",
-            "episode_count": 23,
-            "id": 7249,
-            "name": "Season 9",
-            "overview": "The ninth season largely focuses on the relationship between Jim and Pam Halpert.",
-            "poster_path": "/ncR9y2RApOTSjfggJHjvoIlAqDG.jpg",
-            "season_number": 9,
+            "vote_average": 0
         }
     ],
-    "spoken_languages": [
-        {
-            "iso_639_1": "en",
-            "name": "English"
-        }
-    ],
+    "spoken_languages": [{ "english_name": "English", "iso_639_1": "en", "name": "English" }],
     "status": "Ended",
-    "tagline": "A comedy for anyone whose boss is an idiot.",
+    "tagline": "Una comedia para cualquiera cuyo jefe sea un idiota.",
     "type": "Scripted",
     "vote_average": 8.587,
-    "vote_count": 3673
+    "vote_count": 3674,
+    "credits": {
+        "cast": [
+            {
+                "adult": false,
+                "gender": 2,
+                "id": 12073,
+                "known_for_department": "Acting",
+                "name": "Mike Myers",
+                "original_name": "Mike Myers",
+                "popularity": 18.113,
+                "profile_path": "/gjfDl52Kk02MPgUYFjs9bOy33OY.jpg",
+                "cast_id": 24,
+                "character": "Shrek / Blind Mouse / Opening Narration (voice)",
+                "credit_id": "52fe4279c3a36847f80218a1",
+                "order": 0
+            },
+            {
+                "adult": false,
+                "gender": 2,
+                "id": 776,
+                "known_for_department": "Acting",
+                "name": "Eddie Murphy",
+                "original_name": "Eddie Murphy",
+                "popularity": 61.706,
+                "profile_path": "/qgjMfefsKwSYsyCaIX46uyOXIpy.jpg",
+                "cast_id": 25,
+                "character": "Donkey (voice)",
+                "credit_id": "52fe4279c3a36847f80218a5",
+                "order": 1
+            },
+        ],
+        "crew": [
+            {
+                "adult": false,
+                "gender": 2,
+                "id": 1705,
+                "known_for_department": "Writing",
+                "name": "Ted Elliott",
+                "original_name": "Ted Elliott",
+                "popularity": 7.055,
+                "profile_path": "/kGW95TZLI1qCvZUmk8gPnlviSqy.jpg",
+                "credit_id": "5aa7bdc90e0a263dc701cd81",
+                "department": "Writing",
+                "job": "Writer"
+            },
+            {
+                "adult": false,
+                "gender": 2,
+                "id": 1705,
+                "known_for_department": "Writing",
+                "name": "Ted Elliott",
+                "original_name": "Ted Elliott",
+                "popularity": 7.055,
+                "profile_path": "/kGW95TZLI1qCvZUmk8gPnlviSqy.jpg",
+                "credit_id": "556b8ca59251416b0a004a2d",
+                "department": "Production",
+                "job": "Co-Producer"
+            },
+            {
+                "adult": false,
+                "gender": 2,
+                "id": 1706,
+                "known_for_department": "Writing",
+                "name": "Terry Rossio",
+                "original_name": "Terry Rossio",
+                "popularity": 4.3,
+                "profile_path": "/fFB0vhLH1dU6pSMWojEY5Stbv21.jpg",
+                "credit_id": "556b8cc8c3a36824e70021e9",
+                "department": "Production",
+                "job": "Co-Producer"
+            },
+        ]
+    },
+    "watch/providers": {
+        "results": {
+            "AD": {
+                "link": "https://www.themoviedb.org/movie/808-shrek/watch?locale=AD",
+                "flatrate": [
+                    {
+                        "logo_path": "/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg",
+                        "provider_id": 8,
+                        "provider_name": "Netflix",
+                        "display_priority": 0
+                    },
+                ]
+            },
+            "AL": {
+                "link": "https://www.themoviedb.org/movie/808-shrek/watch?locale=AL",
+                "flatrate": [
+                    {
+                        "logo_path": "/iieEQVJIEOSfDj477zG8sSTtr25.jpg",
+                        "provider_id": 1773,
+                        "provider_name": "SkyShowtime",
+                        "display_priority": 30
+                    }
+                ]
+            },
+            "AO": {
+                "link": "https://www.themoviedb.org/movie/808-shrek/watch?locale=AO",
+                "flatrate": [
+                    {
+                        "logo_path": "/emthp39XA2YScoYL1p0sdbAH2WA.jpg",
+                        "provider_id": 119,
+                        "provider_name": "Amazon Prime Video",
+                        "display_priority": 1
+                    }
+                ],
+            },
+            "AR": {
+                "link": "https://www.themoviedb.org/movie/808-shrek/watch?locale=AR",
+                "ads": [
+                    {
+                        "logo_path": "/ijHUSuVY0PLfTBMfRwH2PrzTD7G.jpg",
+                        "provider_id": 457,
+                        "provider_name": "VIX ",
+                        "display_priority": 14
+                    }
+                ],
+                "rent": [
+                    {
+                        "logo_path": "/peURlLlr8jggOwK53fJ5wdQl05y.jpg",
+                        "provider_id": 2,
+                        "provider_name": "Apple TV",
+                        "display_priority": 3
+                    },
+                    {
+                        "logo_path": "/tbEdFQDwx5LEVr8WpSeXQSIirVq.jpg",
+                        "provider_id": 3,
+                        "provider_name": "Google Play Movies",
+                        "display_priority": 6
+                    },
+                    {
+                        "logo_path": "/lJT7r1nprk1Z8t1ywiIa8h9d3rc.jpg",
+                        "provider_id": 167,
+                        "provider_name": "Claro video",
+                        "display_priority": 10
+                    }
+                ],
+                "flatrate": [
+                    {
+                        "logo_path": "/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg",
+                        "provider_id": 8,
+                        "provider_name": "Netflix",
+                        "display_priority": 1
+                    },
+                    {
+                        "logo_path": "/emthp39XA2YScoYL1p0sdbAH2WA.jpg",
+                        "provider_id": 119,
+                        "provider_name": "Amazon Prime Video",
+                        "display_priority": 2
+                    },
+                    {
+                        "logo_path": "/Ajqyt5aNxNGjmF9uOfxArGrdf3X.jpg",
+                        "provider_id": 384,
+                        "provider_name": "HBO Max",
+                        "display_priority": 5
+                    },
+                    {
+                        "logo_path": "/cDzkhgvozSr4GW2aRdV22uDuFpw.jpg",
+                        "provider_id": 339,
+                        "provider_name": "Movistar Play",
+                        "display_priority": 9
+                    },
+                    {
+                        "logo_path": "/lJT7r1nprk1Z8t1ywiIa8h9d3rc.jpg",
+                        "provider_id": 167,
+                        "provider_name": "Claro video",
+                        "display_priority": 10
+                    }
+                ],
+                "buy": [
+                    {
+                        "logo_path": "/peURlLlr8jggOwK53fJ5wdQl05y.jpg",
+                        "provider_id": 2,
+                        "provider_name": "Apple TV",
+                        "display_priority": 3
+                    },
+                    {
+                        "logo_path": "/tbEdFQDwx5LEVr8WpSeXQSIirVq.jpg",
+                        "provider_id": 3,
+                        "provider_name": "Google Play Movies",
+                        "display_priority": 6
+                    }
+                ]
+            },
+            "EC": {
+                "link": "https://www.themoviedb.org/movie/808-shrek/watch?locale=EC",
+                "buy": [
+                    {
+                        "logo_path": "/peURlLlr8jggOwK53fJ5wdQl05y.jpg",
+                        "provider_id": 2,
+                        "provider_name": "Apple TV",
+                        "display_priority": 7
+                    },
+                ],
+                "flatrate": [
+                    {
+                        "logo_path": "/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg",
+                        "provider_id": 8,
+                        "provider_name": "Netflix",
+                        "display_priority": 0
+                    },
+                    {
+                        "logo_path": "/emthp39XA2YScoYL1p0sdbAH2WA.jpg",
+                        "provider_id": 119,
+                        "provider_name": "Amazon Prime Video",
+                        "display_priority": 2
+                    },
+                    {
+                        "logo_path": "/cDzkhgvozSr4GW2aRdV22uDuFpw.jpg",
+                        "provider_id": 339,
+                        "provider_name": "Movistar Play",
+                        "display_priority": 4
+                    },
+                    {
+                        "logo_path": "/Ajqyt5aNxNGjmF9uOfxArGrdf3X.jpg",
+                        "provider_id": 384,
+                        "provider_name": "HBO Max",
+                        "display_priority": 5
+                    },
+                    {
+                        "logo_path": "/lJT7r1nprk1Z8t1ywiIa8h9d3rc.jpg",
+                        "provider_id": 167,
+                        "provider_name": "Claro video",
+                        "display_priority": 9
+                    }
+                ],
+            },
+        }
+    },
+    "recommendations": {
+        "page": 1,
+        "results": [
+            {
+                "adult": false,
+                "backdrop_path": "/l45UqyARB3WxpYNuACjMjndpe85.jpg",
+                "id": 809,
+                "title": "Shrek 2",
+                "original_language": "en",
+                "original_title": "Shrek 2",
+                "overview": "Cuando Shrek y la princesa Fiona regresan de su luna de miel, los padres de ella los invitan a visitar el reino de Muy Muy Lejano para celebrar la boda. Para Shrek, al que nunca abandona su fiel amigo Asno, esto constituye un gran problema. Los padres de Fiona, por su parte, no esperaban que su yerno tuviera un aspecto semejante y, mucho menos, que su hija hubiera cambiado tanto. Todo esto trastoca los planes del rey respecto al futuro del reino. Pero entonces entran en escena la maquiavélica Hada Madrina, su arrogante hijo el Príncipe Encantador y un minino muy especial: el Gato con Botas, experto cazador de ogros.",
+                "poster_path": "/knRt4E8KyfwEv0SVu9LsLvD28IQ.jpg",
+                "media_type": "movie",
+                "genre_ids": [
+                    16,
+                    10751,
+                    35,
+                    14,
+                    12,
+                    18
+                ],
+                "popularity": 99.959,
+                "release_date": "2004-05-19",
+                "video": false,
+                "vote_average": 7.255,
+                "vote_count": 11504
+            },
+            {
+                "adult": false,
+                "backdrop_path": "/qSNz1G1Ts8fFw6v4Vae4aMAjcY7.jpg",
+                "id": 810,
+                "title": "Shrek tercero",
+                "original_language": "en",
+                "original_title": "Shrek the Third",
+                "overview": "Shrek se casó con Fiona, pero lo que no tuvo en cuenta es que al casarse con una princesa... tarde o temprano uno termina siendo rey. Cuando su suegro, el Rey Harold, cae enfermo, Shrek se encuentra en riesgo de tener que abandonar su amado pantano por el trono. A menos claro que encuentre un heredero. Junto con Asno y el Gato con Botas, Shrek viaja para en busca del primo de Fiona, Arturo. Mientras, en Muy Muy Lejano, el Principe Encantador recluta un ejército de villanos de cuento para tomar el trono por la fuerza. Pero no cuentan con que Fiona y la Reina Lillian también han reunido su grupo de heroínas de cuento para hacerles frente...",
+                "poster_path": "/7sTwtmVPTX77CFOUXdwAM7lKtKL.jpg",
+                "media_type": "movie",
+                "genre_ids": [
+                    14,
+                    12,
+                    16,
+                    35,
+                    10751
+                ],
+                "popularity": 105.698,
+                "release_date": "2007-05-17",
+                "video": false,
+                "vote_average": 6.288,
+                "vote_count": 8444
+            },
+        ],
+        "total_pages": 2,
+        "total_results": 40
+    },
+    "videos": {
+        "results": [
+            {
+                "iso_639_1": "es",
+                "iso_3166_1": "ES",
+                "name": "shrek",
+                "key": "448020852",
+                "site": "Vimeo",
+                "size": 1080,
+                "type": "Featurette",
+                "official": false,
+                "published_at": "2020-08-15T04:26:05.000Z",
+                "id": "63f64b008c22c000b298cdb4"
+            },
+            {
+                "iso_639_1": "es",
+                "iso_3166_1": "ES",
+                "name": "SHREK (Trailer español)",
+                "key": "B88JfTyJ1Fw",
+                "published_at": "2012-02-09T02:09:59.000Z",
+                "site": "YouTube",
+                "size": 360,
+                "type": "Trailer",
+                "official": false,
+                "id": "540d7f820e0a262b40006276"
+            }
+        ]
+    }
+}
+
+
+export const testSeason01 = {
+    "_id": "5258eb44760ee34661897a3a",
+    "air_date": "1999-10-20",
+    "episodes": [
+        {
+            "air_date": "1999-10-20",
+            "episode_number": 1,
+            "episode_type": "standard",
+            "id": 852692,
+            "name": "I'm Luffy! The Man Who Will Become the Pirate King!",
+            "overview": "A group of pirates lead by Alvida plunder a ship, only to find a barrel which contains a strange boy named Luffy. Luffy is on a mission to find the legendary treasure \"One Piece\" and he befriends the ship's cabin-boy, Coby, who actually wants to become a marine officer. Luffy defeats Alvida and the two journey on in search of crewmates.",
+            "production_code": "1",
+            "runtime": 25,
+            "season_number": 1,
+            "show_id": 37854,
+            "still_path": "/jQFsHzYKQDxvIpX42PqszYUmpn5.jpg",
+            "vote_average": 8.1,
+            "vote_count": 24,
+            "crew": [
+                {
+                    "job": "Director",
+                    "department": "Directing",
+                    "credit_id": "5d9c2201439be1002879137a",
+                    "adult": false,
+                    "gender": 2,
+                    "id": 225571,
+                    "known_for_department": "Directing",
+                    "name": "Konosuke Uda",
+                    "original_name": "Konosuke Uda",
+                    "popularity": 23.411,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "6069cf12699fb7006fc63406",
+                    "adult": false,
+                    "gender": 0,
+                    "id": 122766,
+                    "known_for_department": "Visual Effects",
+                    "name": "Kazuya Hisada",
+                    "original_name": "Kazuya Hisada",
+                    "popularity": 1.242,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "6199b303528b2e00629b761f",
+                    "adult": false,
+                    "gender": 2,
+                    "id": 122767,
+                    "known_for_department": "Visual Effects",
+                    "name": "Masahiro Shimanuki",
+                    "original_name": "Masahiro Shimanuki",
+                    "popularity": 2.856,
+                    "profile_path": null
+                },
+                {
+                    "job": "Writer",
+                    "department": "Writing",
+                    "credit_id": "637ffe3aa410c800d00ab32f",
+                    "adult": false,
+                    "gender": 2,
+                    "id": 201835,
+                    "known_for_department": "Writing",
+                    "name": "Junki Takegami",
+                    "original_name": "Junki Takegami",
+                    "popularity": 33.227,
+                    "profile_path": "/vQmOJqsZPZkPSI8MTkAYUsF62zb.jpg"
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637ffe5260620a00830db849",
+                    "adult": false,
+                    "gender": 0,
+                    "id": 3781472,
+                    "known_for_department": "Visual Effects",
+                    "name": "Tomekichi Takeuchi",
+                    "original_name": "Tomekichi Takeuchi",
+                    "popularity": 2.033,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637ffe62a4af8f00ca0a1b40",
+                    "adult": false,
+                    "gender": 1,
+                    "id": 1845993,
+                    "known_for_department": "Visual Effects",
+                    "name": "Yoko Iizuka",
+                    "original_name": "Yoko Iizuka",
+                    "popularity": 4.119,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637ffe71229ae215b45d620d",
+                    "adult": false,
+                    "gender": 2,
+                    "id": 102294,
+                    "known_for_department": "Visual Effects",
+                    "name": "Naoki Tate",
+                    "original_name": "Naoki Tate",
+                    "popularity": 4.969,
+                    "profile_path": null
+                },
+                {
+                    "job": "Animation Director",
+                    "department": "Visual Effects",
+                    "credit_id": "637ffe86a410c800c88424d5",
+                    "adult": false,
+                    "gender": 0,
+                    "id": 122766,
+                    "known_for_department": "Visual Effects",
+                    "name": "Kazuya Hisada",
+                    "original_name": "Kazuya Hisada",
+                    "popularity": 1.242,
+                    "profile_path": null
+                }
+            ],
+            "guest_stars": [
+                {
+                    "character": "Coby (voice)",
+                    "credit_id": "5258eb54760ee34661899c27",
+                    "order": 501,
+                    "adult": false,
+                    "gender": 1,
+                    "id": 76396,
+                    "known_for_department": "Acting",
+                    "name": "Mika Doi",
+                    "original_name": "Mika Doi",
+                    "popularity": 10.861,
+                    "profile_path": "/h5ereBl1UqJC7qH0sLxHJqnJ6Ai.jpg"
+                }
+            ]
+        },
+        {
+            "air_date": "1999-11-17",
+            "episode_number": 2,
+            "episode_type": "standard",
+            "id": 852693,
+            "name": "The Great Swordsman Appears! Pirate Hunter, Roronoa Zoro",
+            "overview": "Luffy and Coby arrive at Shell Island, a Marine base. They meet the bounty hunter Roronoa Zoro, held under arrest by the infamous marine, Captain Morgan, and his son Helmeppo.",
+            "production_code": "2",
+            "runtime": 25,
+            "season_number": 1,
+            "show_id": 37854,
+            "still_path": "/him2IAMOhTToCMGwCzBxHCD9cPf.jpg",
+            "vote_average": 8.1,
+            "vote_count": 18,
+            "crew": [
+                {
+                    "job": "Writer",
+                    "department": "Writing",
+                    "credit_id": "637ffedc229ae21554266dc0",
+                    "adult": false,
+                    "gender": 1,
+                    "id": 1079038,
+                    "known_for_department": "Writing",
+                    "name": "Michiru Shimada",
+                    "original_name": "Michiru Shimada",
+                    "popularity": 14.637,
+                    "profile_path": "/zwkdRhuEKK9ro6DF4Ht1Dhy2kh5.jpg"
+                },
+                {
+                    "job": "Director",
+                    "department": "Directing",
+                    "credit_id": "637ffee6514c4a008459df15",
+                    "adult": false,
+                    "gender": 2,
+                    "id": 1682771,
+                    "known_for_department": "Directing",
+                    "name": "Tetsuharu Nakamura",
+                    "original_name": "Tetsuharu Nakamura",
+                    "popularity": 3.875,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637ffef760620a00bbb19726",
+                    "adult": false,
+                    "gender": 0,
+                    "id": 3082551,
+                    "known_for_department": "Visual Effects",
+                    "name": "Tetsuya Saeki",
+                    "original_name": "Tetsuya Saeki",
+                    "popularity": 3.963,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637ffeffa410c8008cd2e7ba",
+                    "adult": false,
+                    "gender": 0,
+                    "id": 2234461,
+                    "known_for_department": "Visual Effects",
+                    "name": "Yutaka Matsubara",
+                    "original_name": "Yutaka Matsubara",
+                    "popularity": 2.46,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637fff0aa4af8f007eec6e57",
+                    "adult": false,
+                    "gender": 0,
+                    "id": 2790204,
+                    "known_for_department": "Visual Effects",
+                    "name": "Fujio Inose",
+                    "original_name": "Fujio Inose",
+                    "popularity": 5.379,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637fff196e938a008716bb88",
+                    "adult": false,
+                    "gender": 0,
+                    "id": 3217375,
+                    "known_for_department": "Visual Effects",
+                    "name": "Hitoshi Inaba",
+                    "original_name": "Hitoshi Inaba",
+                    "popularity": 5.086,
+                    "profile_path": null
+                },
+                {
+                    "job": "Key Animation",
+                    "department": "Visual Effects",
+                    "credit_id": "637fff202a09bc007dc53630",
+                    "adult": false,
+                    "gender": 1,
+                    "id": 2797991,
+                    "known_for_department": "Visual Effects",
+                    "name": "Shiho Tamai",
+                    "original_name": "Shiho Tamai",
+                    "popularity": 13.915,
+                    "profile_path": null
+                }
+            ],
+            "guest_stars": [
+                {
+                    "character": "Coby (voice)",
+                    "credit_id": "5258eb54760ee34661899c27",
+                    "order": 501,
+                    "adult": false,
+                    "gender": 1,
+                    "id": 76396,
+                    "known_for_department": "Acting",
+                    "name": "Mika Doi",
+                    "original_name": "Mika Doi",
+                    "popularity": 10.861,
+                    "profile_path": "/h5ereBl1UqJC7qH0sLxHJqnJ6Ai.jpg"
+                },
+                {
+                    "character": "",
+                    "credit_id": "5258eb48760ee34661898379",
+                    "order": 510,
+                    "adult": false,
+                    "gender": 1,
+                    "id": 1244351,
+                    "known_for_department": "Acting",
+                    "name": "Machiko Toyoshima",
+                    "original_name": "Machiko Toyoshima",
+                    "popularity": 16.762,
+                    "profile_path": "/kgLd4bMXwEFxeH3UAmqVjVkUDEY.jpg"
+                }
+            ]
+        }
+    ],
+    "name": "East Blue",
+    "overview": "Influenced by Shanks, Luffy starts his journey to become the Pirate King. At the beginning of his journey, he meets a boy named Koby, who wants to become a Marine. They reach Shells Town, where they meet corrupt Marine captain Axe-Hand Morgan, his son Helmeppo, and the pirate hunter Roronoa Zoro.",
+    "id": 49188,
+    "poster_path": "/9hW62RDq5Dno8vLABXscddjEq9M.jpg",
+    "season_number": 1,
+    "vote_average": 8.4
 }
