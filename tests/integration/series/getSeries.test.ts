@@ -12,7 +12,7 @@ import { seriesStatus } from '@config';
 
 const endpoint = '/series';
 
-describe('Get Movie', () => {
+describe('Get Series', () => {
     setupBeforeAndAfter();
 
     const invalidQueryCases = [
