@@ -26,7 +26,7 @@ describe('Get Season', () => {
             const seriesId = 2150;
             const seasonId = 1;
             const response = await
-                server.get(`${endpoint}/${seriesId}/${seasonId}`).query({ [field]: value }).set('Authorization', `Bearer ${testJwt}`);
+                server.get(`${endpoint}/${seriesId}/seasons/${seasonId}`).query({ [field]: value }).set('Authorization', `Bearer ${testJwt}`);
             expect(response.status).toBe(status);
         });
     });
@@ -37,7 +37,7 @@ describe('Get Season', () => {
         const seriesId = 2316;
         const seasonId = 1000;
         const country = 'AR';
-        const response = await server.get(`${endpoint}/${seriesId}/${seasonId}`)
+        const response = await server.get(`${endpoint}/${seriesId}/seasons/${seasonId}`)
             .query({ country }).set('Authorization', `Bearer ${testJwt}`);
         console.log(response.body);
         expect(response.status).toBe(404);
@@ -49,7 +49,7 @@ describe('Get Season', () => {
         const seriesId = 2150;
         const seasonId = 1;
         const country = 'AR';
-        const response = await server.get(`${endpoint}/${seriesId}/${seasonId}`)
+        const response = await server.get(`${endpoint}/${seriesId}/seasons/${seasonId}`)
             .query({ country }).set('Authorization', `Bearer ${testJwt}`);
         const series = response.body as Season;
         expect(response.status).toBe(200);

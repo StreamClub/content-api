@@ -35,7 +35,7 @@ export function SeriesRouter(dependencies: AppDependencies) {
     );
 
     router.get(
-        "/:seriesId/:seasonId",
+        "/:seriesId/seasons/:seasonId",
         loadUserContext,
         validateSchema(GetSeasonSchema, [FieldOptions.query, FieldOptions.params]),
         handleRequest(
