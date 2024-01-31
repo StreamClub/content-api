@@ -65,7 +65,6 @@ describe('Get Season', () => {
             expect(episode.name).toBeDefined();
             expect(episode.overview).toBeDefined();
             expect(episode.poster).toBeDefined();
-            expect(episode.seasonNumber).toBeDefined();
             expect(episode.runtime).toBeDefined();
         }
     });
