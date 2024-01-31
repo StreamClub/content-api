@@ -1,6 +1,6 @@
 import { contentTypes, seriesStatus } from "@config";
 import { watchlistRepository } from "@dal";
-import { Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult, TmdbSeries, Series, NextEpisode, Season } from "@entities";
+import { Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult, TmdbSeries, Series, NextEpisode, Season, ArtistResume } from "@entities";
 import { NotFoundException } from "@exceptions";
 import { getRedirectLinks } from "@utils";
 import AppDependencies from "appDependencies";
@@ -79,6 +79,15 @@ export class TmdbService {
             return serieResume;
         }));
         return new PaginatedResult(result.page, result.total_pages, result.total_results, series);
+    }
+
+    public async searchArtist(userId: string, query: string, page: number) {
+        const result = await this.tmdb.searchPerson({ query, language: this.language, page });
+        const artists = await Promise.all(result.results.map(async (artist) => {
+            const artistDetail = await this.tmdb.personInfo({ id: artist.id, language: this.language });
+            return new ArtistResume(artistDetail);
+        }));
+        return new PaginatedResult(result.page, result.total_pages, result.total_results, artists);
     }
 
     private async getProvidersData(contentType: string, contentId: string, country: string) {
