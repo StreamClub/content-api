@@ -1,5 +1,3 @@
-import { ShowResponse } from "moviedb-promise";
-
 export const testSearchSeries01 = {
     "page": 1,
     "results": [
