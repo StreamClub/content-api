@@ -6,8 +6,8 @@
 import { MAX_STRING_LENGTH } from '@config';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 import { generateTestJwt } from '../../helpers';
-import { mockSearchArtist } from '../../setup/mocksSetUp';
-import { testSearchArtist01 } from '../../helpers/testArtists';
+import { mockGetArtistDetails, mockSearchArtist } from '../../setup/mocksSetUp';
+import { testArtist01, testSearchArtist01 } from '../../helpers/testArtists';
 
 const endpoint = '/artists';
 
@@ -36,6 +36,7 @@ describe('Search Artist', () => {
 
     it('should return a list of artists with the correct format', async () => {
         mockSearchArtist.mockReturnValue(testSearchArtist01)
+        mockGetArtistDetails.mockReturnValue(testArtist01)
         const query = 'test';
         const testJwt = generateTestJwt(1, "test@test.com");
         const page = 1;

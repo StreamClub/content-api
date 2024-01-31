@@ -8,6 +8,7 @@ export let mockSearchArtist = jest.fn()
 export let mockGetRedirectLinks = jest.fn()
 export let mockGetShowDetails = jest.fn()
 export let mockGetSeasonDetails = jest.fn()
+export let mockGetArtistDetails = jest.fn()
 
 export const setUpMocks = () => {
     getRedirectLinks.prototype = mockGetRedirectLinks
@@ -17,4 +18,5 @@ export const setUpMocks = () => {
     MovieDb.prototype.searchMovie = mockSearchMovie
     MovieDb.prototype.seasonInfo = mockGetSeasonDetails
     MovieDb.prototype.searchPerson = mockSearchArtist
+    MovieDb.prototype.personInfo = mockGetArtistDetails
 }
