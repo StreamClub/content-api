@@ -35,4 +35,4 @@ const SeenContentSchema = new Schema<SeenContentType>({
 })
 SeenContentSchema.index({ userId: 1 })
 
-export const SeenContentModel = model<SeenContentType>('Watchlist', SeenContentSchema)
+export const SeenContentModel = model<SeenContentType>('SeenContent', SeenContentSchema)
