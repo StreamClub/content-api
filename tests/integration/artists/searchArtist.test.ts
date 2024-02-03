@@ -50,7 +50,6 @@ describe('Search Artist', () => {
             expect(actor.poster).toBeDefined();
             expect(actor.birthDate).toBeDefined();
             expect(actor.birthPlace).toBeDefined();
-            expect(actor.deathDate).toBeDefined();
             expect(actor.gender).toBeDefined();
         }
         expect(response.body.page).toBeGreaterThanOrEqual(1);

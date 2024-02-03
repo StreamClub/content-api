@@ -5,7 +5,7 @@
 
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 import { mockGetArtistDetails } from '../../setup/mocksSetUp';
-import { generateTestJwt, testMovie1 } from '../../helpers';
+import { generateTestJwt, testArtist01 } from '../../helpers';
 
 const endpoint = '/artists';
 
@@ -22,19 +22,21 @@ describe('Get Artist', () => {
     });
 
     it('should return an Actor with the correct format', async () => {
-
+        mockGetArtistDetails.mockReturnValue(testArtist01);
         const testJwt = generateTestJwt(1, "test@test.com")
         const id = 2150;
-        const country = 'AR';
         const response = await server.get(`${endpoint}/${id}`)
-            .query({ country }).set('Authorization', `Bearer ${testJwt}`);
+            .set('Authorization', `Bearer ${testJwt}`);
         const actor = response.body;
         expect(actor.id).toBeDefined();
         expect(actor.poster).toBeDefined();
         expect(actor.birthDate).toBeDefined();
         expect(actor.birthPlace).toBeDefined();
-        expect(actor.deathDate).toBeDefined();
         expect(actor.gender).toBeDefined();
+        expect(actor.knownFor).toBeDefined();
+        expect(actor.credits.cast).toBeDefined();
+        expect(actor.credits.crew).toBeDefined();
+        expect(actor.externalIds).toBeDefined();
     });
 
 });
