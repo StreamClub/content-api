@@ -39,7 +39,6 @@ describe('Get Season', () => {
         const country = 'AR';
         const response = await server.get(`${endpoint}/${seriesId}/seasons/${seasonId}`)
             .query({ country }).set('Authorization', `Bearer ${testJwt}`);
-        console.log(response.body);
         expect(response.status).toBe(404);
     });
 

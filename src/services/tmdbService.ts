@@ -1,6 +1,6 @@
 import { contentTypes, seriesStatus } from "@config";
 import { watchlistRepository } from "@dal";
-import { Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult, TmdbSeries, Series, NextEpisode, Season, ArtistResume } from "@entities";
+import { Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult, TmdbSeries, Series, NextEpisode, Season, ArtistResume, TmdbPerson, Artist } from "@entities";
 import { NotFoundException } from "@exceptions";
 import { getRedirectLinks } from "@utils";
 import AppDependencies from "appDependencies";
@@ -39,6 +39,16 @@ export class TmdbService {
             const providersData = await this.getProvidersData(this.contentTypes.SERIES, seriesId, country);
             return new Series(serie, country, providersData, nextEpisode);
         })
+    }
+
+    public async getArtist(artistId: string) {
+        return await this.getContentSafely(async () => {
+            const tmdbPerson = await this.tmdb.personInfo({
+                id: artistId, language: this.language,
+                append_to_response: 'combined_credits,external_ids'
+            }) as TmdbPerson;
+            return new Artist(tmdbPerson);
+        });
     }
 
     private async getNextEpisode(userId: string, serieId: number, seasons: TvSeasonResponse[], country: string) {
