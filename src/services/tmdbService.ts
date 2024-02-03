@@ -45,7 +45,7 @@ export class TmdbService {
         const filtered = seasons.filter(season => season.season_number > 0);
         if (filtered.length > 0) {
             const season = await this.getSeason(userId, serieId, filtered[0].season_number, country);
-            return new NextEpisode(season.episodes[0]);
+            return new NextEpisode(season.episodes[0], season.id);
         }
     }
 
