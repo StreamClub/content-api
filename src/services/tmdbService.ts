@@ -1,6 +1,9 @@
 import { contentTypes, seriesStatus } from "@config";
 import { watchlistRepository } from "@dal";
-import { Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult, TmdbSeries, Series, NextEpisode, Season, ArtistResume, TmdbPerson, Artist } from "@entities";
+import {
+    Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult,
+    TmdbSeries, Series, NextEpisode, Season, ArtistResume, TmdbPerson, Artist
+} from "@entities";
 import { NotFoundException } from "@exceptions";
 import { getRedirectLinks } from "@utils";
 import AppDependencies from "appDependencies";

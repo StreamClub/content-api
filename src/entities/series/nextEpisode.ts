@@ -1,5 +1,4 @@
 import { SeasonEpisode } from "@entities";
-import { Episode } from "moviedb-promise";
 
 export class NextEpisode {
     photo: string;
