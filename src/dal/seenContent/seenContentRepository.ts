@@ -17,9 +17,7 @@ class SeenContentRepository {
             {
                 userId,
                 'movies': {
-                    $not: {
-                        $elemMatch: { movieId }
-                    }
+                    $not: { $elemMatch: { movieId } }
                 },
             },
             {
@@ -28,6 +26,22 @@ class SeenContentRepository {
                         $each: [{ movieId }],
                         $position: 0
                     }
+                }
+            },
+        );
+    }
+
+    async removeMovie(userId: string, movieId: Number): Promise<void> {
+        await SeenContentModel.updateOne(
+            {
+                userId,
+                'movies': {
+                    $elemMatch: { movieId }
+                }
+            },
+            {
+                $pull: {
+                    movies: { movieId }
                 }
             },
         );

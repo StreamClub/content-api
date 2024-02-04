@@ -19,6 +19,11 @@ export class SeenContentService {
         await seenContentRepository.addMovie(userId, movieId);
     }
 
+    public async removeMovie(userId: string, movieId: number) {
+        this.failIfListDoesNotExist(userId);
+        await seenContentRepository.removeMovie(userId, movieId);
+    }
+
     private async failIfListDoesNotExist(userId: string) {
         const seenContent = await seenContentRepository.get(userId);
         if (!seenContent) {

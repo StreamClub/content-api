@@ -20,5 +20,11 @@ export function SeenContentRouter(dependencies: AppDependencies) {
         handleRequest((req, res) => seenContentController.addMovie(req, res), StatusCodes.CREATED)
     )
 
+    router.delete(
+        '/movies/:movieId',
+        loadUserContext,
+        handleRequest((req, res) => seenContentController.removeMovie(req, res), StatusCodes.NO_CONTENT)
+    )
+
     return router
 }

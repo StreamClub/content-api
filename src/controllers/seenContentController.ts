@@ -19,4 +19,11 @@ export class SeenContentController {
         const movieId = req.params.movieId;
         return await this.seenContentService.addMovie(userId, Number(movieId));
     }
+
+    public async removeMovie(req: Request<any>, res: Response<any>) {
+        const userId = res.locals.userId;
+        const movieId = req.params.movieId;
+        return await this.seenContentService.removeMovie(userId, Number(movieId));
+    }
+
 }
