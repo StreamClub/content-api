@@ -14,5 +14,11 @@ export function SeenContentRouter(dependencies: AppDependencies) {
         handleRequest((req, res) => seenContentController.create(req, res), StatusCodes.CREATED)
     )
 
+    router.put(
+        '/movies/:movieId',
+        loadUserContext,
+        handleRequest((req, res) => seenContentController.addMovie(req, res), StatusCodes.CREATED)
+    )
+
     return router
 }

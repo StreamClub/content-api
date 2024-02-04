@@ -12,6 +12,27 @@ class SeenContentRepository {
         return await SeenContentModel.findOne({ userId });
     }
 
+    async addMovie(userId: string, movieId: Number): Promise<void> {
+        await SeenContentModel.updateOne(
+            {
+                userId,
+                'movies': {
+                    $not: {
+                        $elemMatch: { movieId }
+                    }
+                },
+            },
+            {
+                $push: {
+                    movies: {
+                        $each: [{ movieId }],
+                        $position: 0
+                    }
+                }
+            },
+        );
+    }
+
 }
 
 export const seenContentRepository = new SeenContentRepository();

@@ -13,4 +13,17 @@ export class SeenContentService {
         }
         return await seenContentRepository.create(userId);
     }
+
+    public async addMovie(userId: string, movieId: number) {
+        this.failIfListDoesNotExist(userId);
+        await seenContentRepository.addMovie(userId, movieId);
+    }
+
+    private async failIfListDoesNotExist(userId: string) {
+        const seenContent = await seenContentRepository.get(userId);
+        if (!seenContent) {
+            throw new NotFoundException('Seen Content List does not exist');
+        }
+        return seenContent;
+    }
 }
