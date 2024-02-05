@@ -51,6 +51,78 @@ class SeenContentRepository {
         return !!seenContent;
     }
 
+    private async incrementTotalWatchedEpisodes(userId: string, seriesId: number) {
+        await SeenContentModel.updateOne(
+            { userId, 'series.seriesId': seriesId },
+            {
+                $inc: {
+                    'series.$.totalWatchedEpisodes': 1
+                }
+            }
+        );
+    }
+
+    public async addSeries(userId: string, seriesId: number, seasonId: number, episodeId: number) {
+        await SeenContentModel.updateOne(
+            { userId, 'series.seriesId': { $ne: seriesId } },
+            {
+                $push: {
+                    'series': {
+                        'seriesId': seriesId,
+                        'seasons': [{
+                            'seasonId': seasonId,
+                            'episodes': [{ 'episodeId': episodeId }],
+                        }],
+                        'totalWatchedEpisodes': 1
+                    }
+                }
+            }
+        );
+    }
+
+    public async addSeason(userId: string, seriesId: number, seasonId: number, episodeId: number) {
+        const result = await SeenContentModel.updateOne(
+            { userId, 'series.seriesId': seriesId, 'series.seasons.seasonId': { $ne: seasonId } },
+            {
+                $push: {
+                    'series.$.seasons': {
+                        seasonId,
+                        'episodes': [{ episodeId }],
+                    }
+                }
+            }
+        );
+
+        if (result.modifiedCount > 0) {
+            await this.incrementTotalWatchedEpisodes(userId, seriesId);
+        }
+    }
+
+    public async addEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
+
+        const result = await SeenContentModel.updateOne(
+            {
+                userId,
+                'series.seriesId': seriesId,
+                'series.seasons.seasonId': seasonId,
+                'series.seasons.episodes.episodeId': { $ne: episodeId }
+            },
+            {
+                $push: {
+                    'series.$.seasons.$[season].episodes': {
+                        'episodeId': episodeId,
+                    }
+                }
+            },
+            {
+                arrayFilters: [{ 'season.seasonId': seasonId }]
+            }
+        );
+        if (result.modifiedCount > 0) {
+            await this.incrementTotalWatchedEpisodes(userId, seriesId);
+        }
+    }
+
 }
 
 export const seenContentRepository = new SeenContentRepository();

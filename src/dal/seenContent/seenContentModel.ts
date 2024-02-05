@@ -1,5 +1,6 @@
 import { SeenContent } from '@entities'
 import { Document, model, Schema } from 'mongoose'
+import { SeenSeriesSchema } from './seenSeriesModel'
 
 type SeenContentType = SeenContent & Document
 
@@ -16,20 +17,7 @@ const SeenContentSchema = new Schema<SeenContentType>({
         default: [],
     },
     series: {
-        type: [{
-            seriesId: Number,
-            seasons: [{
-                seasonNumber: Number,
-                episodes: [{
-                    episodeNumber: Number,
-                }],
-            }],
-            totalWatchedEpisodes: Number,
-            nextEpisode: {
-                episodeNumber: Number,
-                seasonNumber: Number,
-            },
-        }],
+        type: [SeenSeriesSchema],
         default: [],
     },
 })

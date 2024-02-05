@@ -23,13 +23,32 @@ export class SeenContentService {
     }
 
     public async addMovie(userId: string, movieId: number) {
-        this.failIfListDoesNotExist(userId);
+        await this.failIfListDoesNotExist(userId);
         await seenContentRepository.addMovie(userId, movieId);
     }
 
     public async removeMovie(userId: string, movieId: number) {
-        this.failIfListDoesNotExist(userId);
+        await this.failIfListDoesNotExist(userId);
         await seenContentRepository.removeMovie(userId, movieId);
+    }
+
+    public async addEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
+        await this.failIfListDoesNotExist(userId);
+        const userDoc = await seenContentRepository.get(userId);
+
+        const series = userDoc.series.find(series => series.seriesId === seriesId);
+
+        if (!series) {
+            await seenContentRepository.addSeries(userId, seriesId, seasonId, episodeId);
+        } else {
+            const seasonIndex = series.seasons.findIndex(season => season.seasonId === seasonId);
+
+            if (seasonIndex === -1) {
+                await seenContentRepository.addSeason(userId, seriesId, seasonId, episodeId);
+            } else {
+                await seenContentRepository.addEpisode(userId, seriesId, seasonId, episodeId);
+            }
+        }
     }
 
     private async failIfListDoesNotExist(userId: string) {

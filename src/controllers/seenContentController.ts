@@ -33,4 +33,12 @@ export class SeenContentController {
         return await this.seenContentService.removeMovie(userId, Number(movieId));
     }
 
+    public async addEpisode(req: Request<any>, res: Response<any>) {
+        const userId = res.locals.userId;
+        const seriesId = req.params.seriesId;
+        const seasonId = req.params.seasonId;
+        const episodeId = req.params.episodeId;
+        return await this.seenContentService.addEpisode(userId, Number(seriesId), Number(seasonId), Number(episodeId));
+    }
+
 }

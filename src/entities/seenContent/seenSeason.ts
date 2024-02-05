@@ -1,11 +1,12 @@
+import { SeenEpisode } from "./seenEpisode";
 
 
 export class SeenSeason {
-    public id: number;
-    public episodes: number[];
+    public seasonId: number;
+    public episodes: SeenEpisode[];
 
     public constructor(seenSeason: SeenSeason) {
-        this.id = seenSeason.id;
-        this.episodes = seenSeason.episodes;
+        this.seasonId = seenSeason.seasonId;
+        this.episodes = seenSeason.episodes.map((episode) => new SeenEpisode(episode));
     }
 }

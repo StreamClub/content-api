@@ -18,7 +18,6 @@ export function exceptionToHttpError(
     code = e.code;
     description = e.description;
   } else {
-    console.log(error)
     code = StatusCodes.INTERNAL_SERVER_ERROR;
     description = 'Internal server error';
   }

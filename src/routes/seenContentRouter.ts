@@ -25,13 +25,22 @@ export function SeenContentRouter(dependencies: AppDependencies) {
     router.put(
         '/movies/:movieId',
         loadUserContext,
+        //validate schema
         handleRequest((req, res) => seenContentController.addMovie(req, res), StatusCodes.CREATED)
     )
 
     router.delete(
         '/movies/:movieId',
         loadUserContext,
+        //validate schema
         handleRequest((req, res) => seenContentController.removeMovie(req, res), StatusCodes.NO_CONTENT)
+    )
+
+    router.put(
+        '/series/:seriesId/seasons/:seasonId/episodes/:episodeId',
+        loadUserContext,
+        //validate schema
+        handleRequest((req, res) => seenContentController.addEpisode(req, res), StatusCodes.CREATED)
     )
 
     return router
