@@ -1,7 +1,10 @@
-export class SeenMovie {
+import { MongoObject } from "@dtos";
+
+export class SeenMovie extends MongoObject {
     public movieId: number;
 
-    public constructor(movieId: number) {
-        this.movieId = movieId;
+    public constructor(movie: SeenMovie) {
+        super(movie);
+        this.movieId = movie.movieId
     }
 }

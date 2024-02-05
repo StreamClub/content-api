@@ -1,4 +1,4 @@
-import { Watchlist } from "@entities";
+import { Page, UserContentList, Watchlist } from "@entities";
 import { watchlistRepository } from "@dal";
 import { AlreadyExistsException, NotFoundException } from "@exceptions";
 import AppDependencies from "appDependencies";
@@ -18,16 +18,8 @@ export class WatchlistService {
     public async get(userId: string, pageSize: number, pageNumber: number) {
         const foundWatchlist = await this.failIfWatchlistDoesNotExist(userId);
         const watchlist = new Watchlist(foundWatchlist);
-        const totalResults = watchlist.watchlist.length;
-        const totalPages = Math.ceil(totalResults / pageSize);
-        watchlist.watchlist = watchlist.watchlist.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
-        return {
-            userId: watchlist.userId,
-            results: watchlist.watchlist,
-            page: pageNumber,
-            totalResults,
-            totalPages,
-        };
+        const page = new Page(pageNumber, pageSize, watchlist.watchlist);
+        return new UserContentList(userId, page);
     }
 
     public async addContent(userId: string, contentId: string, contentType: string) {

@@ -1,8 +1,9 @@
-import { handleRequest, loadUserContext } from '@middlewares'
+import { FieldOptions, handleRequest, loadUserContext, validateSchema } from '@middlewares'
 import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import AppDependencies from 'appDependencies'
 import { SeenContentController } from '@controllers'
+import { GetContentListSchema } from '@dtos'
 
 export function SeenContentRouter(dependencies: AppDependencies) {
     const router = Router()
@@ -12,6 +13,13 @@ export function SeenContentRouter(dependencies: AppDependencies) {
         '/',
         loadUserContext,
         handleRequest((req, res) => seenContentController.create(req, res), StatusCodes.CREATED)
+    )
+
+    router.get(
+        '/movies/:userId',
+        loadUserContext,
+        validateSchema(GetContentListSchema, [FieldOptions.params, FieldOptions.query]),
+        handleRequest((req, res) => seenContentController.getMovies(req, res), StatusCodes.OK)
     )
 
     router.put(

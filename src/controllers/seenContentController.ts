@@ -14,6 +14,13 @@ export class SeenContentController {
         return await this.seenContentService.create(userId);
     }
 
+    public async getMovies(req: Request<any>, res: Response<any>) {
+        const userId = res.locals.userId;
+        const pageSize = Number(req.query.pageSize) || 20;
+        const pageNumber = Number(req.query.page) || 1;
+        return await this.seenContentService.getMovies(userId, pageSize, pageNumber);
+    }
+
     public async addMovie(req: Request<any>, res: Response<any>) {
         const userId = res.locals.userId;
         const movieId = req.params.movieId;

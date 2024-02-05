@@ -1,4 +1,5 @@
 import { seenContentRepository } from "@dal";
+import { Page, SeenContent, SeenMovie, UserContentList } from "@entities";
 import { AlreadyExistsException, NotFoundException } from "@exceptions";
 import AppDependencies from "appDependencies";
 
@@ -12,6 +13,13 @@ export class SeenContentService {
             throw new AlreadyExistsException('Seen Content List already exists');
         }
         return await seenContentRepository.create(userId);
+    }
+
+    public async getMovies(userId: string, pageSize: number, pageNumber: number) {
+        const found = await this.failIfListDoesNotExist(userId);
+        const seenMovies = found.movies.map((movie) => new SeenMovie(movie));
+        const page = new Page(pageNumber, pageSize, seenMovies);
+        return new UserContentList(userId, page);
     }
 
     public async addMovie(userId: string, movieId: number) {

@@ -9,7 +9,7 @@ export class SeenContent extends MongoObject {
     constructor(seenContent: SeenContent) {
         super(seenContent);
         this.userId = seenContent.userId;
-        this.movies = seenContent.movies;
-        this.series = seenContent.series;
+        this.movies = seenContent.movies.map((movie) => new SeenMovie(movie));
+        this.series = seenContent.series.map((series) => new SeenSeries(series));
     }
 }
