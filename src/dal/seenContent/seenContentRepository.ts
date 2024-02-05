@@ -35,14 +35,10 @@ class SeenContentRepository {
         await SeenContentModel.updateOne(
             {
                 userId,
-                'movies': {
-                    $elemMatch: { movieId }
-                }
+                'movies': { $elemMatch: { movieId } }
             },
             {
-                $pull: {
-                    movies: { movieId }
-                }
+                $pull: { movies: { movieId } }
             },
         );
     }
@@ -50,9 +46,7 @@ class SeenContentRepository {
     async isASeenMovie(userId: string, movieId: Number): Promise<boolean> {
         const seenContent = await SeenContentModel.findOne({
             userId,
-            'movies': {
-                $elemMatch: { movieId }
-            }
+            'movies': { $elemMatch: { movieId } }
         });
         return !!seenContent;
     }
