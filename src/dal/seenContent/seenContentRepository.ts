@@ -47,6 +47,16 @@ class SeenContentRepository {
         );
     }
 
+    async isASeenMovie(userId: string, movieId: Number): Promise<boolean> {
+        const seenContent = await SeenContentModel.findOne({
+            userId,
+            'movies': {
+                $elemMatch: { movieId }
+            }
+        });
+        return !!seenContent;
+    }
+
 }
 
 export const seenContentRepository = new SeenContentRepository();

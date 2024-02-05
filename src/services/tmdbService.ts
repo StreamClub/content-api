@@ -1,5 +1,5 @@
 import { contentTypes, seriesStatus } from "@config";
-import { watchlistRepository } from "@dal";
+import { seenContentRepository, watchlistRepository } from "@dal";
 import {
     Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult,
     TmdbSeries, Series, NextEpisode, Season, ArtistResume, TmdbPerson, Artist
@@ -75,6 +75,8 @@ export class TmdbService {
             const movieResume = new MovieResume(movie)
             movieResume.inWatchlist = await watchlistRepository
                 .isInWatchlist(userId, movie.id.toString(), contentTypes.MOVIE);
+            movieResume.seen = await seenContentRepository
+                .isASeenMovie(userId, movie.id);
             return movieResume;
         }));
         return new PaginatedResult(result.page, result.total_pages, result.total_results, movies);
