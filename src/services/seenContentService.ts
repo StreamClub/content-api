@@ -33,10 +33,8 @@ export class SeenContentService {
     }
 
     public async addEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
-        await this.failIfListDoesNotExist(userId);
-        const userDoc = await seenContentRepository.get(userId);
-
-        const series = userDoc.series.find(series => series.seriesId === seriesId);
+        const seenContent = await this.failIfListDoesNotExist(userId);
+        const series = seenContent.series.find(series => series.seriesId === seriesId);
 
         if (!series) {
             await seenContentRepository.addSeries(userId, seriesId, seasonId, episodeId);
@@ -50,6 +48,12 @@ export class SeenContentService {
             }
         }
     }
+
+    public async removeEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
+        await this.failIfListDoesNotExist(userId);
+        await seenContentRepository.removeEpisode(userId, seriesId, seasonId, episodeId);
+    }
+
 
     private async failIfListDoesNotExist(userId: string) {
         const seenContent = await seenContentRepository.get(userId);

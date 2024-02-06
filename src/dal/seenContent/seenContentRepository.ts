@@ -53,13 +53,13 @@ class SeenContentRepository {
         return !!seenContent;
     }
 
-    private async incrementTotalWatchedEpisodes(userId: string, seriesId: number, seasonId: number) {
+    private async incrementTotalWatchedEpisodes(userId: string, seriesId: number, seasonId: number, quantity = 1) {
         if (seasonId != this.SPECIALS_SEASON_ID) {
             await SeenContentModel.updateOne(
                 { userId, 'series.seriesId': seriesId },
                 {
                     $inc: {
-                        'series.$.totalWatchedEpisodes': 1
+                        'series.$.totalWatchedEpisodes': quantity
                     }
                 }
             );
@@ -104,7 +104,6 @@ class SeenContentRepository {
     }
 
     public async addEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
-
         const result = await SeenContentModel.updateOne(
             {
                 userId,
@@ -126,6 +125,27 @@ class SeenContentRepository {
         if (result.modifiedCount > 0) {
             await this.incrementTotalWatchedEpisodes(userId, seriesId, seasonId);
         }
+    }
+
+    public async removeEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
+        const result = await SeenContentModel.updateOne(
+            {
+                userId,
+                'series.seriesId': seriesId,
+                'series.seasons.seasonId': seasonId,
+                'series.seasons.episodes.episodeId': episodeId
+            },
+            {
+                $pull: { 'series.$.seasons.$[season].episodes': { episodeId } }
+            },
+            {
+                arrayFilters: [{ 'season.seasonId': seasonId }]
+            }
+        );
+        if (result.modifiedCount > 0) {
+            await this.incrementTotalWatchedEpisodes(userId, seriesId, seasonId, -1);
+        }
+
     }
 
 }
