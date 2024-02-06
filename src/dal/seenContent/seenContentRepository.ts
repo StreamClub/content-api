@@ -1,8 +1,8 @@
 import { SeenContent } from '@entities';
 import { SeenContentModel } from './seenContentModel'
+import { SPECIALS_SEASON_ID } from '@config';
 
 class SeenContentRepository {
-    private SPECIALS_SEASON_ID = 0;
 
     async create(userId: string): Promise<SeenContent> {
         const seenContent = new SeenContentModel({ userId });
@@ -54,7 +54,7 @@ class SeenContentRepository {
     }
 
     private async incrementTotalWatchedEpisodes(userId: string, seriesId: number, seasonId: number, quantity = 1) {
-        if (seasonId != this.SPECIALS_SEASON_ID) {
+        if (seasonId != SPECIALS_SEASON_ID) {
             await SeenContentModel.updateOne(
                 { userId, 'series.seriesId': seriesId },
                 {
@@ -67,7 +67,7 @@ class SeenContentRepository {
     }
 
     public async addSeries(userId: string, seriesId: number, seasonId: number, episodeId: number) {
-        const totalWatchedEpisodes = seasonId === this.SPECIALS_SEASON_ID ? 1 : 0;
+        const totalWatchedEpisodes = seasonId === SPECIALS_SEASON_ID ? 1 : 0;
         await SeenContentModel.updateOne(
             { userId, 'series.seriesId': { $ne: seriesId } },
             {
