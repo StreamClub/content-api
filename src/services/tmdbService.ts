@@ -62,7 +62,7 @@ export class TmdbService {
         }
     }
 
-    public async getSeason(userId: string, serieId: number, seasonNumber: number, country: string) {
+    public async getSeason(userId: string, serieId: number, seasonNumber: number, country: string): Promise<Season> {
         return await this.getContentSafely(async () => {
             const season = await this.tmdb.seasonInfo({ id: serieId, season_number: seasonNumber, language: this.language });
             return new Season(season);

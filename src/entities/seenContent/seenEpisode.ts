@@ -1,5 +1,3 @@
-
-
 export class SeenEpisode {
     public episodeId: number;
 
