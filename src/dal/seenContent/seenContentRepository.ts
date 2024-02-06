@@ -51,18 +51,21 @@ class SeenContentRepository {
         return !!seenContent;
     }
 
-    private async incrementTotalWatchedEpisodes(userId: string, seriesId: number) {
-        await SeenContentModel.updateOne(
-            { userId, 'series.seriesId': seriesId },
-            {
-                $inc: {
-                    'series.$.totalWatchedEpisodes': 1
+    private async incrementTotalWatchedEpisodes(userId: string, seriesId: number, seasonId: number) {
+        if (seasonId != 0) {
+            await SeenContentModel.updateOne(
+                { userId, 'series.seriesId': seriesId },
+                {
+                    $inc: {
+                        'series.$.totalWatchedEpisodes': 1
+                    }
                 }
-            }
-        );
+            );
+        }
     }
 
     public async addSeries(userId: string, seriesId: number, seasonId: number, episodeId: number) {
+        const totalWatchedEpisodes = seasonId === 0 ? 1 : 0;
         await SeenContentModel.updateOne(
             { userId, 'series.seriesId': { $ne: seriesId } },
             {
@@ -73,7 +76,7 @@ class SeenContentRepository {
                             'seasonId': seasonId,
                             'episodes': [{ 'episodeId': episodeId }],
                         }],
-                        'totalWatchedEpisodes': 1
+                        'totalWatchedEpisodes': totalWatchedEpisodes
                     }
                 }
             }
@@ -94,7 +97,7 @@ class SeenContentRepository {
         );
 
         if (result.modifiedCount > 0) {
-            await this.incrementTotalWatchedEpisodes(userId, seriesId);
+            await this.incrementTotalWatchedEpisodes(userId, seriesId, seasonId);
         }
     }
 
@@ -119,7 +122,7 @@ class SeenContentRepository {
             }
         );
         if (result.modifiedCount > 0) {
-            await this.incrementTotalWatchedEpisodes(userId, seriesId);
+            await this.incrementTotalWatchedEpisodes(userId, seriesId, seasonId);
         }
     }
 
