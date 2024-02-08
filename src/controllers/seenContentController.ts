@@ -51,6 +51,11 @@ export class SeenContentController {
         return await this.seenContentService.addSeries(userId, seriesId, seenSeasons);
     }
 
+    public async removeSeries(req: Request<any>, res: Response<any>) {
+        const userId = res.locals.userId;
+        const seriesId = Number(req.params.seriesId);
+        return await this.seenContentService.removeSeries(userId, seriesId);
+    }
 
     public async addSeason(req: Request<any>, res: Response<any>) {
         const userId = res.locals.userId;

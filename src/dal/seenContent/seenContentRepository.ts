@@ -88,6 +88,15 @@ class SeenContentRepository {
         );
     }
 
+    public async removeSeries(userId: string, seriesId: number) {
+        await SeenContentModel.updateOne(
+            { userId, 'series.seriesId': seriesId },
+            {
+                $pull: { 'series': { seriesId } }
+            }
+        );
+    }
+
     public async addNewSeason(userId: string, seriesId: number, seasonId: number, seenEpisodes: SeenEpisode[]) {
         const result = await SeenContentModel.updateOne(
             {

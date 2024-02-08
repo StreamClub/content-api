@@ -37,6 +37,11 @@ export class SeenContentService {
         await this.addSeasons(userId, seriesId, seasons, seenContent.series.find(series => series.seriesId === seriesId));
     }
 
+    public async removeSeries(userId: string, seriesId: number) {
+        await this.failIfListDoesNotExist(userId);
+        await seenContentRepository.removeSeries(userId, seriesId);
+    }
+
     private async addSeasons(userId: string, seriesId: number, seasons: SeenSeason[], seenSeries: SeenSeries) {
 
         if (!seenSeries) {
