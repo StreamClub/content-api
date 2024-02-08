@@ -2,12 +2,12 @@ import { contentTypes, seriesStatus } from "@config";
 import { seenContentRepository, watchlistRepository } from "@dal";
 import {
     Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult,
-    TmdbSeries, Series, NextEpisode, Season, ArtistResume, TmdbPerson, Artist, SeasonEpisode
+    TmdbSeries, Series, NextEpisode, Season, ArtistResume, TmdbPerson, Artist
 } from "@entities";
 import { NotFoundException } from "@exceptions";
 import { getRedirectLinks } from "@utils";
 import AppDependencies from "appDependencies";
-import { Episode, MovieDb, MovieResult, TvResult, TvSeasonResponse } from 'moviedb-promise'
+import { MovieDb, MovieResult, TvResult, TvSeasonResponse } from 'moviedb-promise'
 
 export class TmdbService {
     private tmdb: MovieDb;
