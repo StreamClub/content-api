@@ -2,7 +2,7 @@ import { contentTypes, seriesStatus } from "@config";
 import { seenContentRepository, watchlistRepository } from "@dal";
 import {
     Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult,
-    TmdbSeries, Series, NextEpisode, Season, ArtistResume, TmdbPerson, Artist
+    TmdbSeries, Series, NextEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode
 } from "@entities";
 import { NotFoundException } from "@exceptions";
 import { getRedirectLinks } from "@utils";
@@ -38,7 +38,7 @@ export class TmdbService {
                 id: seriesId, language: this.language,
                 append_to_response: 'credits,watch/providers,recommendations,videos'
             }) as TmdbSeries;
-            const nextEpisode = await this.getNextEpisode(userId, serie.id, serie.seasons, country);
+            const nextEpisode = await this.getNextEpisode(userId, serie.id, serie.seasons);
             const providersData = await this.getProvidersData(this.contentTypes.SERIES, seriesId, country);
             return new Series(serie, country, providersData, nextEpisode);
         })
@@ -63,11 +63,29 @@ export class TmdbService {
         });
     }
 
-    private async getNextEpisode(userId: string, serieId: number, seasons: TvSeasonResponse[], country: string) {
-        const filtered = seasons.filter(season => season.season_number > 0);
+    private async getNextEpisode(userId: string, serieId: number, seasons: TvSeasonResponse[]): Promise<NextEpisode> {
+        //TODO: revisar el caso que solo ha visto capitulos de la temporada especial
+        const lastSeenEpisode: SeenEpisode = await seenContentRepository.getLastSeenEpisode(userId, serieId);
+        if (!lastSeenEpisode) {
+            return this.getSeasonFirstEpisode(serieId, 1, seasons);
+        } else {
+            const season = await this.getSeason(serieId, lastSeenEpisode.seasonId);
+            const nextEpisode = season.episodes.find(episode => episode.episodeId === lastSeenEpisode.episodeId + 1);
+            if (nextEpisode) {
+                return new NextEpisode(nextEpisode, season.id);
+            } else {
+                return await this.getSeasonFirstEpisode(serieId, lastSeenEpisode.seasonId + 1, seasons);
+            }
+        }
+    }
+
+    private async getSeasonFirstEpisode(serieId: number, seasonId: number, showSeasons: TvSeasonResponse[]) {
+        const filtered = showSeasons.filter(season => season.season_number === seasonId);
         if (filtered.length > 0) {
-            const season = await this.getSeason(serieId, filtered[0].season_number);
+            const season = await this.getSeason(serieId, seasonId);
             return new NextEpisode(season.episodes[0], season.id);
+        } else {
+            return null;
         }
     }
 

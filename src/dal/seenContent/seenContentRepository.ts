@@ -1,4 +1,4 @@
-import { SeenContent, SeenEpisode, SeenSeason } from '@entities';
+import { NextEpisode, SeenContent, SeenEpisode, SeenSeason } from '@entities';
 import { SeenContentModel } from './seenContentModel'
 import { SPECIALS_SEASON_ID } from '@config';
 
@@ -211,6 +211,20 @@ class SeenContentRepository {
                 }
             );
         }
+    }
+
+    public async getLastSeenEpisode(userId: string, seriesId: number): Promise<SeenEpisode> {
+        const seenContent = await SeenContentModel.findOne({ userId, 'series.seriesId': seriesId });
+        if (seenContent) {
+            const series = seenContent.series.find(series => series.seriesId === seriesId);
+            if (series) {
+                return {
+                    seasonId: series.lastSeenEpisode.seasonId,
+                    episodeId: series.lastSeenEpisode.episodeId
+                };
+            }
+        }
+        return null;
     }
 
 }
