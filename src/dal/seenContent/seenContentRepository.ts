@@ -1,4 +1,4 @@
-import { SeenContent, SeenEpisode } from '@entities';
+import { SeenContent, SeenEpisode, SeenSeason } from '@entities';
 import { SeenContentModel } from './seenContentModel'
 import { SPECIALS_SEASON_ID } from '@config';
 
@@ -66,8 +66,13 @@ class SeenContentRepository {
         }
     }
 
-    public async addSeries(userId: string, seriesId: number, seasonId: number, seenEpisodes: SeenEpisode[]) {
-        const totalWatchedEpisodes = seasonId !== SPECIALS_SEASON_ID ? seenEpisodes.length : 0;
+    public async addSeries(userId: string, seriesId: number, seenSeasons: SeenSeason[]) {
+        const seasonsData = seenSeasons.map(seenSeason => ({
+            'seasonId': seenSeason.seasonId,
+            'episodes': seenSeason.episodes.map(seenEpisode => ({ 'episodeId': seenEpisode.episodeId })),
+        }));
+
+        const totalWatchedEpisodes = seasonsData.reduce((total, season) => total + season.episodes.length, 0);
 
         await SeenContentModel.updateOne(
             { userId, 'series.seriesId': { $ne: seriesId } },
@@ -75,10 +80,7 @@ class SeenContentRepository {
                 $push: {
                     'series': {
                         'seriesId': seriesId,
-                        'seasons': [{
-                            'seasonId': seasonId,
-                            'episodes': seenEpisodes.map(seenEpisode => ({ 'episodeId': seenEpisode.episodeId })),
-                        }],
+                        'seasons': seasonsData,
                         'totalWatchedEpisodes': totalWatchedEpisodes
                     }
                 }
@@ -86,7 +88,7 @@ class SeenContentRepository {
         );
     }
 
-    public async addSeason(userId: string, seriesId: number, seasonId: number, seenEpisodes: SeenEpisode[]) {
+    public async addNewSeason(userId: string, seriesId: number, seasonId: number, seenEpisodes: SeenEpisode[]) {
         const result = await SeenContentModel.updateOne(
             {
                 userId,
@@ -100,6 +102,29 @@ class SeenContentRepository {
                         'episodes': seenEpisodes.map(seenEpisode => ({ 'episodeId': seenEpisode.episodeId })),
                     }
                 }
+            }
+        );
+        if (result.modifiedCount > 0) {
+            await this.incrementTotalWatchedEpisodes(userId, seriesId, seasonId, seenEpisodes.length);
+        }
+    }
+
+    public async addToSeason(userId: string, seriesId: number, seasonId: number, seenEpisodes: SeenEpisode[]) {
+        const result = await SeenContentModel.updateOne(
+            {
+                userId,
+                'series.seriesId': seriesId,
+                'series.seasons.seasonId': seasonId,
+            },
+            {
+                $push: {
+                    'series.$.seasons.$[season].episodes': {
+                        $each: seenEpisodes.map(seenEpisode => ({ 'episodeId': seenEpisode.episodeId })),
+                    }
+                }
+            },
+            {
+                arrayFilters: [{ 'season.seasonId': seasonId }]
             }
         );
         if (result.modifiedCount > 0) {

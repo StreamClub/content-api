@@ -21,7 +21,7 @@ export class TmdbService {
         this.tmdb = new MovieDb(process.env.TMDB_API_KEY);
     }
 
-    public async getMovie(movieId: string, country: string): Promise<Movie> {
+    public async getMovie(movieId: number, country: string): Promise<Movie> {
         return await this.getContentSafely(async () => {
             const movie = await this.tmdb.movieInfo({
                 id: movieId, language: this.language,
@@ -32,7 +32,7 @@ export class TmdbService {
         })
     }
 
-    public async getSeries(userId: string, seriesId: string, country: string) {
+    public async getSeries(userId: string, seriesId: number, country: string): Promise<Series> {
         return await this.getContentSafely(async () => {
             const serie = await this.tmdb.tvInfo({
                 id: seriesId, language: this.language,
@@ -105,7 +105,7 @@ export class TmdbService {
         return new PaginatedResult(result.page, result.total_pages, result.total_results, artists);
     }
 
-    private async getProvidersData(contentType: string, contentId: string, country: string) {
+    private async getProvidersData(contentType: string, contentId: number, country: string) {
         const providersUrl = `https://www.themoviedb.org/${contentType}/${contentId}/watch?locale=${country}`;
         return await getRedirectLinks(providersUrl);
     }

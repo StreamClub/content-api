@@ -1,5 +1,5 @@
 import { seenContentRepository } from "@dal";
-import { Page, SeenContent, SeenEpisode, SeenMovie, UserContentList } from "@entities";
+import { Page, SeenContent, SeenEpisode, SeenMovie, SeenSeason, SeenSeries, UserContentList } from "@entities";
 import { AlreadyExistsException, NotFoundException } from "@exceptions";
 import AppDependencies from "appDependencies";
 
@@ -32,15 +32,34 @@ export class SeenContentService {
         await seenContentRepository.removeMovie(userId, movieId);
     }
 
+    public async addSeries(userId: string, seriesId: number, seasons: SeenSeason[]) {
+        const seenContent = await this.failIfListDoesNotExist(userId);
+        await this.addSeasons(userId, seriesId, seasons, seenContent.series.find(series => series.seriesId === seriesId));
+    }
+
+    private async addSeasons(userId: string, seriesId: number, seasons: SeenSeason[], seenSeries: SeenSeries) {
+
+        if (!seenSeries) {
+            await seenContentRepository.addSeries(userId, seriesId, seasons);
+        } else {
+            seasons.forEach(season => {
+                const seasonIndex = seenSeries.seasons.findIndex(seenSeason => seenSeason.seasonId === season.seasonId);
+                console.log(seasonIndex)
+                if (seasonIndex === -1) {
+                    seenContentRepository.addNewSeason(userId, seriesId, season.seasonId, season.episodes);
+                } else {
+                    const existingEpisodeIds = seenSeries.seasons[seasonIndex].episodes.map(ep => ep.episodeId);
+                    const newEpisodes = season.episodes.filter(episode => !existingEpisodeIds.includes(episode.episodeId));
+                    seenContentRepository.addToSeason(userId, seriesId, season.seasonId, newEpisodes);
+                }
+            });
+        }
+    }
+
     public async addSeason(userId: string, seriesId: number, seasonId: number, episodes: SeenEpisode[]) {
         const seenContent = await this.failIfListDoesNotExist(userId);
         const series = seenContent.series.find(series => series.seriesId === seriesId);
-
-        if (!series) {
-            await seenContentRepository.addSeries(userId, seriesId, seasonId, episodes);
-        } else {
-            await seenContentRepository.addSeason(userId, seriesId, seasonId, episodes);
-        }
+        await this.addSeasons(userId, seriesId, [new SeenSeason({ seasonId, episodes })], series);
     }
 
     public async removeSeason(userId: string, seriesId: number, seasonId: number) {
@@ -58,12 +77,13 @@ export class SeenContentService {
         const series = seenContent.series.find(series => series.seriesId === seriesId);
 
         if (!series) {
-            await seenContentRepository.addSeries(userId, seriesId, seasonId, seenEpisodes);
+            const seenSeasons = [new SeenSeason({ seasonId, episodes: seenEpisodes })];
+            await seenContentRepository.addSeries(userId, seriesId, seenSeasons);
         } else {
             const seasonIndex = series.seasons.findIndex(season => season.seasonId === seasonId);
 
             if (seasonIndex === -1) {
-                await seenContentRepository.addSeason(userId, seriesId, seasonId, seenEpisodes);
+                await seenContentRepository.addNewSeason(userId, seriesId, seasonId, seenEpisodes);
             } else {
                 await seenContentRepository.addEpisode(userId, seriesId, seasonId, episodeId);
             }

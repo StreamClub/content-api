@@ -37,6 +37,13 @@ export function SeenContentRouter(dependencies: AppDependencies) {
     )
 
     router.put(
+        '/series/:seriesId',
+        loadUserContext,
+        //validate schema
+        handleRequest((req, res) => seenContentController.addSeries(req, res), StatusCodes.CREATED)
+    )
+
+    router.put(
         '/series/:seriesId/seasons/:seasonId',
         loadUserContext,
         //validate schema
