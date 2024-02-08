@@ -198,17 +198,19 @@ class SeenContentRepository {
     }
 
     public async addLastSeenEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
-        await SeenContentModel.updateOne(
-            { userId, 'series.seriesId': seriesId },
-            {
-                $set: {
-                    'series.$.lastSeenEpisode': {
-                        seasonId,
-                        episodeId
+        if (seasonId !== SPECIALS_SEASON_ID) {
+            await SeenContentModel.updateOne(
+                { userId, 'series.seriesId': seriesId },
+                {
+                    $set: {
+                        'series.$.lastSeenEpisode': {
+                            seasonId,
+                            episodeId
+                        }
                     }
                 }
-            }
-        );
+            );
+        }
     }
 
 }
