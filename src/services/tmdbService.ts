@@ -64,7 +64,6 @@ export class TmdbService {
     }
 
     private async getNextEpisode(userId: string, serieId: number, seasons: TvSeasonResponse[]): Promise<NextEpisode> {
-        //TODO: revisar el caso que solo ha visto capitulos de la temporada especial
         const lastSeenEpisode: SeenEpisode = await seenContentRepository.getLastSeenEpisode(userId, serieId);
         if (!lastSeenEpisode) {
             return this.getSeasonFirstEpisode(serieId, 1, seasons);

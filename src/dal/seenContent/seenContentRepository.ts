@@ -1,4 +1,4 @@
-import { NextEpisode, SeenContent, SeenEpisode, SeenSeason } from '@entities';
+import { SeenContent, SeenEpisode, SeenSeason } from '@entities';
 import { SeenContentModel } from './seenContentModel'
 import { SPECIALS_SEASON_ID } from '@config';
 
@@ -72,7 +72,12 @@ class SeenContentRepository {
             'episodes': seenSeason.episodes.map(seenEpisode => ({ 'episodeId': seenEpisode.episodeId })),
         }));
 
-        const totalWatchedEpisodes = seasonsData.reduce((total, season) => total + season.episodes.length, 0);
+        const totalWatchedEpisodes = seasonsData.reduce((total, season) => {
+            if (season.seasonId !== SPECIALS_SEASON_ID) {
+                return total + season.episodes.length;
+            }
+            return total;
+        }, 0);
 
         await SeenContentModel.updateOne(
             { userId, 'series.seriesId': { $ne: seriesId } },
@@ -217,7 +222,7 @@ class SeenContentRepository {
         const seenContent = await SeenContentModel.findOne({ userId, 'series.seriesId': seriesId });
         if (seenContent) {
             const series = seenContent.series.find(series => series.seriesId === seriesId);
-            if (series) {
+            if (series && series.lastSeenEpisode.seasonId) {
                 return {
                     seasonId: series.lastSeenEpisode.seasonId,
                     episodeId: series.lastSeenEpisode.episodeId

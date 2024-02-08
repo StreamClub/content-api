@@ -27,7 +27,7 @@ export class Season {
     toSeenEpisodes = () => {
         const airedEpisodes = this.getAiredEpisodes();
         return airedEpisodes.map(episode => {
-            return { episodeId: episode.episodeId };
+            return { episodeId: episode.episodeId, seasonId: this.id };
         })
     }
 

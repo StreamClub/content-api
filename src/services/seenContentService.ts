@@ -81,7 +81,7 @@ export class SeenContentService {
 
     public async addEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
         const seenContent = await this.failIfListDoesNotExist(userId);
-        const seenEpisodes: SeenEpisode[] = [{ episodeId }];
+        const seenEpisodes: SeenEpisode[] = [{ seasonId, episodeId }];
         const series = seenContent.series.find(series => series.seriesId === seriesId);
 
         if (!series) {
