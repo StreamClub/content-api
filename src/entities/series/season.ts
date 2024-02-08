@@ -27,8 +27,22 @@ export class Season {
     toSeenEpisodes = () => {
         const airedEpisodes = this.getAiredEpisodes();
         return airedEpisodes.map(episode => {
-            return { episodeId: episode.episodeNumber };
+            return { episodeId: episode.episodeId };
         })
+    }
+
+    getLastAiredEpisode = () => {
+        return this.getAiredEpisodes().reduce((prev, current) => (prev.airDate > current.airDate) ? prev : current);
+    }
+
+    getLatestEpisode = (seenEpisode: SeasonEpisode) => {
+        if (!seenEpisode) {
+            seenEpisode = this.getLastAiredEpisode();
+        }
+        if (seenEpisode.seasonId < this.getLastAiredEpisode().seasonId) {
+            seenEpisode = this.getLastAiredEpisode();
+        }
+        return seenEpisode;
 
     }
 }

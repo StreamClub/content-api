@@ -44,9 +44,9 @@ export class TmdbService {
         })
     }
 
-    public async getEpisode(serieId: number, seasonNumber: number, episodeNumber: number) {
-        const season = await this.getSeason(serieId, seasonNumber);
-        const episode = season.episodes.find(episode => episode.episodeNumber === episodeNumber);
+    public async getEpisode(serieId: number, seasonId: number, episodeNumber: number) {
+        const season = await this.getSeason(serieId, seasonId);
+        const episode = season.episodes.find(episode => episode.episodeId === episodeNumber);
         if (!episode) {
             throw new NotFoundException('El episodio no existe');
         }
@@ -71,9 +71,9 @@ export class TmdbService {
         }
     }
 
-    public async getSeason(serieId: number, seasonNumber: number): Promise<Season> {
+    public async getSeason(serieId: number, seasonId: number): Promise<Season> {
         return await this.getContentSafely(async () => {
-            const season = await this.tmdb.seasonInfo({ id: serieId, season_number: seasonNumber, language: this.language });
+            const season = await this.tmdb.seasonInfo({ id: serieId, season_number: seasonId, language: this.language });
             return new Season(season);
         });
     }

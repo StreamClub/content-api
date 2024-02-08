@@ -43,12 +43,14 @@ export class SeenContentController {
         const seriesId = Number(req.params.seriesId);
         const series = await this.tmdbService.getSeries(userId, seriesId, 'AR');
         const seasons = series.seasons.filter(season => season.id !== SPECIALS_SEASON_ID);
+        let latestSeenEpisode: SeasonEpisode = null;
         const seenSeasons: SeenSeason[] = await Promise.all(seasons.map(async (season) => {
             const seasonInfo: Season = await this.tmdbService.getSeason(seriesId, season.id);
             const episodes: SeenEpisode[] = seasonInfo.toSeenEpisodes();
+            latestSeenEpisode = seasonInfo.getLatestEpisode(latestSeenEpisode);
             return new SeenSeason({ seasonId: season.id, episodes });
         }));
-        return await this.seenContentService.addSeries(userId, seriesId, seenSeasons);
+        return await this.seenContentService.addSeries(userId, seriesId, seenSeasons, latestSeenEpisode);
     }
 
     public async removeSeries(req: Request<any>, res: Response<any>) {
@@ -63,7 +65,8 @@ export class SeenContentController {
         const seasonId = Number(req.params.seasonId);
         const season = await this.tmdbService.getSeason(seriesId, seasonId);
         const episodes: SeenEpisode[] = season.toSeenEpisodes();
-        return await this.seenContentService.addSeason(userId, seriesId, seasonId, episodes);
+        const lastSeenEpisode = season.getLatestEpisode(null);
+        return await this.seenContentService.addSeason(userId, seriesId, seasonId, episodes, lastSeenEpisode);
     }
 
     public async removeSeason(req: Request<any>, res: Response<any>) {

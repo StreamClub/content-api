@@ -17,8 +17,8 @@ export const SeenSeriesSchema = new Schema<SeenSeriesType>({
         type: Number,
         default: 0,
     },
-    nextEpisode: {
-        episodeNumber: Number,
+    lastSeenEpisode: {
+        episodeId: Number,
         seasonId: Number,
     },
 }, { _id: false })

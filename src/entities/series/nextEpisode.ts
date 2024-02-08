@@ -4,14 +4,14 @@ export class NextEpisode {
     photo: string;
     airDate: string;
     name: string;
-    episodeNumber: number;
-    seasonNumber: number;
+    episodeId: number;
+    seasonId: number;
 
-    constructor(episode: SeasonEpisode, seasonNumber: number) {
+    constructor(episode: SeasonEpisode, seasonId: number) {
         this.photo = episode.poster;
         this.airDate = episode.airDate;
         this.name = episode.name;
-        this.episodeNumber = episode.episodeNumber;
-        this.seasonNumber = seasonNumber;
+        this.episodeId = episode.episodeId;
+        this.seasonId = seasonId;
     }
 }

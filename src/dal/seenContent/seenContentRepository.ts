@@ -195,7 +195,20 @@ class SeenContentRepository {
         if (result.modifiedCount > 0) {
             await this.incrementTotalWatchedEpisodes(userId, seriesId, seasonId, -1);
         }
+    }
 
+    public async addLastSeenEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
+        await SeenContentModel.updateOne(
+            { userId, 'series.seriesId': seriesId },
+            {
+                $set: {
+                    'series.$.lastSeenEpisode': {
+                        seasonId,
+                        episodeId
+                    }
+                }
+            }
+        );
     }
 
 }

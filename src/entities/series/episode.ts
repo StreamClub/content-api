@@ -3,7 +3,8 @@ import { EpisodeResult } from "moviedb-promise";
 
 export class SeasonEpisode {
     airDate: string;
-    episodeNumber: number;
+    episodeId: number;
+    seasonId: number;
     name: string;
     overview: string;
     runtime: string;
@@ -11,7 +12,8 @@ export class SeasonEpisode {
 
     constructor(tmdbEpisode: EpisodeResult) {
         this.airDate = tmdbEpisode.air_date;
-        this.episodeNumber = tmdbEpisode.episode_number;
+        this.episodeId = tmdbEpisode.episode_number;
+        this.seasonId = tmdbEpisode.season_number;
         this.name = tmdbEpisode.name;
         this.overview = tmdbEpisode.overview;
         this.runtime = tmdbEpisode.runtime;

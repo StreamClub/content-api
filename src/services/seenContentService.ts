@@ -1,5 +1,5 @@
 import { seenContentRepository } from "@dal";
-import { Page, SeenContent, SeenEpisode, SeenMovie, SeenSeason, SeenSeries, UserContentList } from "@entities";
+import { Page, SeasonEpisode, SeenContent, SeenEpisode, SeenMovie, SeenSeason, SeenSeries, UserContentList } from "@entities";
 import { AlreadyExistsException, NotFoundException } from "@exceptions";
 import AppDependencies from "appDependencies";
 
@@ -32,9 +32,11 @@ export class SeenContentService {
         await seenContentRepository.removeMovie(userId, movieId);
     }
 
-    public async addSeries(userId: string, seriesId: number, seasons: SeenSeason[]) {
+    public async addSeries(userId: string, seriesId: number, seasons: SeenSeason[], latestSeenEpisode: SeasonEpisode) {
         const seenContent = await this.failIfListDoesNotExist(userId);
         await this.addSeasons(userId, seriesId, seasons, seenContent.series.find(series => series.seriesId === seriesId));
+        await seenContentRepository.addLastSeenEpisode(userId, seriesId,
+            latestSeenEpisode.seasonId, latestSeenEpisode.episodeId);
     }
 
     public async removeSeries(userId: string, seriesId: number) {
@@ -60,10 +62,12 @@ export class SeenContentService {
         }
     }
 
-    public async addSeason(userId: string, seriesId: number, seasonId: number, episodes: SeenEpisode[]) {
+    public async addSeason(userId: string, seriesId: number, seasonId: number, episodes: SeenEpisode[], latestSeenEpisode: SeasonEpisode) {
         const seenContent = await this.failIfListDoesNotExist(userId);
         const series = seenContent.series.find(series => series.seriesId === seriesId);
         await this.addSeasons(userId, seriesId, [new SeenSeason({ seasonId, episodes })], series);
+        await seenContentRepository.addLastSeenEpisode(userId, seriesId,
+            latestSeenEpisode.seasonId, latestSeenEpisode.episodeId);
     }
 
     public async removeSeason(userId: string, seriesId: number, seasonId: number) {
@@ -92,6 +96,7 @@ export class SeenContentService {
                 await seenContentRepository.addEpisode(userId, seriesId, seasonId, episodeId);
             }
         }
+        await seenContentRepository.addLastSeenEpisode(userId, seriesId, seasonId, episodeId);
     }
 
     public async removeEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
