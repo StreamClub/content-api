@@ -44,7 +44,7 @@ export class SeenContentController {
         const series = await this.tmdbService.getSeries(userId, seriesId, 'AR');
         const seasons = series.seasons.filter(season => season.id !== SPECIALS_SEASON_ID);
         const seenSeasons: SeenSeason[] = await Promise.all(seasons.map(async (season) => {
-            const seasonInfo: Season = await this.tmdbService.getSeason(userId, seriesId, season.id, 'AR');
+            const seasonInfo: Season = await this.tmdbService.getSeason(seriesId, season.id);
             const episodes: SeenEpisode[] = seasonInfo.toSeenEpisodes();
             return new SeenSeason({ seasonId: season.id, episodes });
         }));
@@ -56,7 +56,7 @@ export class SeenContentController {
         const userId = res.locals.userId;
         const seriesId = Number(req.params.seriesId);
         const seasonId = Number(req.params.seasonId);
-        const season = await this.tmdbService.getSeason(userId, seriesId, seasonId, 'AR');
+        const season = await this.tmdbService.getSeason(seriesId, seasonId);
         const episodes: SeenEpisode[] = season.toSeenEpisodes();
         return await this.seenContentService.addSeason(userId, seriesId, seasonId, episodes);
     }
@@ -70,10 +70,14 @@ export class SeenContentController {
 
     public async addEpisode(req: Request<any>, res: Response<any>) {
         const userId = res.locals.userId;
-        const seriesId = req.params.seriesId;
-        const seasonId = req.params.seasonId;
-        const episodeId = req.params.episodeId;
-        return await this.seenContentService.addEpisode(userId, Number(seriesId), Number(seasonId), Number(episodeId));
+        const seriesId = Number(req.params.seriesId);
+        const seasonId = Number(req.params.seasonId);
+        const episodeId = Number(req.params.episodeId);
+        const episode: SeasonEpisode = await this.tmdbService.getEpisode(seriesId, seasonId, episodeId);
+        if (moment(episode.airDate).format('YYYY-MM-DD') > moment().format('YYYY-MM-DD')) {
+            throw new Error('El episodio no se ha estrenado');
+        }
+        return await this.seenContentService.addEpisode(userId, seriesId, seasonId, episodeId);
     }
 
     public async removeEpisode(req: Request<any>, res: Response<any>) {

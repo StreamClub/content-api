@@ -2,12 +2,12 @@ import { contentTypes, seriesStatus } from "@config";
 import { seenContentRepository, watchlistRepository } from "@dal";
 import {
     Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult,
-    TmdbSeries, Series, NextEpisode, Season, ArtistResume, TmdbPerson, Artist
+    TmdbSeries, Series, NextEpisode, Season, ArtistResume, TmdbPerson, Artist, SeasonEpisode
 } from "@entities";
 import { NotFoundException } from "@exceptions";
 import { getRedirectLinks } from "@utils";
 import AppDependencies from "appDependencies";
-import { MovieDb, MovieResult, TvResult, TvSeasonResponse } from 'moviedb-promise'
+import { Episode, MovieDb, MovieResult, TvResult, TvSeasonResponse } from 'moviedb-promise'
 
 export class TmdbService {
     private tmdb: MovieDb;
@@ -44,6 +44,15 @@ export class TmdbService {
         })
     }
 
+    public async getEpisode(serieId: number, seasonNumber: number, episodeNumber: number) {
+        const season = await this.getSeason(serieId, seasonNumber);
+        const episode = season.episodes.find(episode => episode.episodeNumber === episodeNumber);
+        if (!episode) {
+            throw new NotFoundException('El episodio no existe');
+        }
+        return episode;
+    }
+
     public async getArtist(artistId: string) {
         return await this.getContentSafely(async () => {
             const tmdbPerson = await this.tmdb.personInfo({
@@ -57,12 +66,12 @@ export class TmdbService {
     private async getNextEpisode(userId: string, serieId: number, seasons: TvSeasonResponse[], country: string) {
         const filtered = seasons.filter(season => season.season_number > 0);
         if (filtered.length > 0) {
-            const season = await this.getSeason(userId, serieId, filtered[0].season_number, country);
+            const season = await this.getSeason(serieId, filtered[0].season_number);
             return new NextEpisode(season.episodes[0], season.id);
         }
     }
 
-    public async getSeason(userId: string, serieId: number, seasonNumber: number, country: string): Promise<Season> {
+    public async getSeason(serieId: number, seasonNumber: number): Promise<Season> {
         return await this.getContentSafely(async () => {
             const season = await this.tmdb.seasonInfo({ id: serieId, season_number: seasonNumber, language: this.language });
             return new Season(season);
