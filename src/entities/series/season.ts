@@ -1,4 +1,5 @@
 import { SeasonEpisode } from "@entities";
+import moment from "moment";
 import { EpisodeResult, TvSeasonResponse } from "moviedb-promise";
 
 
@@ -17,5 +18,17 @@ export class Season {
         this.overview = tmdbSeason.overview;
         this.poster = tmdbSeason.poster_path;
         this.episodes = tmdbSeason.episodes.map((episode: EpisodeResult) => new SeasonEpisode(episode));
+    }
+
+    getAiredEpisodes = () => {
+        return this.episodes.filter(episode => moment(episode.airDate).format('YYYY-MM-DD') <= moment().format('YYYY-MM-DD'));
+    }
+
+    toSeenEpisodes = () => {
+        const airedEpisodes = this.getAiredEpisodes();
+        return airedEpisodes.map(episode => {
+            return { episodeId: episode.episodeNumber };
+        })
+
     }
 }
