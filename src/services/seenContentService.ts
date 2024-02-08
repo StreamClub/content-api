@@ -49,7 +49,6 @@ export class SeenContentService {
         } else {
             seasons.forEach(season => {
                 const seasonIndex = seenSeries.seasons.findIndex(seenSeason => seenSeason.seasonId === season.seasonId);
-                console.log(seasonIndex)
                 if (seasonIndex === -1) {
                     seenContentRepository.addNewSeason(userId, seriesId, season.seasonId, season.episodes);
                 } else {
