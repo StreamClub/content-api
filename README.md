@@ -18,3 +18,5 @@ Si por algun motivo tienen que borrar todas las imagenes ejecutar:
 ```
 sudo docker system prune -a --volumes
 ```
+## Requisitos: 
+Node: v20.11.0
