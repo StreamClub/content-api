@@ -34,7 +34,8 @@
     "prettier": "^3.0.3",
     "supertest": "^6.3.3",
     "ts-case-convert": "^2.0.6",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",

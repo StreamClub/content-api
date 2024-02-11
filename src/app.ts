@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { exceptionToHttpError } from '@middlewares'
+import { exceptionToHttpError, loggerMiddleware } from '@middlewares'
 import { registerRouters } from '@routes'
 import AppDependencies from './appDependencies'
 import { toCamelCase } from '@middlewares'
@@ -11,7 +11,7 @@ export class App {
         this.dependencies = dependencies
     }
 
-    public async start() {
+    public async start(production: boolean = true) {
         await this.dependencies.db.start()
         const app = express()
 
@@ -20,6 +20,9 @@ export class App {
         app.use(toCamelCase())
         registerRouters(app, this.dependencies)
         app.use(exceptionToHttpError)
+        if (production) {
+            app.use(loggerMiddleware);
+        };
         return app
     }
 }

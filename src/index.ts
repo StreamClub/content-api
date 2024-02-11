@@ -5,6 +5,7 @@ import AppDependencies from './appDependencies'
 import { Db } from '@dal'
 import { config } from '@config'
 import http from 'http'
+import { logger } from '@utils'
 
 const startServerDependencies = (): AppDependencies => {
     const db = new Db(config.dbUrl)
@@ -18,6 +19,6 @@ const dependencies = startServerDependencies()
 new App(dependencies).start().then((app) => {
     const server = http.createServer(app)
     server.listen(config.port, () => {
-        console.log(`Content API listening on port ${config.port}`)
+        logger.info(`Content API listening on port ${config.port}`)
     })
 })
