@@ -26,7 +26,7 @@ export function WatchlistRouter(dependencies: AppDependencies) {
         '/',
         loadUserContext,
         validateSchema(AddContentSchema, [FieldOptions.params, FieldOptions.body]),
-        handleRequest((req, res) => watchlistController.addContent(req, res), StatusCodes.OK)
+        handleRequest((req, res) => watchlistController.addContent(req, res), StatusCodes.CREATED)
     )
 
     router.delete(

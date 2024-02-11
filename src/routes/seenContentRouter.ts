@@ -3,7 +3,7 @@ import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import AppDependencies from 'appDependencies'
 import { SeenContentController } from '@controllers'
-import { GetContentListSchema } from '@dtos'
+import { AddSeenMovieSchema, GetContentListSchema } from '@dtos'
 
 export function SeenContentRouter(dependencies: AppDependencies) {
     const router = Router()
@@ -25,14 +25,14 @@ export function SeenContentRouter(dependencies: AppDependencies) {
     router.put(
         '/movies/:movieId',
         loadUserContext,
-        //validate schema
+        validateSchema(AddSeenMovieSchema, [FieldOptions.params]),
         handleRequest((req, res) => seenContentController.addMovie(req, res), StatusCodes.CREATED)
     )
 
     router.delete(
         '/movies/:movieId',
         loadUserContext,
-        //validate schema
+        validateSchema(AddSeenMovieSchema, [FieldOptions.params]),
         handleRequest((req, res) => seenContentController.removeMovie(req, res), StatusCodes.OK)
     )
 

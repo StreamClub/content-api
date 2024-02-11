@@ -1,10 +1,10 @@
-import { MongoObject } from "@dtos";
-
-export class SeenMovie extends MongoObject {
+export class SeenMovie {
     public movieId: number;
+    public updatedAt: Date;
 
     public constructor(movie: SeenMovie) {
-        super(movie);
+        console.log(movie);
         this.movieId = movie.movieId
+        this.updatedAt = movie.updatedAt
     }
 }
