@@ -19,7 +19,7 @@ export class WatchlistService {
         const foundWatchlist = await this.failIfWatchlistDoesNotExist(userId);
         const watchlist = new Watchlist(foundWatchlist);
         const page = new Page(pageNumber, pageSize, watchlist.watchlist);
-        return new UserContentList(userId, page);
+        return new UserContentList(Number(userId), page);
     }
 
     public async addContent(userId: string, contentId: string, contentType: string) {
