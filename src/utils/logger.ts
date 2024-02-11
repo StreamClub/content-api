@@ -3,8 +3,9 @@ import winston from "winston";
 class Logger {
     private static instance: Logger;
     private logger: winston.Logger;
+    private production: boolean;
 
-    private constructor() {
+    private constructor(production: boolean = false) {
         this.logger = winston.createLogger({
             level: 'silly',
             format: winston.format.combine(
@@ -15,7 +16,18 @@ class Logger {
                 new winston.transports.Console(),
             ],
         });
+        this.production = production;
     }
+
+    private static log(level: string, message: string): void {
+        if (this.instance.production) {
+            this.instance.logger.log({
+                level,
+                message
+            });
+        }
+    }
+
 
     public static getInstance(): Logger {
         if (!Logger.instance) {
@@ -26,52 +38,31 @@ class Logger {
     }
 
     public info(message: string): void {
-        this.logger.log({
-            level: 'info',
-            message
-        });
+        Logger.log('info', message);
     }
 
     public error(message: string): void {
-        this.logger.log({
-            level: 'error',
-            message
-        });
+        Logger.log('error', message);
     }
 
     public warn(message: string): void {
-        this.logger.log({
-            level: 'warn',
-            message
-        });
+        Logger.log('warn', message);
     }
 
     public silly(message: string): void {
-        this.logger.log({
-            level: 'silly',
-            message
-        });
+        Logger.log('silly', message);
     }
 
     public debug(message: string): void {
-        this.logger.log({
-            level: 'debug',
-            message
-        });
+        Logger.log('debug', message);
     }
 
     public verbose(message: string): void {
-        this.logger.log({
-            level: 'verbose',
-            message
-        });
+        Logger.log('verbose', message);
     }
 
     public http(message: string): void {
-        this.logger.log({
-            level: 'http',
-            message
-        });
+        Logger.log('http', message);
     }
 
 }
