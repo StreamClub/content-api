@@ -12,7 +12,7 @@ export function setupBeforeAndAfter() {
         db = new TestDb()
         await db.initTestDb()
         const app = new App({ db })
-        server = request(await app.start())
+        server = request(await app.start(false))
     })
     afterEach(async () => await db.clearDatabase());
     afterAll(async () => await db.closeDatabase());
