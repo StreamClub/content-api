@@ -19,7 +19,7 @@ export class SeenContentService {
         const found = await this.failIfListDoesNotExist(userId);
         const seenMovies = found.movies.map((movie) => new SeenMovie(movie));
         const page = new Page(pageNumber, pageSize, seenMovies);
-        return new UserContentList(userId, page);
+        return new UserContentList(Number(userId), page);
     }
 
     public async addMovie(userId: string, movieId: number) {
