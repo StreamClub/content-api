@@ -1,6 +1,6 @@
 /// <reference types="@types/jest" />;
 /**
-* @group watchlist
+* @group seenContent
 */
 import { generateTestJwt } from '../../helpers';
 import { createSeenContentList } from '../../helpers/seenContentHelper';
