@@ -7,7 +7,7 @@ import { MAX_STRING_LENGTH } from '@config';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 import { generateTestJwt } from '../../helpers';
 import { mockGetShowDetails, mockSearchSeries } from '../../setup/mocksSetUp';
-import { testSearchSeries01, testSeries01 } from '../../helpers/testSeries';
+import { testSearchSeries01, testSeries01 } from '../../helpers/mocks/testSeries';
 
 const endpoint = '/series';
 

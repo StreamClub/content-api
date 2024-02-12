@@ -33,7 +33,7 @@ describe('Add Content To Watchlist', () => {
         const movieId = 2150;
         const testJwt = generateTestJwt(1, "test@test.com");
         await createSeenContentList(userId);
-        seeMovie(userId, movieId);
+        await seeMovie(userId, movieId);
         const getResponseBefore = await server.get(`${endpoint}/${userId}`)
             .set('Authorization', `Bearer ${testJwt}`);
         expect(getResponseBefore.status).toBe(200);

@@ -5,9 +5,9 @@
 
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 import { mockGetRedirectLinks, mockGetSeasonDetails, mockGetShowDetails } from '../../setup/mocksSetUp';
-import { generateTestJwt, testSeason01, testSeries01 } from '../../helpers';
+import { generateTestJwt } from '../../helpers';
 import { Series } from '@entities';
-import { testProviders01 } from '../../helpers/testProviders';
+import { testSeason01, testSeries01, testProviders01 } from '../../helpers';
 import { seriesStatus } from '@config';
 
 const endpoint = '/series';
@@ -48,13 +48,13 @@ describe('Get Series', () => {
         expect(series.overview).toBe(testSeries01.overview);
         expect(series.poster).toBe(testSeries01.poster_path);
         expect(series.backdrop).toBe(testSeries01.backdrop_path);
-        expect(series.genres).toStrictEqual(testSeries01.genres.map((genre) => genre.name));
+        expect(series.genres).toStrictEqual(testSeries01.genres.map((genre: any) => genre.name));
         expect(series.status).toBe(seriesStatus[testSeries01.status]);
-        expect(series.createdBy).toStrictEqual(testSeries01.created_by.map((creator) => creator.name));
+        expect(series.createdBy).toStrictEqual(testSeries01.created_by.map((creator: any) => creator.name));
         expect(series.lastAirDate).toBe(testSeries01.last_air_date);
         expect(series.numberOfEpisodes).toBe(testSeries01.number_of_episodes);
         expect(series.numberOfSeasons).toBe(testSeries01.number_of_seasons);
-        expect(series.seasons).toStrictEqual(testSeries01.seasons.map((season) => {
+        expect(series.seasons).toStrictEqual(testSeries01.seasons.map((season: any) => {
             return {
                 id: season.season_number,
                 name: season.name,

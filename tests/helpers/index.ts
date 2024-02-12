@@ -1,4 +1,2 @@
-export * from './testMovies';
+export * from './mocks';
 export * from './generateTestJwt';
-export * from './testSeries';
-export * from './testArtists';
