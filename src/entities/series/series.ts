@@ -1,5 +1,5 @@
 import { Content, ProvidersDictionary } from "@entities";
-import { NextEpisode } from "./nextEpisode";
+import { LastSeenEpisode } from "./lastSeenEpisode";
 import { TmdbSeries } from "./tmdbSeries";
 import { SimilarSeries } from "./similarSeries";
 import { SeasonResume } from "./seasonResume";
@@ -12,10 +12,10 @@ export class Series extends Content {
     numberOfEpisodes: number;
     numberOfSeasons: number;
     seasons: SeasonResume[];
-    nextEpisode: NextEpisode;
+    nextEpisode: LastSeenEpisode;
     similar: SimilarSeries[];
 
-    constructor(tmdbShow: TmdbSeries, country: string, provider: ProvidersDictionary, nextEpisode: NextEpisode) {
+    constructor(tmdbShow: TmdbSeries, country: string, provider: ProvidersDictionary, nextEpisode: LastSeenEpisode) {
         super(tmdbShow, country, provider);
         this.title = tmdbShow.name;
         this.status = seriesStatus[tmdbShow.status];

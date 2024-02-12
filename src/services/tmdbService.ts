@@ -2,7 +2,7 @@ import { contentTypes, seriesStatus } from "@config";
 import { seenContentRepository, watchlistRepository } from "@dal";
 import {
     Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult,
-    TmdbSeries, Series, NextEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode
+    TmdbSeries, Series, LastSeenEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode
 } from "@entities";
 import { NotFoundException } from "@exceptions";
 import { getRedirectLinks } from "@utils";
@@ -63,7 +63,7 @@ export class TmdbService {
         });
     }
 
-    private async getNextEpisode(userId: string, serieId: number, seasons: TvSeasonResponse[]): Promise<NextEpisode> {
+    private async getNextEpisode(userId: string, serieId: number, seasons: TvSeasonResponse[]): Promise<LastSeenEpisode> {
         const lastSeenEpisode: SeenEpisode = await seenContentRepository.getLastSeenEpisode(userId, serieId);
         if (!lastSeenEpisode) {
             return this.getSeasonFirstEpisode(serieId, 1, seasons);
@@ -71,7 +71,7 @@ export class TmdbService {
             const season = await this.getSeason(serieId, lastSeenEpisode.seasonId);
             const nextEpisode = season.episodes.find(episode => episode.episodeId === lastSeenEpisode.episodeId + 1);
             if (nextEpisode) {
-                return new NextEpisode(nextEpisode, season.id);
+                return new LastSeenEpisode(nextEpisode, season.id);
             } else {
                 return await this.getSeasonFirstEpisode(serieId, lastSeenEpisode.seasonId + 1, seasons);
             }
@@ -82,7 +82,7 @@ export class TmdbService {
         const filtered = showSeasons.filter(season => season.season_number === seasonId);
         if (filtered.length > 0) {
             const season = await this.getSeason(serieId, seasonId);
-            return new NextEpisode(season.episodes[0], season.id);
+            return new LastSeenEpisode(season.episodes[0], season.id);
         } else {
             return null;
         }

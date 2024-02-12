@@ -8,6 +8,6 @@ export class AddSeenEpisodeDto {
 
 export const AddSeenEpisodeSchema = Joi.object({
     seriesId: Joi.number().required().integer().min(1),
-    seasonId: Joi.number().required().integer().min(1),
+    seasonId: Joi.number().required().integer().min(0),
     episodeId: Joi.number().required().integer().min(1),
 });

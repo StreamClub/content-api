@@ -2,8 +2,9 @@
 /**
 * @group seenContent
 */
-import { generateTestJwt } from '../../helpers';
-import { createSeenContentList } from '../../helpers/seenContentHelper';
+import { generateTestJwt, testSeason01, testSpecialSeason01 } from '../../helpers';
+import { createSeenContentList, getSeenContentList, seeEpisode } from '../../helpers/seenContentHelper';
+import { mockGetSeasonDetails } from '../../setup/mocksSetUp';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
 const endpoint = '/seenContent/series';
@@ -34,7 +35,6 @@ describe('Add Content To Watchlist', () => {
     const invalidSeasonIdCases = [
         [400, 'seasonId', 'notANumber', 'not a number'],
         [400, 'seasonId', -1, 'negative number'],
-        [400, 'seasonId', 0, 'zero'],
         [400, 'seasonId', 1.5, 'not integer'],
     ]
 
@@ -71,64 +71,179 @@ describe('Add Content To Watchlist', () => {
         });
     });
 
-    // it('should return 404 when trying to add an episode to of a user without seen list', async () => {
-    //     const userId = 1;
-    //     const movieId = 2150;
-    //     const testJwt = generateTestJwt(userId, "test@test.com");
-    //     const response = await server.put(`${endpoint}/${movieId}`)
-    //         .set('Authorization', `Bearer ${testJwt}`)
-    //     expect(response.status).toBe(404);
-    // });
+    it('should return 404 when trying to add an episode to of a user without seen list', async () => {
+        mockGetSeasonDetails.mockReturnValue(testSeason01)
+        const userId = 1;
+        const seriesId = 37854;
+        const seasonId = 1;
+        const episodeId = 1;
+        const testJwt = generateTestJwt(userId, "test@test.com");
+        const response = await server
+            .put(`${endpoint}/${seriesId}/seasons/${seasonId}/episodes/${episodeId}`)
+            .set('Authorization', `Bearer ${testJwt}`)
+        expect(response.status).toBe(404);
+    });
 
-    // it('should add a movie to the seen list of the user', async () => {
-    //     const userId = 1;
-    //     const movieId = 2150;
-    //     const testJwt = generateTestJwt(userId, "test@test.com");
-    //     await createSeenContentList(userId);
-    //     const response = await server.put(`${endpoint}/${movieId}`)
-    //         .set('Authorization', `Bearer ${testJwt}`)
-    //     expect(response.status).toBe(201);
-    //     const getResponse = await server.get(`${endpoint}/${userId}`)
-    //         .set('Authorization', `Bearer ${testJwt}`);
-    //     expect(getResponse.status).toBe(200);
-    //     expect(getResponse.body.results.length).toBe(1);
-    //     expect(getResponse.body.results[0].movieId).toBe(2150);
-    //     expect(getResponse.body.results[0].updatedAt).toBeDefined();
-    // });
+    it('should add an episode to an empty seen list of the user', async () => {
+        mockGetSeasonDetails.mockReturnValue(testSeason01)
+        const userId = 1;
+        const seriesId = 37854;
+        const seasonId = 1;
+        const episodeId = 1;
+        await createSeenContentList(userId);
+        const testJwt = generateTestJwt(userId, "test@test.com");
+        const response = await server
+            .put(`${endpoint}/${seriesId}/seasons/${seasonId}/episodes/${episodeId}`)
+            .set('Authorization', `Bearer ${testJwt}`)
+        expect(response.status).toBe(201)
+        const seenContentList = await getSeenContentList(userId);
+        expect(seenContentList.userId).toBe(userId);
+        expect(seenContentList.series.length).toBe(1);
+        expect(seenContentList.series[0].seriesId).toBe(seriesId);
+        expect(seenContentList.series[0].totalWatchedEpisodes).toBe(1);
+        expect(seenContentList.series[0].lastSeenEpisode.seasonId).toBe(seasonId);
+        expect(seenContentList.series[0].lastSeenEpisode.episodeId).toBe(episodeId);
+        expect(seenContentList.series[0].seasons.length).toBe(1);
+        expect(seenContentList.series[0].seasons[0].seasonId).toBe(seasonId);
+        expect(seenContentList.series[0].seasons[0].episodes.length).toBe(1);
+        expect(seenContentList.series[0].seasons[0].episodes[0].episodeId).toBe(episodeId);
+    });
 
-    // it('should not add a movie to the seen list of the user if it is already there', async () => {
-    //     const userId = 1;
-    //     const movieId = 2150;
-    //     const testJwt = generateTestJwt(userId, "test@test.com");
-    //     await createSeenContentList(userId);
-    //     const response = await server.put(`${endpoint}/${movieId}`)
-    //         .set('Authorization', `Bearer ${testJwt}`)
-    //     expect(response.status).toBe(201);
-    //     const response2 = await server.put(`${endpoint}/${movieId}`)
-    //         .set('Authorization', `Bearer ${testJwt}`)
-    //     expect(response2.status).toBe(201);
-    //     const getResponse = await server.get(`${endpoint}/${userId}`).set('Authorization', `Bearer ${testJwt}`);
-    //     expect(getResponse.status).toBe(200);
-    //     expect(getResponse.body.results.length).toBe(1);
-    //     expect(getResponse.body.results[0].movieId).toBe(2150);
-    // });
+    it('should not add an episode to the seen list of the user if it is already there', async () => {
+        mockGetSeasonDetails.mockReturnValue(testSeason01)
+        const userId = 1;
+        const seriesId = 37854;
+        const seasonId = 1;
+        const episodeId = 1;
+        await createSeenContentList(userId);
+        const testJwt = generateTestJwt(userId, "test@test.com");
+        await seeEpisode(userId, seriesId, seasonId, episodeId);
+        const response = await server
+            .put(`${endpoint}/${seriesId}/seasons/${seasonId}/episodes/${episodeId}`)
+            .set('Authorization', `Bearer ${testJwt}`)
+        expect(response.status).toBe(201)
+        const seenContentList = await getSeenContentList(userId);
+        expect(seenContentList.userId).toBe(userId);
+        expect(seenContentList.series.length).toBe(1);
+        expect(seenContentList.series[0].seriesId).toBe(seriesId);
+        expect(seenContentList.series[0].totalWatchedEpisodes).toBe(1);
+        expect(seenContentList.series[0].lastSeenEpisode.seasonId).toBe(seasonId);
+        expect(seenContentList.series[0].lastSeenEpisode.episodeId).toBe(episodeId);
+        expect(seenContentList.series[0].seasons.length).toBe(1);
+        expect(seenContentList.series[0].seasons[0].seasonId).toBe(seasonId);
+        expect(seenContentList.series[0].seasons[0].episodes.length).toBe(1);
+        expect(seenContentList.series[0].seasons[0].episodes[0].episodeId).toBe(episodeId);
+    });
 
-    // it('should increment the size of the seen list when adding two movies', async () => {
-    //     const userId = 1;
-    //     const movieId = 2150;
-    //     const movieId2 = 2151;
-    //     const testJwt = generateTestJwt(userId, "test@test.com");
-    //     await createSeenContentList(userId);
-    //     const response = await server.put(`${endpoint}/${movieId}`)
-    //         .set('Authorization', `Bearer ${testJwt}`)
-    //     expect(response.status).toBe(201);
-    //     const response2 = await server.put(`${endpoint}/${movieId2}`)
-    //         .set('Authorization', `Bearer ${testJwt}`)
-    //     expect(response2.status).toBe(201);
-    //     const getResponse = await server.get(`${endpoint}/${userId}`).set('Authorization', `Bearer ${testJwt}`);
-    //     expect(getResponse.status).toBe(200);
-    //     expect(getResponse.body.results.length).toBe(2);
-    //     expect(getResponse.body.results[0].movieId).toBe(2151);
-    //     expect(getResponse.body.results[1].movieId).toBe(2150);
-    // });
+    it('should add an episode to a seen list with an episode of that season', async () => {
+        mockGetSeasonDetails.mockReturnValue(testSeason01)
+        const userId = 1;
+        const seriesId = 37854;
+        const seasonId = 1;
+        const episodeId = 1;
+        await createSeenContentList(userId);
+        await seeEpisode(userId, seriesId, seasonId, episodeId);
+        const testJwt = generateTestJwt(userId, "test@test.com");
+        const response = await server
+            .put(`${endpoint}/${seriesId}/seasons/${seasonId}/episodes/${episodeId + 1}`)
+            .set('Authorization', `Bearer ${testJwt}`)
+        expect(response.status).toBe(201)
+        const seenContentList = await getSeenContentList(userId);
+        expect(seenContentList.userId).toBe(userId);
+        expect(seenContentList.series.length).toBe(1);
+        expect(seenContentList.series[0].seriesId).toBe(seriesId);
+        expect(seenContentList.series[0].totalWatchedEpisodes).toBe(2);
+        expect(seenContentList.series[0].lastSeenEpisode.seasonId).toBe(seasonId);
+        expect(seenContentList.series[0].lastSeenEpisode.episodeId).toBe(episodeId + 1);
+        expect(seenContentList.series[0].seasons.length).toBe(1);
+        expect(seenContentList.series[0].seasons[0].seasonId).toBe(seasonId);
+        expect(seenContentList.series[0].seasons[0].episodes.length).toBe(2);
+        const expectedEpisodes = [episodeId, episodeId + 1];
+        seenContentList.series[0].seasons[0].episodes.forEach((episode) => {
+            expect(expectedEpisodes).toContain(episode.episodeId);
+            expectedEpisodes.filter((id) => id !== episode.episodeId);
+        })
+    });
+
+    it('should add an episode ta a seen list with an episode of another season', async () => {
+        mockGetSeasonDetails.mockReturnValue(testSeason01)
+        const userId = 1;
+        const seriesId = 37854;
+        const seasonId = 1;
+        const episodeId = 1;
+        await createSeenContentList(userId);
+        await seeEpisode(userId, seriesId, seasonId, episodeId);
+        const testJwt = generateTestJwt(userId, "test@test.com");
+        const response = await server
+            .put(`${endpoint}/${seriesId}/seasons/${seasonId + 1}/episodes/${episodeId}`)
+            .set('Authorization', `Bearer ${testJwt}`)
+        expect(response.status).toBe(201)
+        const seenContentList = await getSeenContentList(userId);
+        expect(seenContentList.userId).toBe(userId);
+        expect(seenContentList.series.length).toBe(1);
+        expect(seenContentList.series[0].seriesId).toBe(seriesId);
+        expect(seenContentList.series[0].totalWatchedEpisodes).toBe(2);
+        expect(seenContentList.series[0].lastSeenEpisode.seasonId).toBe(seasonId + 1);
+        expect(seenContentList.series[0].lastSeenEpisode.episodeId).toBe(episodeId);
+        expect(seenContentList.series[0].seasons.length).toBe(2);
+        expect(seenContentList.series[0].seasons[0].seasonId).toBe(seasonId);
+        seenContentList.series[0].seasons.forEach((season) => {
+            if (season.seasonId === seasonId) {
+                expect(season.episodes.length).toBe(1);
+                expect(season.episodes[0].episodeId).toBe(episodeId);
+            } else {
+                expect(season.seasonId).toBe(seasonId + 1);
+                expect(season.episodes.length).toBe(1);
+                expect(season.episodes[0].episodeId).toBe(episodeId);
+            }
+        });
+    });
+
+    it('should add an episode of an special season but should not increment the total watched episodes', async () => {
+        mockGetSeasonDetails.mockReturnValue(testSpecialSeason01)
+        const userId = 1;
+        const seriesId = 37854;
+        const seasonId = 0;
+        const episodeId = 1;
+        await createSeenContentList(userId);
+        const testJwt = generateTestJwt(userId, "test@test.com");
+        const response = await server
+            .put(`${endpoint}/${seriesId}/seasons/${seasonId}/episodes/${episodeId}`)
+            .set('Authorization', `Bearer ${testJwt}`)
+        expect(response.status).toBe(201)
+        const seenContentList = await getSeenContentList(userId);
+        expect(seenContentList.userId).toBe(userId);
+        expect(seenContentList.series.length).toBe(1);
+        expect(seenContentList.series[0].seriesId).toBe(seriesId);
+        expect(seenContentList.series[0].totalWatchedEpisodes).toBe(0);
+        expect(seenContentList.series[0].lastSeenEpisode.seasonId).toBe(undefined);
+        expect(seenContentList.series[0].lastSeenEpisode.episodeId).toBe(undefined);
+        expect(seenContentList.series[0].seasons.length).toBe(1);
+        expect(seenContentList.series[0].seasons[0].seasonId).toBe(seasonId);
+        expect(seenContentList.series[0].seasons[0].episodes.length).toBe(1);
+        expect(seenContentList.series[0].seasons[0].episodes[0].episodeId).toBe(episodeId);
+    });
+
+    it('should not modify the next episode if a special episode is watched', async () => {
+        mockGetSeasonDetails.mockReturnValue(testSpecialSeason01)
+        const userId = 1;
+        const seriesId = 37854;
+        const seasonId = 0;
+        const episodeId = 1;
+        await createSeenContentList(userId);
+        const testJwt = generateTestJwt(userId, "test@test.com");
+        await seeEpisode(userId, seriesId, seasonId + 1, episodeId + 1);
+        const response = await server
+            .put(`${endpoint}/${seriesId}/seasons/${seasonId}/episodes/${episodeId}`)
+            .set('Authorization', `Bearer ${testJwt}`)
+        expect(response.status).toBe(201)
+        const seenContentList = await getSeenContentList(userId);
+        expect(seenContentList.userId).toBe(userId);
+        expect(seenContentList.series.length).toBe(1);
+        expect(seenContentList.series[0].seriesId).toBe(seriesId);
+        expect(seenContentList.series[0].totalWatchedEpisodes).toBe(1);
+        expect(seenContentList.series[0].lastSeenEpisode.seasonId).toBe(seasonId + 1);
+        expect(seenContentList.series[0].lastSeenEpisode.episodeId).toBe(episodeId +1 );
+        expect(seenContentList.series[0].seasons.length).toBe(2);
+    });
 });

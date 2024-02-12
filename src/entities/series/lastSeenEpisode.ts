@@ -1,6 +1,6 @@
 import { SeasonEpisode } from "@entities";
 
-export class NextEpisode {
+export class LastSeenEpisode {
     photo: string;
     airDate: string;
     name: string;
