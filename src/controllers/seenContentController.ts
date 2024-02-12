@@ -4,6 +4,7 @@ import { SeenContentService, TmdbService } from '@services';
 import { Season, SeasonEpisode, SeenEpisode, SeenSeason } from '@entities';
 import moment from 'moment';
 import { SPECIALS_SEASON_ID } from '@config';
+import { EpisodeHasNotAiredException } from '@exceptions';
 
 export class SeenContentController {
     private seenContentService: SeenContentService;
@@ -83,7 +84,7 @@ export class SeenContentController {
         const episodeId = Number(req.params.episodeId);
         const episode: SeasonEpisode = await this.tmdbService.getEpisode(seriesId, seasonId, episodeId);
         if (moment(episode.airDate).format('YYYY-MM-DD') > moment().format('YYYY-MM-DD')) {
-            throw new Error('El episodio no se ha estrenado');
+            throw new EpisodeHasNotAiredException();
         }
         return await this.seenContentService.addEpisode(userId, seriesId, seasonId, episodeId);
     }

@@ -1,4 +1,3 @@
-import { getRedirectLinks } from "@utils/getRedirectLinks"
 import { MovieDb } from "moviedb-promise"
 
 export let mockMovieInfo = jest.fn()

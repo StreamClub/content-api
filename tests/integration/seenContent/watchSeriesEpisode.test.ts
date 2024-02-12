@@ -2,7 +2,7 @@
 /**
 * @group seenContent
 */
-import { generateTestJwt, testSeason01, testSpecialSeason01 } from '../../helpers';
+import { generateTestJwt, testSeason01, testSeason03, testSpecialSeason01 } from '../../helpers';
 import { createSeenContentList, getSeenContentList, seeEpisode } from '../../helpers/seenContentHelper';
 import { mockGetSeasonDetails } from '../../setup/mocksSetUp';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
@@ -245,5 +245,19 @@ describe('Add Content To Watchlist', () => {
         expect(seenContentList.series[0].lastSeenEpisode.seasonId).toBe(seasonId + 1);
         expect(seenContentList.series[0].lastSeenEpisode.episodeId).toBe(episodeId +1 );
         expect(seenContentList.series[0].seasons.length).toBe(2);
+    });
+
+    it('should return an error if the episode has not aired', async () => {
+        mockGetSeasonDetails.mockReturnValue(testSeason03)
+        const userId = 1;
+        const seriesId = 37854;
+        const seasonId = 22;
+        const episodeId = 1095;
+        await createSeenContentList(userId);
+        const testJwt = generateTestJwt(userId, "test@test.com");
+        const response = await server
+            .put(`${endpoint}/${seriesId}/seasons/${seasonId}/episodes/${episodeId}`)
+            .set('Authorization', `Bearer ${testJwt}`)
+        expect(response.status).toBe(409);
     });
 });
