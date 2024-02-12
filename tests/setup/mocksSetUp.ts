@@ -1,17 +1,16 @@
-import { getRedirectLinks } from "@utils"
+import { getRedirectLinks } from "@utils/getRedirectLinks"
 import { MovieDb } from "moviedb-promise"
 
 export let mockMovieInfo = jest.fn()
 export let mockSearchMovie = jest.fn()
 export let mockSearchSeries = jest.fn()
 export let mockSearchArtist = jest.fn()
-export let mockGetRedirectLinks = jest.fn()
+export let mockGetRedirectLinks = jest.spyOn(require('../../src/utils/getRedirectLinks'), 'getRedirectLinks');
 export let mockGetShowDetails = jest.fn()
 export let mockGetSeasonDetails = jest.fn()
 export let mockGetArtistDetails = jest.fn()
 
 export const setUpMocks = () => {
-    getRedirectLinks.prototype = mockGetRedirectLinks
     MovieDb.prototype.searchTv = mockSearchSeries
     MovieDb.prototype.movieInfo = mockMovieInfo
     MovieDb.prototype.tvInfo = mockGetShowDetails

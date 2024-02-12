@@ -35,7 +35,7 @@ describe('Get Series', () => {
     it('should return a Series with the correct format', async () => {
         mockGetShowDetails.mockReturnValue(testSeries01);
         mockGetSeasonDetails.mockReturnValue(testSeason01);
-        mockGetRedirectLinks.mockResolvedValue(testProviders01);
+        mockGetRedirectLinks.mockReturnValue(testProviders01);
         const testJwt = generateTestJwt(1, "test@test.com")
         const id = 2150;
         const country = 'AR';

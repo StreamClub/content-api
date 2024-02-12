@@ -17,6 +17,7 @@ export function setupBeforeAndAfter() {
         seenContentService = new SeenContentService({ db });
         server = request(await app.start(false))
     })
+    beforeEach(async () => jest.clearAllMocks());
     afterEach(async () => await db.clearDatabase());
     afterAll(async () => await db.closeDatabase());
 }
