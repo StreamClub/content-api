@@ -232,6 +232,19 @@ class SeenContentRepository {
         return null;
     }
 
+    public async getTotalWatchedEpisodes(userId: string, seriesId: number): Promise<number> {
+        const result = await SeenContentModel.aggregate([
+            { $match: { userId, 'series.seriesId': seriesId } },
+            { $unwind: '$series' },
+            { $match: { 'series.seriesId': seriesId } },
+            { $project: { _id: 0, totalWatchedEpisodes: '$series.totalWatchedEpisodes' } }
+        ]);
+          
+          // Ahora, result contendrá solo el atributo totalWatchedEpisodes de la serie encontrada
+        return result.length > 0 ? result[0].totalWatchedEpisodes : 0;
+          
+    }
+
 }
 
 export const seenContentRepository = new SeenContentRepository();

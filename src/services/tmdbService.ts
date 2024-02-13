@@ -40,7 +40,11 @@ export class TmdbService {
             }) as TmdbSeries;
             const nextEpisode = await this.getNextEpisode(userId, serie.id, serie.seasons);
             const providersData = await this.getProvidersData(this.contentTypes.SERIES, seriesId, country);
-            return new Series(serie, country, providersData, nextEpisode);
+            const series = new Series(serie, country, providersData, nextEpisode);
+            const totalWatchedEpisodes = await seenContentRepository
+                .getTotalWatchedEpisodes(userId, serie.id)
+            series.setSeen(series.numberOfEpisodes, totalWatchedEpisodes)
+            return series;
         })
     }
 
@@ -109,12 +113,15 @@ export class TmdbService {
     }
 
     public async searchSeries(userId: string, query: string, page: number) {
-        const result = await this.tmdb.searchTv({ query, language: this.language, page });
+        const result = await this.tmdb.searchTv({ query, language: this.language, page});
         const series = await Promise.all(result.results.map(async (serie: TvResult) => {
             const serieResume = new SeriesResume(serie)
             serieResume.inWatchlist = await watchlistRepository
                 .isInWatchlist(userId, serie.id.toString(), contentTypes.SERIES);
             const showDetails = await this.tmdb.tvInfo({ id: serie.id, language: this.language });
+            const totalWatchedEpisodes = await seenContentRepository
+                .getTotalWatchedEpisodes(userId, serie.id)
+            serieResume.setSeen(showDetails.number_of_episodes, totalWatchedEpisodes)
             serieResume.status = seriesStatus[showDetails.status];
             serieResume.lastEpisodeReleaseDate = showDetails.last_episode_to_air?.air_date;
             return serieResume;
