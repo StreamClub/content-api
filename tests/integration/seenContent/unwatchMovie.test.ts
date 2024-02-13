@@ -8,7 +8,7 @@ import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
 const endpoint = '/seenContent/movies';
 
-describe('Add Content To Watchlist', () => {
+describe('Remove Movie From Seen Content List', () => {
     setupBeforeAndAfter();
 
     const invalidQueryCases = [

@@ -4,12 +4,12 @@
 */
 import { generateTestJwt, testSeason01, testSeason02, testSeries02, testSpecialSeason01 } from '../../helpers';
 import { createSeenContentList, getSeenContentList, seeEpisode } from '../../helpers/seenContentHelper';
-import { mockGetSeasonDetails, mockGetShowDetails } from '../../setup/mocksSetUp';
+import { mockGetSeasonDetails } from '../../setup/mocksSetUp';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
 const endpoint = '/seenContent/series';
 
-describe('Add Content To Watchlist', () => {
+describe('Add Episode To Seen Content List', () => {
     setupBeforeAndAfter();
 
     const invalidSeriesIdCases = [

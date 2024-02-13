@@ -8,7 +8,7 @@ import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
 const endpoint = '/seenContent/series';
 
-describe('Add Content To Watchlist', () => {
+describe('Remove Episode From Seen Content List', () => {
     setupBeforeAndAfter();
 
     const invalidSeriesIdCases = [

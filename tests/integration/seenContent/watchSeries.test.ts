@@ -10,7 +10,7 @@ import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
 const endpoint = '/seenContent/series';
 
-describe('Add Content To Watchlist', () => {
+describe('Add Series To Seen Content List', () => {
     setupBeforeAndAfter();
     const invalidSeriesIdCases = [
         [400, 'seasonId', 'notANumber', 'not a number'],
