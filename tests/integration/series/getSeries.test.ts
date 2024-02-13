@@ -5,10 +5,11 @@
 
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 import { mockGetRedirectLinks, mockGetSeasonDetails, mockGetShowDetails } from '../../setup/mocksSetUp';
-import { generateTestJwt } from '../../helpers';
+import { generateTestJwt, testSeason02, testSeries02 } from '../../helpers';
 import { Series } from '@entities';
 import { testSeason01, testSeries01, testProviders01 } from '../../helpers';
 import { seriesStatus } from '@config';
+import { createSeenContentList, seeEpisode } from '../../helpers/seenContentHelper';
 
 const endpoint = '/series';
 
@@ -83,4 +84,57 @@ describe('Get Series', () => {
             .query({ country }).set('Authorization', `Bearer ${testJwt}`);
         expect(response.status).toBe(404);
     });
+
+    it('should return the fist episode as next episode if the user has not watched any episode', async () => {
+        mockGetShowDetails.mockReturnValue(testSeries02);
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
+        mockGetRedirectLinks.mockReturnValue(testProviders01);
+        const testJwt = generateTestJwt(1, "test@test.com")
+        const id = 2150;
+        const country = 'AR';
+        const response = await server.get(`${endpoint}/${id}`)
+            .query({ country }).set('Authorization', `Bearer ${testJwt}`);
+        const series = response.body as Series;
+        expect(response.status).toBe(200);
+        expect(series.nextEpisode.seasonId).toBe(testSeason01.season_number);
+        expect(series.nextEpisode.episodeId).toBe(testSeason01.episodes[0].episode_number);
+    });
+
+    it('should return the second episode as next episode if the user has watched the first episode', async () => {
+        mockGetShowDetails.mockReturnValue(testSeries02);
+        mockGetSeasonDetails.mockReturnValueOnce(testSeason01);
+        mockGetSeasonDetails.mockReturnValueOnce(testSeason02);
+        mockGetRedirectLinks.mockReturnValue(testProviders01);
+        const userId = 1;
+        const testJwt = generateTestJwt(userId, "test@test.com")
+        await createSeenContentList(userId);
+        await seeEpisode(userId, testSeries02.id, 1, 1);
+        const id = testSeries02.id;
+        const country = 'AR';
+        const response = await server.get(`${endpoint}/${id}`)
+            .query({ country }).set('Authorization', `Bearer ${testJwt}`);
+        const series = response.body as Series;
+        expect(response.status).toBe(200);
+        expect(series.nextEpisode.seasonId).toBe(testSeason01.season_number);
+        expect(series.nextEpisode.episodeId).toBe(testSeason01.episodes[1].episode_number);
+    });
+
+    it('should return the first episode of the second season as next episode if the user has watched the last episodes of the first season', async () => {
+        mockGetShowDetails.mockReturnValue(testSeries02);
+        mockGetSeasonDetails.mockReturnValueOnce(testSeason02);
+        mockGetRedirectLinks.mockReturnValue(testProviders01);
+        const userId = 1;
+        const testJwt = generateTestJwt(userId, "test@test.com")
+        await createSeenContentList(userId);
+        await seeEpisode(userId, testSeries02.id, 1, 61);
+        const id = testSeries02.id;
+        const country = 'AR';
+        const response = await server.get(`${endpoint}/${id}`)
+            .query({ country }).set('Authorization', `Bearer ${testJwt}`);
+        const series = response.body as Series;
+        expect(response.status).toBe(200);
+        expect(series.nextEpisode.seasonId).toBe(testSeason02.season_number);
+        expect(series.nextEpisode.episodeId).toBe(testSeason02.episodes[0].episode_number);
+    });
+
 });

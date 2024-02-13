@@ -1331,7 +1331,7 @@ export const testSeries02 = {
       "name": "Egg Head Arc",
       "overview": "",
       "poster_path": "/acKdAHRH4ypzQ4jnkjCDC7Ac9jH.jpg",
-      "season_number": 22,
+      "season_number": 2,
       "vote_average": 8
     }
   ],
