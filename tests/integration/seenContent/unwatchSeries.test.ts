@@ -49,7 +49,7 @@ describe('Remove Series from Seen Content List', () => {
             .set('Authorization', `Bearer ${testJwt}`);
         expect(response.status).toBe(200);
         const seenContent = await getSeenContentList(userId);
-        expect(seenContent.series[0].seasons).toHaveLength(0);
+        expect(seenContent.series).toHaveLength(0);
     });
 
     it('should return ok when trying to delete a series that is not in the seen content list', async () => {
