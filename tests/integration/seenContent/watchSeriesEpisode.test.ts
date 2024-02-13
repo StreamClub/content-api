@@ -158,10 +158,10 @@ describe('Add Content To Watchlist', () => {
         expect(seenContentList.series[0].seasons.length).toBe(1);
         expect(seenContentList.series[0].seasons[0].seasonId).toBe(seasonId);
         expect(seenContentList.series[0].seasons[0].episodes.length).toBe(2);
-        const expectedEpisodes = [episodeId, episodeId + 1];
+        let expectedEpisodes = [episodeId, episodeId + 1];
         seenContentList.series[0].seasons[0].episodes.forEach((episode) => {
             expect(expectedEpisodes).toContain(episode.episodeId);
-            expectedEpisodes.filter((id) => id !== episode.episodeId);
+            expectedEpisodes = expectedEpisodes.filter((id) => id !== episode.episodeId);
         })
     });
 

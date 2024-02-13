@@ -2,10 +2,8 @@
 /**
 * @group seenContent
 */
-import exp from 'constants';
-import { generateTestJwt, testSeason01, testSeason03, testSpecialSeason01 } from '../../helpers';
+import { generateTestJwt } from '../../helpers';
 import { createSeenContentList, getSeenContentList, seeEpisode } from '../../helpers/seenContentHelper';
-import { mockGetSeasonDetails } from '../../setup/mocksSetUp';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
 const endpoint = '/seenContent/series';
