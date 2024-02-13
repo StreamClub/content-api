@@ -99,6 +99,15 @@ export class TmdbService {
         });
     }
 
+
+    public async getUserSeason(userId: string, serieId: number, seasonId: number) {
+        const season = await this.getSeason(serieId, seasonId);
+        const seenEpisodes = await seenContentRepository
+            .getSeenEpisodes(userId, serieId, seasonId);
+        season.setSeenEpisodes(seenEpisodes);
+        return season;
+    }
+
     public async searchMovie(userId: string, query: string, page: number) {
         const result = await this.tmdb.searchMovie({ query, language: this.language, page });
         const movies = await Promise.all(result.results.map(async (movie: MovieResult) => {

@@ -9,6 +9,7 @@ export class SeasonEpisode {
     overview: string;
     runtime: string;
     poster: string;
+    seen: boolean;
 
     constructor(tmdbEpisode: EpisodeResult) {
         this.airDate = tmdbEpisode.air_date;
@@ -18,5 +19,6 @@ export class SeasonEpisode {
         this.overview = tmdbEpisode.overview;
         this.runtime = tmdbEpisode.runtime;
         this.poster = tmdbEpisode.still_path;
+        this.seen = false;
     }
 }

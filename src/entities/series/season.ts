@@ -20,6 +20,12 @@ export class Season {
         this.episodes = tmdbSeason.episodes.map((episode: EpisodeResult) => new SeasonEpisode(episode));
     }
 
+    setSeenEpisodes = (seenEpisodes: number[]) => {
+        this.episodes.forEach(episode => {
+            episode.seen = seenEpisodes.includes(episode.episodeId);
+        });
+    }
+
     getAiredEpisodes = () => {
         return this.episodes.filter(episode => moment(episode.airDate).format('YYYY-MM-DD') <= moment().format('YYYY-MM-DD'));
     }

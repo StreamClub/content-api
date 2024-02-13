@@ -26,7 +26,10 @@ export class SeriesController {
     }
 
     public async getSeason(req: Request<GetMovieDto>, res: Response<any>) {
-        return await this.tmdbService.getSeason(Number(req.params.seriesId), Number(req.params.seasonId));
+        const userId = res.locals.userId;
+        const seriesId = Number(req.params.seriesId);
+        const seasonId = Number(req.params.seasonId);
+        return await this.tmdbService.getUserSeason(userId, seriesId, seasonId);
     }
 
 }
