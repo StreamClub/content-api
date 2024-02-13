@@ -814,6 +814,355 @@ export const testSeries02 = {
   "episode_run_time": [
     24
   ],
+  "credits": {
+    "cast": [
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 12073,
+            "known_for_department": "Acting",
+            "name": "Mike Myers",
+            "original_name": "Mike Myers",
+            "popularity": 18.113,
+            "profile_path": "/gjfDl52Kk02MPgUYFjs9bOy33OY.jpg",
+            "cast_id": 24,
+            "character": "Shrek / Blind Mouse / Opening Narration (voice)",
+            "credit_id": "52fe4279c3a36847f80218a1",
+            "order": 0
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 776,
+            "known_for_department": "Acting",
+            "name": "Eddie Murphy",
+            "original_name": "Eddie Murphy",
+            "popularity": 61.706,
+            "profile_path": "/qgjMfefsKwSYsyCaIX46uyOXIpy.jpg",
+            "cast_id": 25,
+            "character": "Donkey (voice)",
+            "credit_id": "52fe4279c3a36847f80218a5",
+            "order": 1
+        },
+        {
+            "adult": false,
+            "gender": 1,
+            "id": 6941,
+            "known_for_department": "Acting",
+            "name": "Cameron Diaz",
+            "original_name": "Cameron Diaz",
+            "popularity": 61.116,
+            "profile_path": "/d4f4cQ9EiYuvNMjT1IB2h06KoRx.jpg",
+            "cast_id": 26,
+            "character": "Princess Fiona (voice)",
+            "credit_id": "52fe4279c3a36847f80218a9",
+            "order": 2
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 12074,
+            "known_for_department": "Acting",
+            "name": "John Lithgow",
+            "original_name": "John Lithgow",
+            "popularity": 14.968,
+            "profile_path": "/8Y1sjBdnVR483S8PrnAQzlESwhx.jpg",
+            "cast_id": 27,
+            "character": "Lord Farquaad (voice)",
+            "credit_id": "52fe4279c3a36847f80218ad",
+            "order": 3
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 1925,
+            "known_for_department": "Acting",
+            "name": "Vincent Cassel",
+            "original_name": "Vincent Cassel",
+            "popularity": 20.577,
+            "profile_path": "/nPjsfQ3ffWFiNXjPnNUlJ0VVYT.jpg",
+            "cast_id": 28,
+            "character": "Monsieur Hood (voice)",
+            "credit_id": "52fe4279c3a36847f80218b1",
+            "order": 4
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 12075,
+            "known_for_department": "Acting",
+            "name": "Peter Dennis",
+            "original_name": "Peter Dennis",
+            "popularity": 2.909,
+            "profile_path": "/A2lPsbLYrhXcKL82byfU8FAfaMY.jpg",
+            "cast_id": 29,
+            "character": "Ogre Hunter (voice)",
+            "credit_id": "52fe4279c3a36847f80218b5",
+            "order": 5
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 12076,
+            "known_for_department": "Acting",
+            "name": "Clive Pearse",
+            "original_name": "Clive Pearse",
+            "popularity": 2.436,
+            "profile_path": "/aRwEqA2YmmymjuJ0lheFKLE6gwU.jpg",
+            "cast_id": 30,
+            "character": "Ogre Hunter (voice)",
+            "credit_id": "52fe4279c3a36847f80218b9",
+            "order": 6
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 12077,
+            "known_for_department": "Acting",
+            "name": "Jim Cummings",
+            "original_name": "Jim Cummings",
+            "popularity": 14.959,
+            "profile_path": "/c0sQPRCM5Ri3F4gVyxPr4AcPmIq.jpg",
+            "cast_id": 31,
+            "character": "Captain of Guards (voice)",
+            "credit_id": "52fe4279c3a36847f80218bd",
+            "order": 7
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 12078,
+            "known_for_department": "Acting",
+            "name": "Bobby Block",
+            "original_name": "Bobby Block",
+            "popularity": 4.092,
+            "profile_path": "/l4ktDZmixDQIhXfDsyLvTGANXiy.jpg",
+            "cast_id": 32,
+            "character": "Baby Bear (voice)",
+            "credit_id": "52fe4279c3a36847f80218c1",
+            "order": 8
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 12098,
+            "known_for_department": "Acting",
+            "name": "Chris Miller",
+            "original_name": "Chris Miller",
+            "popularity": 2.787,
+            "profile_path": "/qKdbhP9amIRlydcoivWlTx3szuS.jpg",
+            "cast_id": 34,
+            "character": "Geppetto / Magic Mirror (voice)",
+            "credit_id": "52fe4279c3a36847f80218cb",
+            "order": 9
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 12095,
+            "known_for_department": "Acting",
+            "name": "Cody Cameron",
+            "original_name": "Cody Cameron",
+            "popularity": 2.353,
+            "profile_path": "/68Cewzd8H9qFwJclWFl33Fl3N70.jpg",
+            "cast_id": 35,
+            "character": "Pinocchio / Three Pigs (voice)",
+            "credit_id": "52fe4279c3a36847f80218cf",
+            "order": 10
+        },
+        {
+            "adult": false,
+            "gender": 1,
+            "id": 7210,
+            "known_for_department": "Acting",
+            "name": "Kathleen Freeman",
+            "original_name": "Kathleen Freeman",
+            "popularity": 7.729,
+            "profile_path": "/pAlKHL8sshImJPCN45iQ5PGuURZ.jpg",
+            "cast_id": 36,
+            "character": "Old Woman (voice)",
+            "credit_id": "52fe4279c3a36847f80218d3",
+            "order": 11
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 12454,
+            "known_for_department": "Sound",
+            "name": "Michael Galasso",
+            "original_name": "Michael Galasso",
+            "popularity": 1.646,
+            "profile_path": "/ugEpT0TiAvw0rXLB277bVpBDNhQ.jpg",
+            "cast_id": 448,
+            "character": "Peter Pan (voice)",
+            "credit_id": "5e7a6e3dcabfe4001125247a",
+            "order": 12
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 12097,
+            "known_for_department": "Acting",
+            "name": "Christopher Knights",
+            "original_name": "Christopher Knights",
+            "popularity": 4.197,
+            "profile_path": "/lY4SomC77NUlqPWSmhzvqLfIn8R.jpg",
+            "cast_id": 50,
+            "character": "Blind Mouse / Thelonious (voice)",
+            "credit_id": "57223d5a92514121c60013ed",
+            "order": 13
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 44114,
+            "known_for_department": "Directing",
+            "name": "Simon J. Smith",
+            "original_name": "Simon J. Smith",
+            "popularity": 3.284,
+            "profile_path": "/puCP7MQ8Gm9aKGcQiOcLiKIKcpJ.jpg",
+            "cast_id": 51,
+            "character": "Blind Mouse (voice)",
+            "credit_id": "57223d7992514121c60013f2",
+            "order": 14
+        },
+    ],
+    "crew": [
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 1705,
+            "known_for_department": "Writing",
+            "name": "Ted Elliott",
+            "original_name": "Ted Elliott",
+            "popularity": 7.055,
+            "profile_path": "/kGW95TZLI1qCvZUmk8gPnlviSqy.jpg",
+            "credit_id": "5aa7bdc90e0a263dc701cd81",
+            "department": "Writing",
+            "job": "Writer"
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 1705,
+            "known_for_department": "Writing",
+            "name": "Ted Elliott",
+            "original_name": "Ted Elliott",
+            "popularity": 7.055,
+            "profile_path": "/kGW95TZLI1qCvZUmk8gPnlviSqy.jpg",
+            "credit_id": "556b8ca59251416b0a004a2d",
+            "department": "Production",
+            "job": "Co-Producer"
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 1706,
+            "known_for_department": "Writing",
+            "name": "Terry Rossio",
+            "original_name": "Terry Rossio",
+            "popularity": 4.3,
+            "profile_path": "/fFB0vhLH1dU6pSMWojEY5Stbv21.jpg",
+            "credit_id": "556b8cc8c3a36824e70021e9",
+            "department": "Production",
+            "job": "Co-Producer"
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 947,
+            "known_for_department": "Sound",
+            "name": "Hans Zimmer",
+            "original_name": "Hans Zimmer",
+            "popularity": 24.345,
+            "profile_path": "/tpQnDeHY15szIXvpnhlprufz4d.jpg",
+            "credit_id": "572241d4c3a3683bf7002154",
+            "department": "Crew",
+            "job": "Thanks"
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 493,
+            "known_for_department": "Editing",
+            "name": "Michael Kahn",
+            "original_name": "Michael Kahn",
+            "popularity": 2.097,
+            "profile_path": "/jb4Y9q1q91VRQJue0VXhU7VcXce.jpg",
+            "credit_id": "572242a192514149f3001088",
+            "department": "Crew",
+            "job": "Thanks"
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 3193,
+            "known_for_department": "Sound",
+            "name": "Scott Martin Gershin",
+            "original_name": "Scott Martin Gershin",
+            "popularity": 1.715,
+            "profile_path": "/3UbacYnss8yrqtA2oqpAhTurbLQ.jpg",
+            "credit_id": "57d5a8ac9251416f59000311",
+            "department": "Sound",
+            "job": "Sound Effects Editor"
+        },
+        {
+            "adult": false,
+            "gender": 2,
+            "id": 5524,
+            "known_for_department": "Production",
+            "name": "Andrew Adamson",
+            "original_name": "Andrew Adamson",
+            "popularity": 6.097,
+            "profile_path": "/qqIAVKAe5LHRbPyZUlptsqlo4Kb.jpg",
+            "credit_id": "52fe4279c3a36847f8021819",
+            "department": "Directing",
+            "job": "Director"
+        },
+        {
+            "adult": false,
+            "gender": 1,
+            "id": 12058,
+            "known_for_department": "Directing",
+            "name": "Vicky Jenson",
+            "original_name": "Vicky Jenson",
+            "popularity": 10.49,
+            "profile_path": "/dDSlofPZbJxtYBO2f73XjNwcFVT.jpg",
+            "credit_id": "52fe4279c3a36847f802181f",
+            "department": "Directing",
+            "job": "Director"
+        },
+    ]
+},
+"recommendations": {
+    "page": 1,
+    "results": [
+        {
+            "adult": false,
+            "backdrop_path": "/l45UqyARB3WxpYNuACjMjndpe85.jpg",
+            "id": 809,
+            "title": "Shrek 2",
+            "original_language": "en",
+            "original_title": "Shrek 2",
+            "overview": "Cuando Shrek y la princesa Fiona regresan de su luna de miel, los padres de ella los invitan a visitar el reino de Muy Muy Lejano para celebrar la boda. Para Shrek, al que nunca abandona su fiel amigo Asno, esto constituye un gran problema. Los padres de Fiona, por su parte, no esperaban que su yerno tuviera un aspecto semejante y, mucho menos, que su hija hubiera cambiado tanto. Todo esto trastoca los planes del rey respecto al futuro del reino. Pero entonces entran en escena la maquiavélica Hada Madrina, su arrogante hijo el Príncipe Encantador y un minino muy especial: el Gato con Botas, experto cazador de ogros.",
+            "poster_path": "/knRt4E8KyfwEv0SVu9LsLvD28IQ.jpg",
+            "media_type": "movie",
+            "genre_ids": [
+                16,
+                10751,
+                35,
+                14,
+                12,
+                18
+            ],
+            "popularity": 99.959,
+            "release_date": "2004-05-19",
+            "video": false,
+            "vote_average": 7.255,
+            "vote_count": 11504
+        },
+    ]
+},
   "first_air_date": "1999-10-20",
   "genres": [
     {
@@ -829,6 +1178,37 @@ export const testSeries02 = {
       "name": "Animation"
     }
   ],
+  "videos": {
+    "results": [
+        {
+            "iso_639_1": "es",
+            "iso_3166_1": "ES",
+            "name": "shrek",
+            "key": "448020852",
+            "site": "Vimeo",
+            "size": 1080,
+            "type": "Featurette",
+            "official": false,
+            "published_at": "2020-08-15T04:26:05.000Z",
+            "id": "63f64b008c22c000b298cdb4"
+        },
+    ]
+},
+"watch/providers": {
+    "results": {
+        "AD": {
+            "link": "https://www.themoviedb.org/movie/808-shrek/watch?locale=AD",
+            "flatrate": [
+                {
+                    "logo_path": "/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg",
+                    "provider_id": 8,
+                    "provider_name": "Netflix",
+                    "display_priority": 0
+                },
+            ]
+        },
+    }
+},
   "homepage": "http://www.toei-anim.co.jp/tv/onep",
   "id": 37854,
   "in_production": true,
@@ -943,16 +1323,6 @@ export const testSeries02 = {
       "poster_path": "/9hW62RDq5Dno8vLABXscddjEq9M.jpg",
       "season_number": 1,
       "vote_average": 8.4
-    },
-    {
-      "air_date": null,
-      "episode_count": 16,
-      "id": 49189,
-      "name": "Entering into the Grand Line",
-      "overview": "Following the first adventures of Monkey D. Luffy's Straw Hat Pirates head to a sea, called the Grand Line. Stuck in the bowels of the giant whale Laboon, they encounter the whale's caretaker, an old man named Crocus, and Nefeltari Vivi. Taking her with them, they make enemies of the Warlord Sir Crocodile's secret organization, Baroque Works, and befriend the giants Dorry and Broggy on the prehistoric island Little Garden.",
-      "poster_path": "/egsfvwuojnsNZRTrqLkWyw09p6f.jpg",
-      "season_number": 2,
-      "vote_average": 8.7
     },
     {
       "air_date": null,

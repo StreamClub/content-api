@@ -2,9 +2,9 @@
 /**
 * @group seenContent
 */
-import { generateTestJwt, testSeason01, testSeason03, testSpecialSeason01 } from '../../helpers';
+import { generateTestJwt, testSeason01, testSeason02, testSeries02, testSpecialSeason01 } from '../../helpers';
 import { createSeenContentList, getSeenContentList, seeEpisode } from '../../helpers/seenContentHelper';
-import { mockGetSeasonDetails } from '../../setup/mocksSetUp';
+import { mockGetSeasonDetails, mockGetShowDetails } from '../../setup/mocksSetUp';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
 const endpoint = '/seenContent/series';
@@ -248,7 +248,7 @@ describe('Add Content To Watchlist', () => {
     });
 
     it('should return an error if the episode has not aired', async () => {
-        mockGetSeasonDetails.mockReturnValue(testSeason03)
+        mockGetSeasonDetails.mockReturnValue(testSeason02)
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 22;

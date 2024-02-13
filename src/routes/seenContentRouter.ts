@@ -3,7 +3,7 @@ import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import AppDependencies from 'appDependencies'
 import { SeenContentController } from '@controllers'
-import { AddSeenEpisodeSchema, AddSeenMovieSchema, AddSeenSeasonSchema, GetContentListSchema } from '@dtos'
+import { AddSeenEpisodeSchema, AddSeenMovieSchema, AddSeenSeasonSchema, AddSeenSeriesSchema, GetContentListSchema } from '@dtos'
 
 export function SeenContentRouter(dependencies: AppDependencies) {
     const router = Router()
@@ -39,14 +39,14 @@ export function SeenContentRouter(dependencies: AppDependencies) {
     router.put(
         '/series/:seriesId',
         loadUserContext,
-        //validate schema
+        validateSchema(AddSeenSeriesSchema, [FieldOptions.params]),
         handleRequest((req, res) => seenContentController.addSeries(req, res), StatusCodes.CREATED)
     )
 
     router.delete(
         '/series/:seriesId',
         loadUserContext,
-        //validate schema
+        validateSchema(AddSeenSeriesSchema, [FieldOptions.params]),
         handleRequest((req, res) => seenContentController.removeSeries(req, res), StatusCodes.OK)
     )
 

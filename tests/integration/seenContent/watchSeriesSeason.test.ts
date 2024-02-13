@@ -2,7 +2,7 @@
 /**
 * @group seenContent
 */
-import { generateTestJwt, testSeason01, testSeason03, testSpecialSeason01 } from '../../helpers';
+import { generateTestJwt, testSeason01, testSpecialSeason01 } from '../../helpers';
 import { createSeenContentList, getSeenContentList, seeEpisode } from '../../helpers/seenContentHelper';
 import { mockGetSeasonDetails } from '../../setup/mocksSetUp';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
