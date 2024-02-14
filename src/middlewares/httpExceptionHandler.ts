@@ -1,4 +1,5 @@
 import { ApiException } from '@exceptions/apiException';
+import { logger } from '@utils';
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
@@ -17,10 +18,15 @@ export function exceptionToHttpError(
   if (e.isScException) {
     code = e.code;
     description = e.description;
+    logger.warn(`Handled error: ${error.message}
+      Code: ${code}
+      Description: ${description}`);
   } else {
-    console.log(error)
     code = StatusCodes.INTERNAL_SERVER_ERROR;
     description = 'Internal server error';
+    logger.error(`Unhandled error: ${error.message}
+      Code: ${code}
+      Stack: ${error.stack}`);
   }
   res.status(code).json({
     error: error.message,

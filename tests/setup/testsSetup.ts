@@ -2,8 +2,10 @@ import { TestDb } from './testDb'
 import request from 'supertest'
 import { App } from '../../src/app'
 import { setUpMocks } from './mocksSetUp'
+import { SeenContentService } from '@services'
 
 export let db: TestDb
+export let seenContentService: SeenContentService
 export let server: request.SuperTest<request.Test>
 
 export function setupBeforeAndAfter() {
@@ -12,8 +14,10 @@ export function setupBeforeAndAfter() {
         db = new TestDb()
         await db.initTestDb()
         const app = new App({ db })
-        server = request(await app.start())
+        seenContentService = new SeenContentService({ db });
+        server = request(await app.start(false))
     })
+    beforeEach(async () => jest.clearAllMocks());
     afterEach(async () => await db.clearDatabase());
     afterAll(async () => await db.closeDatabase());
 }

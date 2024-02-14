@@ -59,12 +59,13 @@ describe('Get Season', () => {
         expect(series.poster).toBe(testSeason02.poster_path);
         expect(series.episodes.length).toBe(testSeason02.episodes.length);
         for (const episode of series.episodes) {
-            expect(episode.episodeNumber).toBeDefined();
+            expect(episode.episodeId).toBeDefined();
             expect(episode.airDate).toBeDefined();
             expect(episode.name).toBeDefined();
             expect(episode.overview).toBeDefined();
             expect(episode.poster).toBeDefined();
             expect(episode.runtime).toBeDefined();
+            expect(episode.seen).toBeDefined();
         }
     });
 

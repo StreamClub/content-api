@@ -21,13 +21,15 @@ export class SeriesController {
     public async getSeries(req: Request<GetMovieDto>, res: Response<any>) {
         const userId = res.locals.userId;
         const country = req.query.country as string;
-        return await this.tmdbService.getSeries(userId, req.params.seriesId, country);
+        const seriesId = Number(req.params.seriesId);
+        return await this.tmdbService.getSeries(userId, seriesId, country);
     }
 
     public async getSeason(req: Request<GetMovieDto>, res: Response<any>) {
         const userId = res.locals.userId;
-        const country = req.query.country as string;
-        return await this.tmdbService.getSeason(userId, Number(req.params.seriesId), Number(req.params.seasonId), country);
+        const seriesId = Number(req.params.seriesId);
+        const seasonId = Number(req.params.seasonId);
+        return await this.tmdbService.getUserSeason(userId, seriesId, seasonId);
     }
 
 }

@@ -29,7 +29,7 @@ export function MovieRouter(dependencies: AppDependencies) {
         loadUserContext,
         validateSchema(GetMovieSchema, [FieldOptions.params, FieldOptions.query]),
         handleRequest(
-            (req, res) => movieController.getMovie(req),
+            (req, res) => movieController.getMovie(req, res),
             StatusCodes.OK
         )
     );

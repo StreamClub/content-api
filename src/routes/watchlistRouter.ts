@@ -2,7 +2,7 @@ import { FieldOptions, handleRequest, loadUserContext, validateSchema } from '@m
 import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import AppDependencies from 'appDependencies'
-import { AddContentSchema, GetWatchlistSchema } from '@dtos'
+import { AddContentSchema, GetContentListSchema } from '@dtos'
 import { WatchlistController } from '@controllers'
 
 export function WatchlistRouter(dependencies: AppDependencies) {
@@ -18,7 +18,7 @@ export function WatchlistRouter(dependencies: AppDependencies) {
     router.get(
         '/:userId',
         loadUserContext,
-        validateSchema(GetWatchlistSchema, [FieldOptions.params, FieldOptions.query]),
+        validateSchema(GetContentListSchema, [FieldOptions.params, FieldOptions.query]),
         handleRequest((req) => watchlistController.get(req), StatusCodes.OK)
     )
 
@@ -26,7 +26,7 @@ export function WatchlistRouter(dependencies: AppDependencies) {
         '/',
         loadUserContext,
         validateSchema(AddContentSchema, [FieldOptions.params, FieldOptions.body]),
-        handleRequest((req, res) => watchlistController.addContent(req, res), StatusCodes.OK)
+        handleRequest((req, res) => watchlistController.addContent(req, res), StatusCodes.CREATED)
     )
 
     router.delete(
