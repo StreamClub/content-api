@@ -4,7 +4,7 @@
 Para correr ejecutar:
 
 ```
-docker-compose up -d
+docker compose up --no-attach mongo
 ```
 Para matarlo ejecutar el siguiente comando:
 ```
