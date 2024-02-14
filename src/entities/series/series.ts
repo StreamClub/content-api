@@ -15,6 +15,7 @@ export class Series extends Content {
     nextEpisode: LastSeenEpisode;
     similar: SimilarSeries[];
     seen: number;
+    inWatchlist: boolean;
 
     constructor(tmdbShow: TmdbSeries, country: string, provider: ProvidersDictionary, nextEpisode: LastSeenEpisode) {
         super(tmdbShow, country, provider);

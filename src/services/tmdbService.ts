@@ -44,6 +44,8 @@ export class TmdbService {
             const totalWatchedEpisodes = await seenContentRepository
                 .getTotalWatchedEpisodes(userId, serie.id)
             series.setSeen(series.numberOfEpisodes, totalWatchedEpisodes)
+            series.inWatchlist = await watchlistRepository
+                .isInWatchlist(userId, seriesId.toString(), contentTypes.SERIES);
             return series;
         })
     }
