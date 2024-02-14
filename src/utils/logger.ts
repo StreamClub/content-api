@@ -5,7 +5,7 @@ class Logger {
     private logger: winston.Logger;
     private production: boolean;
 
-    private constructor(production: boolean = false) {
+    private constructor(production: boolean = true) {
         this.logger = winston.createLogger({
             level: 'silly',
             format: winston.format.combine(

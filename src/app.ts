@@ -18,11 +18,11 @@ export class App {
         app.use(cors())
         app.use(express.json())
         app.use(toCamelCase())
-        registerRouters(app, this.dependencies)
-        app.use(exceptionToHttpError)
         if (production) {
             app.use(loggerMiddleware);
         };
+        registerRouters(app, this.dependencies)
+        app.use(exceptionToHttpError)
         return app
     }
 }
