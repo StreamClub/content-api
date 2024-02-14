@@ -11,10 +11,11 @@ export class MovieController {
         this.tmdbService = new TmdbService(dependencies);
     }
 
-    public async getMovie(req: Request<GetMovieDto>) {
+    public async getMovie(req: Request<GetMovieDto>, res: Response<any>) {
         const country = req.query.country as string;
         const movieId = parseInt(req.params.movieId);
-        return await this.tmdbService.getMovie(movieId, country);
+        const userId = res.locals.userId;
+        return await this.tmdbService.getMovie(userId, movieId, country);
     }
 
     public async searchMovie(req: Request<GetMovieDto>, res: Response<any>) {

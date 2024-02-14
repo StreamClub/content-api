@@ -11,7 +11,8 @@ export class Movie extends Content {
     status: string;
     directors: string[];
     similar: SimilarMovie[];
-
+    seen: boolean;
+    inWatchlist: boolean;
 
     constructor(tmdbMovie: TmdbMovie, country: string, provider: ProvidersDictionary) {
         super(tmdbMovie, country, provider);

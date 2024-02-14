@@ -21,14 +21,19 @@ export class TmdbService {
         this.tmdb = new MovieDb(process.env.TMDB_API_KEY);
     }
 
-    public async getMovie(movieId: number, country: string): Promise<Movie> {
+    public async getMovie(userId: string, movieId: number, country: string): Promise<Movie> {
         return await this.getContentSafely(async () => {
             const movie = await this.tmdb.movieInfo({
                 id: movieId, language: this.language,
                 append_to_response: 'credits,watch/providers,recommendations,videos'
             }) as TmdbMovie;
             const providersData = await this.getProvidersData(this.contentTypes.MOVIE, movieId, country);
-            return new Movie(movie, country, providersData);
+            const scMovie = new Movie(movie, country, providersData);
+            scMovie.inWatchlist = await watchlistRepository
+                .isInWatchlist(userId, movie.id.toString(), contentTypes.MOVIE);
+            scMovie.seen = await seenContentRepository
+                .isASeenMovie(userId, movie.id);
+            return scMovie;
         })
     }
 
