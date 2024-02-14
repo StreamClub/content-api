@@ -1,5 +1,5 @@
 import { Content, ProvidersDictionary } from "@entities";
-import { NextEpisode } from "./nextEpisode";
+import { LastSeenEpisode } from "./lastSeenEpisode";
 import { TmdbSeries } from "./tmdbSeries";
 import { SimilarSeries } from "./similarSeries";
 import { SeasonResume } from "./seasonResume";
@@ -12,10 +12,12 @@ export class Series extends Content {
     numberOfEpisodes: number;
     numberOfSeasons: number;
     seasons: SeasonResume[];
-    nextEpisode: NextEpisode;
+    nextEpisode: LastSeenEpisode;
     similar: SimilarSeries[];
+    seen: number;
+    inWatchlist: boolean;
 
-    constructor(tmdbShow: TmdbSeries, country: string, provider: ProvidersDictionary, nextEpisode: NextEpisode) {
+    constructor(tmdbShow: TmdbSeries, country: string, provider: ProvidersDictionary, nextEpisode: LastSeenEpisode) {
         super(tmdbShow, country, provider);
         this.title = tmdbShow.name;
         this.status = seriesStatus[tmdbShow.status];
@@ -27,5 +29,9 @@ export class Series extends Content {
         this.similar = tmdbShow.recommendations.results.slice(0, 10).map((series) => new SimilarSeries(series));
         this.releaseDate = tmdbShow.first_air_date;
         this.nextEpisode = nextEpisode;
+    }
+
+    public setSeen(totalEpisodes: number, totalWatchedEpisodes: number) {
+        this.seen = (totalEpisodes != 0) ? 100 * (totalWatchedEpisodes / totalEpisodes) : 0
     }
 }

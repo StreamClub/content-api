@@ -1,4 +1,5 @@
 import { UnauthorizedException } from '@exceptions';
+import { logger } from '@utils';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
@@ -12,7 +13,7 @@ export function loadUserContext(req: Request, res: Response, next: NextFunction)
         res.locals.userId = userContext.userId;
         next();
     } catch (err) {
-        console.log(err)
+        logger.error(err.message);
         throw new UnauthorizedException('Invalid auth token');
     }
 }

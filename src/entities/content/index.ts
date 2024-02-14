@@ -3,3 +3,5 @@ export * from "./provider";
 export * from "./paginatedResult";
 export * from "./content";
 export * from "./tmdbContent";
+export * from "./userContentList";
+export * from "./page";

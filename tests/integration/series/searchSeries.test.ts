@@ -7,7 +7,7 @@ import { MAX_STRING_LENGTH } from '@config';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 import { generateTestJwt } from '../../helpers';
 import { mockGetShowDetails, mockSearchSeries } from '../../setup/mocksSetUp';
-import { testSearchSeries01, testSeries01 } from '../../helpers/testSeries';
+import { testSearchSeries01, testSeries01 } from '../../helpers/mocks/testSeries';
 
 const endpoint = '/series';
 
@@ -45,17 +45,18 @@ describe('Search Series', () => {
         const series = response.body.results;
         expect(response.status).toBe(200);
         expect(series.length).toBeLessThanOrEqual(20);
-        for (const serie of series) {
-            expect(serie.id).toBeDefined();
-            expect(serie.title).toBeDefined();
-            expect(serie.poster).toBeDefined();
-            expect(serie.available).toBeDefined();
-            expect(serie.score).toBeDefined();
-            expect(serie.seen).toBeDefined();
-            expect(serie.inWatchlist).toBeDefined();
-            expect(serie.releaseDate).toBeDefined();
-            expect(serie.status).toBeDefined();
-            expect(serie.lastEpisodeReleaseDate).toBeDefined();
+        for (const currentSeries of series) {
+            expect(currentSeries.id).toBeDefined();
+            expect(currentSeries.title).toBeDefined();
+            expect(currentSeries.poster).toBeDefined();
+            expect(currentSeries.available).toBeDefined();
+            expect(currentSeries.score).toBeDefined();
+            expect(currentSeries.seen).toBeGreaterThanOrEqual(0);
+            expect(currentSeries.seen).toBeLessThanOrEqual(100);
+            expect(currentSeries.inWatchlist).toBeDefined();
+            expect(currentSeries.releaseDate).toBeDefined();
+            expect(currentSeries.status).toBeDefined();
+            expect(currentSeries.lastEpisodeReleaseDate).toBeDefined();
         }
         expect(response.body.page).toBeGreaterThanOrEqual(1);
         expect(response.body.totalPages).toBeGreaterThanOrEqual(0);

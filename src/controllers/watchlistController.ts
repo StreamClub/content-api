@@ -1,5 +1,4 @@
-
-import { AddContentDto, GetWatchlistDto } from '@dtos';
+import { AddContentDto, GetContentListDto } from '@dtos';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { WatchlistService } from '@services';
@@ -16,7 +15,7 @@ export class WatchlistController {
         return await this.watchlistService.create(userId);
     }
 
-    public async get(req: Request<GetWatchlistDto>) {
+    public async get(req: Request<GetContentListDto>) {
         const pageSize = Number(req.query.pageSize) || 20;
         const pageNumber = Number(req.query.page) || 1;
         const userId = req.params.userId;

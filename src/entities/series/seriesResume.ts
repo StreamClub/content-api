@@ -7,7 +7,7 @@ export class SeriesResume {
     available: boolean;
     releaseDate: string;
     score: number;
-    seen: boolean;
+    seen: number;
     inWatchlist: boolean;
     status: string;
     lastEpisodeReleaseDate: string;
@@ -19,6 +19,9 @@ export class SeriesResume {
         this.available = Math.round(Math.random() * 1) == 1; //TODO: cambiar el available segun los servicios del usuario
         this.releaseDate = series.first_air_date;
         this.score = series.vote_average; //TODO: cambiar el score por el de la base de datos
-        this.seen = Math.round(Math.random() * 1) == 1;; //TODO: cambiar el seen por el de la base de datos
+    }
+
+    public setSeen(totalEpisodes: number, totalWatchedEpisodes: number) {
+        this.seen = (totalEpisodes != 0) ? 100 * (totalWatchedEpisodes / totalEpisodes) : 0
     }
 }

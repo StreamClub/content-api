@@ -49,7 +49,7 @@ describe('Add Content To Watchlist', () => {
         const response = await server.put(`${endpoint}`)
             .set('Authorization', `Bearer ${testJwt}`)
             .send({ contentId: 2150, contentType: contentTypes.MOVIE });
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(201);
         const getResponse = await server.get(`${endpoint}/${userId}`).set('Authorization', `Bearer ${testJwt}`);
         expect(getResponse.status).toBe(200);
         expect(getResponse.body.results.length).toBe(1);
@@ -65,7 +65,7 @@ describe('Add Content To Watchlist', () => {
         const response = await server.put(`${endpoint}`)
             .set('Authorization', `Bearer ${testJwt}`)
             .send({ contentId: 2150, contentType: contentTypes.SERIES });
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(201);
         const getResponse = await server.get(`${endpoint}/${userId}`).set('Authorization', `Bearer ${testJwt}`);
         expect(getResponse.status).toBe(200);
         expect(getResponse.body.results.length).toBe(1);
@@ -82,11 +82,11 @@ describe('Add Content To Watchlist', () => {
         const response = await server.put(`${endpoint}`)
             .set('Authorization', `Bearer ${testJwt}`)
             .send({ contentId, contentType: contentTypes.SERIES });
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(201);
         const response2 = await server.put(`${endpoint}`)
             .set('Authorization', `Bearer ${testJwt}`)
             .send({ contentId, contentType: contentTypes.MOVIE });
-        expect(response2.status).toBe(200);
+        expect(response2.status).toBe(201);
         const getResponse = await server.get(`${endpoint}/${userId}`).set('Authorization', `Bearer ${testJwt}`);
         expect(getResponse.status).toBe(200);
         expect(getResponse.body.results.length).toBe(2);
@@ -103,11 +103,11 @@ describe('Add Content To Watchlist', () => {
         const response = await server.put(`${endpoint}`)
             .set('Authorization', `Bearer ${testJwt}`)
             .send({ contentId: 2150, contentType: contentTypes.MOVIE });
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(201);
         const response2 = await server.put(`${endpoint}`)
             .set('Authorization', `Bearer ${testJwt}`)
             .send({ contentId: 2150, contentType: contentTypes.MOVIE });
-        expect(response2.status).toBe(200);
+        expect(response2.status).toBe(201);
         const getResponse = await server.get(`${endpoint}/${userId}`).set('Authorization', `Bearer ${testJwt}`);
         expect(getResponse.status).toBe(200);
         expect(getResponse.body.results.length).toBe(1);
@@ -122,11 +122,11 @@ describe('Add Content To Watchlist', () => {
         const response = await server.put(`${endpoint}`)
             .set('Authorization', `Bearer ${testJwt}`)
             .send({ contentId: 2150, contentType: contentTypes.SERIES });
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(201);
         const response2 = await server.put(`${endpoint}`)
             .set('Authorization', `Bearer ${testJwt}`)
             .send({ contentId: 2150, contentType: contentTypes.SERIES });
-        expect(response2.status).toBe(200);
+        expect(response2.status).toBe(201);
         const getResponse = await server.get(`${endpoint}/${userId}`).set('Authorization', `Bearer ${testJwt}`);
         expect(getResponse.status).toBe(200);
         expect(getResponse.body.results.length).toBe(1);
