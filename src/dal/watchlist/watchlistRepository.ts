@@ -1,4 +1,4 @@
-import { Watchlist } from '@entities'
+import { Page, Watchlist } from '@entities'
 import { WatchlistModel } from './watchlistModel'
 
 class WatchlistRepository {
@@ -8,8 +8,15 @@ class WatchlistRepository {
         return new Watchlist(watchlist);
     }
 
-    async get(userId: string): Promise<Watchlist> {
-        return await WatchlistModel.findOne({ userId });
+    async get(userId: string, pageNumber: number, pageSize: number): Promise<Page> {
+        const founded = await WatchlistModel.findOne({ userId });
+        const watchlist = new Watchlist(founded);
+        return new Page(pageNumber, pageSize, watchlist.watchlist);
+    }
+
+    async doesUserHaveWatchlist(userId: string): Promise<boolean> {
+        const watchlistCount = await WatchlistModel.countDocuments({ userId });
+        return watchlistCount > 0;
     }
 
     async addContent(userId: string, contentId: string, contentType: string): Promise<void> {

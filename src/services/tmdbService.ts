@@ -129,7 +129,7 @@ export class TmdbService {
     }
 
     public async searchSeries(userId: string, query: string, page: number) {
-        const result = await this.tmdb.searchTv({ query, language: this.language, page});
+        const result = await this.tmdb.searchTv({ query, language: this.language, page });
         const series = await Promise.all(result.results.map(async (serie: TvResult) => {
             const serieResume = new SeriesResume(serie)
             serieResume.inWatchlist = await watchlistRepository

@@ -8,7 +8,7 @@ export class WatchlistService {
     }
 
     public async create(userId: string) {
-        const watchlist = await watchlistRepository.get(userId);
+        const watchlist = await watchlistRepository.doesUserHaveWatchlist(userId);
         if (watchlist) {
             throw new AlreadyExistsException('Watchlist already exists');
         }
@@ -16,9 +16,8 @@ export class WatchlistService {
     }
 
     public async get(userId: string, pageSize: number, pageNumber: number) {
-        const foundWatchlist = await this.failIfWatchlistDoesNotExist(userId);
-        const watchlist = new Watchlist(foundWatchlist);
-        const page = new Page(pageNumber, pageSize, watchlist.watchlist);
+        await this.failIfWatchlistDoesNotExist(userId);
+        const page = await watchlistRepository.get(userId, pageNumber, pageSize);
         return new UserContentList(Number(userId), page);
     }
 
@@ -33,11 +32,10 @@ export class WatchlistService {
     }
 
     private async failIfWatchlistDoesNotExist(userId: string) {
-        const watchlist = await watchlistRepository.get(userId);
+        const watchlist = await watchlistRepository.doesUserHaveWatchlist(userId);
         if (!watchlist) {
             throw new NotFoundException('Watchlist does not exist');
         }
-        return watchlist;
     }
 
 }
