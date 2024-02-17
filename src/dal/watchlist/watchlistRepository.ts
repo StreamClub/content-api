@@ -1,25 +1,67 @@
-import { Page, Watchlist } from '@entities'
+import { Page, Watchlist, WatchlistItem } from '@entities'
 import { WatchlistModel } from './watchlistModel'
 
 class WatchlistRepository {
-    async create(userId: string): Promise<Watchlist> {
+    async create(userId: number): Promise<Watchlist> {
         const watchlist = new WatchlistModel({ userId });
         await watchlist.save();
         return new Watchlist(watchlist);
     }
 
-    async get(userId: string, pageNumber: number, pageSize: number): Promise<Page> {
-        const founded = await WatchlistModel.findOne({ userId });
-        const watchlist = new Watchlist(founded);
-        return new Page(pageNumber, pageSize, watchlist.watchlist);
+    async get(userId: number, page: number, pageSize: number): Promise<Page> {
+        const founded = await WatchlistModel.aggregate([
+            {
+                $match: {
+                    userId: userId,
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    watchlist: 1,
+                },
+            },
+            {
+                $unwind: {
+                    'path': '$watchlist'
+                }
+            },
+            {
+                $skip: (page - 1) * pageSize,
+            },
+            {
+                $limit: pageSize,
+            }
+        ]);
+        const watchlistLength = await this.getWatchlistSize(userId);
+        const watchlist = founded.map((content) => {
+            return new WatchlistItem(content.watchlist)
+        });
+        return new Page(page, pageSize, watchlistLength, watchlist);
     }
 
-    async doesUserHaveWatchlist(userId: string): Promise<boolean> {
+    async getWatchlistSize(userId: number): Promise<number> {
+        const size = await WatchlistModel.aggregate([
+            {
+                $match: {
+                    userId: userId,
+                },
+            },
+            {
+                $project: {
+                    watchlistLength: { $size: "$watchlist" },
+                },
+            },
+        ]);
+        return size[0] ? size[0].watchlistLength : 0;
+    }
+
+    async doesUserHaveWatchlist(userId: number): Promise<boolean> {
         const watchlistCount = await WatchlistModel.countDocuments({ userId });
         return watchlistCount > 0;
     }
 
-    async addContent(userId: string, contentId: string, contentType: string): Promise<void> {
+    async addContent(userId: number, contentId: string, contentType: string): Promise<void> {
         await WatchlistModel.updateOne(
             {
                 userId,
@@ -43,7 +85,7 @@ class WatchlistRepository {
         );
     }
 
-    async removeContent(userId: string, contentId: string, contentType: string): Promise<void> {
+    async removeContent(userId: number, contentId: string, contentType: string): Promise<void> {
         await WatchlistModel.updateOne(
             {
                 userId,
@@ -65,7 +107,7 @@ class WatchlistRepository {
         );
     }
 
-    async isInWatchlist(userId: string, contentId: string, contentType: string): Promise<boolean> {
+    async isInWatchlist(userId: number, contentId: string, contentType: string): Promise<boolean> {
         const watchlist = await WatchlistModel.findOne({
             userId,
             'watchlist': {

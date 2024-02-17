@@ -7,7 +7,7 @@ export class SeenContentService {
     public constructor(dependencies: AppDependencies) {
     }
 
-    public async create(userId: string) {
+    public async create(userId: number) {
         const seenContent = await seenContentRepository.get(userId);
         if (seenContent) {
             throw new AlreadyExistsException('Seen Content List already exists');
@@ -15,36 +15,37 @@ export class SeenContentService {
         return await seenContentRepository.create(userId);
     }
 
-    public async getMovies(userId: string, pageSize: number, pageNumber: number) {
+    public async getMovies(userId: number, pageSize: number, pageNumber: number) {
         const found = await this.failIfListDoesNotExist(userId);
         const seenMovies = found.movies.map((movie) => new SeenMovie(movie));
-        const page = new Page(pageNumber, pageSize, seenMovies);
+        const results = seenMovies.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+        const page = new Page(pageNumber, pageSize, seenMovies.length, results);
         return new UserContentList(Number(userId), page);
     }
 
-    public async addMovie(userId: string, movieId: number) {
+    public async addMovie(userId: number, movieId: number) {
         await this.failIfListDoesNotExist(userId);
         await seenContentRepository.addMovie(userId, movieId);
     }
 
-    public async removeMovie(userId: string, movieId: number) {
+    public async removeMovie(userId: number, movieId: number) {
         await this.failIfListDoesNotExist(userId);
         await seenContentRepository.removeMovie(userId, movieId);
     }
 
-    public async addSeries(userId: string, seriesId: number, seasons: SeenSeason[], latestSeenEpisode: SeasonEpisode) {
+    public async addSeries(userId: number, seriesId: number, seasons: SeenSeason[], latestSeenEpisode: SeasonEpisode) {
         const seenContent = await this.failIfListDoesNotExist(userId);
         await this.addSeasons(userId, seriesId, seasons, seenContent.series.find(series => series.seriesId === seriesId));
         await seenContentRepository.addLastSeenEpisode(userId, seriesId,
             latestSeenEpisode.seasonId, latestSeenEpisode.episodeId);
     }
 
-    public async removeSeries(userId: string, seriesId: number) {
+    public async removeSeries(userId: number, seriesId: number) {
         await this.failIfListDoesNotExist(userId);
         await seenContentRepository.removeSeries(userId, seriesId);
     }
 
-    private async addSeasons(userId: string, seriesId: number, seasons: SeenSeason[], seenSeries: SeenSeries) {
+    private async addSeasons(userId: number, seriesId: number, seasons: SeenSeason[], seenSeries: SeenSeries) {
 
         if (!seenSeries) {
             await seenContentRepository.addSeries(userId, seriesId, seasons);
@@ -62,7 +63,7 @@ export class SeenContentService {
         }
     }
 
-    public async addSeason(userId: string, seriesId: number, seasonId: number, episodes: SeenEpisode[], latestSeenEpisode: SeasonEpisode) {
+    public async addSeason(userId: number, seriesId: number, seasonId: number, episodes: SeenEpisode[], latestSeenEpisode: SeasonEpisode) {
         const seenContent = await this.failIfListDoesNotExist(userId);
         const series = seenContent.series.find(series => series.seriesId === seriesId);
         await this.addSeasons(userId, seriesId, [new SeenSeason({ seasonId, episodes })], series);
@@ -70,7 +71,7 @@ export class SeenContentService {
             latestSeenEpisode.seasonId, latestSeenEpisode.episodeId);
     }
 
-    public async removeSeason(userId: string, seriesId: number, seasonId: number) {
+    public async removeSeason(userId: number, seriesId: number, seasonId: number) {
         const seenContent: SeenContent = new SeenContent(await this.failIfListDoesNotExist(userId));
         const season = seenContent.series.find(series => series.seriesId === seriesId)
             ?.seasons.find(season => season.seasonId === seasonId);
@@ -79,7 +80,7 @@ export class SeenContentService {
         }
     }
 
-    public async addEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
+    public async addEpisode(userId: number, seriesId: number, seasonId: number, episodeId: number) {
         const seenContent = await this.failIfListDoesNotExist(userId);
         const seenEpisodes: SeenEpisode[] = [{ seasonId, episodeId }];
         const series = seenContent.series.find(series => series.seriesId === seriesId);
@@ -99,12 +100,12 @@ export class SeenContentService {
         await seenContentRepository.addLastSeenEpisode(userId, seriesId, seasonId, episodeId);
     }
 
-    public async removeEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
+    public async removeEpisode(userId: number, seriesId: number, seasonId: number, episodeId: number) {
         await this.failIfListDoesNotExist(userId);
         await seenContentRepository.removeEpisode(userId, seriesId, seasonId, episodeId);
     }
 
-    private async failIfListDoesNotExist(userId: string) {
+    private async failIfListDoesNotExist(userId: number) {
         const seenContent = await seenContentRepository.get(userId);
         if (!seenContent) {
             throw new NotFoundException('Seen Content List does not exist');

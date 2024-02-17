@@ -21,7 +21,7 @@ export class TmdbService {
         this.tmdb = new MovieDb(process.env.TMDB_API_KEY);
     }
 
-    public async getMovie(userId: string, movieId: number, country: string): Promise<Movie> {
+    public async getMovie(userId: number, movieId: number, country: string): Promise<Movie> {
         return await this.getContentSafely(async () => {
             const movie = await this.tmdb.movieInfo({
                 id: movieId, language: this.language,
@@ -37,7 +37,7 @@ export class TmdbService {
         })
     }
 
-    public async getSeries(userId: string, seriesId: number, country: string): Promise<Series> {
+    public async getSeries(userId: number, seriesId: number, country: string): Promise<Series> {
         return await this.getContentSafely(async () => {
             const serie = await this.tmdb.tvInfo({
                 id: seriesId, language: this.language,
@@ -74,7 +74,7 @@ export class TmdbService {
         });
     }
 
-    private async getNextEpisode(userId: string, serieId: number, seasons: TvSeasonResponse[]): Promise<LastSeenEpisode> {
+    private async getNextEpisode(userId: number, serieId: number, seasons: TvSeasonResponse[]): Promise<LastSeenEpisode> {
         const lastSeenEpisode: SeenEpisode = await seenContentRepository.getLastSeenEpisode(userId, serieId);
         if (!lastSeenEpisode) {
             return this.getSeasonFirstEpisode(serieId, 1, seasons);
@@ -107,7 +107,7 @@ export class TmdbService {
     }
 
 
-    public async getUserSeason(userId: string, serieId: number, seasonId: number) {
+    public async getUserSeason(userId: number, serieId: number, seasonId: number) {
         const season = await this.getSeason(serieId, seasonId);
         const seenEpisodes = await seenContentRepository
             .getSeenEpisodes(userId, serieId, seasonId);
@@ -115,7 +115,7 @@ export class TmdbService {
         return season;
     }
 
-    public async searchMovie(userId: string, query: string, page: number) {
+    public async searchMovie(userId: number, query: string, page: number) {
         const result = await this.tmdb.searchMovie({ query, language: this.language, page });
         const movies = await Promise.all(result.results.map(async (movie: MovieResult) => {
             const movieResume = new MovieResume(movie)
@@ -128,7 +128,7 @@ export class TmdbService {
         return new PaginatedResult(result.page, result.total_pages, result.total_results, movies);
     }
 
-    public async searchSeries(userId: string, query: string, page: number) {
+    public async searchSeries(userId: number, query: string, page: number) {
         const result = await this.tmdb.searchTv({ query, language: this.language, page });
         const series = await Promise.all(result.results.map(async (serie: TvResult) => {
             const serieResume = new SeriesResume(serie)
@@ -145,7 +145,7 @@ export class TmdbService {
         return new PaginatedResult(result.page, result.total_pages, result.total_results, series);
     }
 
-    public async searchArtist(userId: string, query: string, page: number) {
+    public async searchArtist(userId: number, query: string, page: number) {
         const result = await this.tmdb.searchPerson({ query, language: this.language, page });
         const artists = await Promise.all(result.results.map(async (artist) => {
             const artistDetail = await this.tmdb.personInfo({ id: artist.id, language: this.language });
