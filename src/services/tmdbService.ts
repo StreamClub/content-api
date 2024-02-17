@@ -154,6 +154,13 @@ export class TmdbService {
         return new PaginatedResult(result.page, result.total_pages, result.total_results, artists);
     }
 
+    public async getPoster(contentType: string, contentId: number) {
+        const tmdbContent = contentType == this.contentTypes.MOVIE ?
+            await this.tmdb.movieInfo({ id: contentId, language: this.language }) :
+            await this.tmdb.tvInfo({ id: contentId, language: this.language });
+        return tmdbContent.poster_path;
+    }
+
     private async getProvidersData(contentType: string, contentId: number, country: string) {
         const providersUrl = `https://www.themoviedb.org/${contentType}/${contentId}/watch?locale=${country}`;
         return await getRedirectLinks(providersUrl);

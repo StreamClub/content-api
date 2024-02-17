@@ -3,9 +3,10 @@
 * @group watchlist
 */
 import { contentTypes } from '@config';
-import { generateTestJwt } from '../../helpers';
+import { generateTestJwt, testMovie1, testSeries01 } from '../../helpers';
 import { createWatchlist } from '../../helpers/watchlistHelper';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
+import { mockGetShowDetails, mockMovieInfo } from '../../setup/mocksSetUp';
 
 const endpoint = '/watchlist';
 
@@ -43,6 +44,7 @@ describe('Add Content To Watchlist', () => {
     });
 
     it('should add a movie to the watchlist of the user', async () => {
+        mockMovieInfo.mockReturnValue(testMovie1)
         const userId = 1;
         const testJwt = generateTestJwt(userId, "test@test.com");
         await createWatchlist(userId);
@@ -59,6 +61,7 @@ describe('Add Content To Watchlist', () => {
     });
 
     it('should add a series to the watchlist of the user', async () => {
+        mockGetShowDetails.mockReturnValue(testSeries01)
         const userId = 1;
         const testJwt = generateTestJwt(userId, "test@test.com");
         await createWatchlist(userId);
@@ -75,6 +78,8 @@ describe('Add Content To Watchlist', () => {
     });
 
     it('should let you add a movie and a series with the same id to the watchlist of the user', async () => {
+        mockMovieInfo.mockReturnValue(testMovie1)
+        mockGetShowDetails.mockReturnValue(testSeries01)
         const userId = 1;
         const contentId = 2150;
         const testJwt = generateTestJwt(userId, "test@test.com");
@@ -97,6 +102,7 @@ describe('Add Content To Watchlist', () => {
     });
 
     it('should not add a movie to the watchlist of the user if it is already there', async () => {
+        mockMovieInfo.mockReturnValue(testMovie1)
         const userId = 1;
         const testJwt = generateTestJwt(userId, "test@test.com");
         await createWatchlist(userId);
@@ -116,6 +122,7 @@ describe('Add Content To Watchlist', () => {
 
 
     it('should not add a series to the watchlist of the user if it is already there', async () => {
+        mockGetShowDetails.mockReturnValue(testSeries01)
         const userId = 1;
         const testJwt = generateTestJwt(userId, "test@test.com");
         await createWatchlist(userId);
