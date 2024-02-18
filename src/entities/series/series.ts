@@ -6,16 +6,16 @@ import { SeasonResume } from "./seasonResume";
 import { seriesStatus as seriesStatus } from "@config";
 
 export class Series extends Content {
-    status: string;
-    createdBy: string[];
-    lastAirDate: string;
-    numberOfEpisodes: number;
-    numberOfSeasons: number;
-    seasons: SeasonResume[];
-    nextEpisode: LastSeenEpisode;
-    similar: SimilarSeries[];
-    seen: number;
-    inWatchlist: boolean;
+    public status: string;
+    public createdBy: string[];
+    public lastAirDate: string;
+    public numberOfEpisodes: number;
+    public numberOfSeasons: number;
+    public seasons: SeasonResume[];
+    public nextEpisode: LastSeenEpisode;
+    public similar: SimilarSeries[];
+    public seen: number;
+    public inWatchlist: boolean;
 
     constructor(tmdbShow: TmdbSeries, country: string, provider: ProvidersDictionary, nextEpisode: LastSeenEpisode) {
         super(tmdbShow, country, provider);

@@ -14,12 +14,12 @@ export class MovieController {
     public async getMovie(req: Request<GetMovieDto>, res: Response<any>) {
         const country = req.query.country as string;
         const movieId = parseInt(req.params.movieId);
-        const userId = res.locals.userId;
+        const userId = Number(res.locals.userId);
         return await this.tmdbService.getMovie(userId, movieId, country);
     }
 
     public async searchMovie(req: Request<GetMovieDto>, res: Response<any>) {
-        const userId = res.locals.userId;
+        const userId = Number(res.locals.userId);
         const query = req.query.query as string;
         const page = parseInt(req.query.page as string || '1');
         return await this.tmdbService.searchMovie(userId, query, page);

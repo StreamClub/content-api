@@ -4,12 +4,12 @@ import { EpisodeResult, TvSeasonResponse } from "moviedb-promise";
 
 
 export class Season {
-    id: number;
-    airDate: string;
-    name: string;
-    overview: string;
-    poster: string;
-    episodes: SeasonEpisode[];
+    public id: number;
+    public airDate: string;
+    public name: string;
+    public overview: string;
+    public poster: string;
+    public episodes: SeasonEpisode[];
 
     constructor(tmdbSeason: TvSeasonResponse) {
         this.id = tmdbSeason.season_number;

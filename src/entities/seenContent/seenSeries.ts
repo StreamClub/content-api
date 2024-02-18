@@ -1,4 +1,4 @@
-import {  LastSeenEpisode, SeenSeason } from "@entities";
+import { LastSeenEpisode, SeenSeason } from "@entities";
 
 export class SeenSeries {
     public seriesId: number;

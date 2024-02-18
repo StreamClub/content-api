@@ -21,4 +21,4 @@ export const SeenSeriesSchema = new Schema<SeenSeriesType>({
         episodeId: Number,
         seasonId: Number,
     },
-}, { _id: false })
+}, { _id: false, timestamps: true })
