@@ -1,4 +1,4 @@
-import { SeenContent, SeenEpisode, SeenSeason } from '@entities';
+import { Page, SeenContent, SeenEpisode, SeenItemFactory, SeenSeason } from '@entities';
 import { SeenContentModel } from './seenContentModel'
 import { SPECIALS_SEASON_ID } from '@config';
 
@@ -13,6 +13,107 @@ class SeenContentRepository {
     async get(userId: number): Promise<SeenContent> {
         return await SeenContentModel.findOne({ userId });
     }
+
+    async getContentList(userId: number, pageSize: number, pageNumber: number): Promise<Page> {
+        const seenContent = await SeenContentModel.aggregate([
+            { $match: { userId: userId } },
+            {
+                $project: {
+                    contentType: { $literal: 'movie' },
+                    content: {
+                        $map: {
+                            input: "$movies.movieId",
+                            as: "id",
+                            in: {
+                                movieId: "$$id",
+                                updatedAt: {
+                                    $arrayElemAt: [
+                                        "$movies.updatedAt",
+                                        { $indexOfArray: ["$movies.movieId", "$$id"] }
+                                    ]
+                                },
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    contentType: 1,
+                    content: 1,
+                }
+            },
+            {
+                $unionWith: {
+                    coll: 'seencontents',
+                    pipeline: [
+                        { $match: { userId: userId } },
+                        {
+                            $project: {
+                                contentType: { $literal: 'series' },
+                                content: {
+                                    $map: {
+                                        input: "$series.seriesId",
+                                        as: "id",
+                                        in: {
+                                            seriesId: "$$id",
+                                            updatedAt: {
+                                                $arrayElemAt: [
+                                                    "$series.updatedAt",
+                                                    { $indexOfArray: ["$series.seriesId", "$$id"] }
+                                                ]
+                                            },
+                                            totalWatchedEpisodes: {
+                                                $arrayElemAt: [
+                                                    "$series.totalWatchedEpisodes",
+                                                    { $indexOfArray: ["$series.seriesId", "$$id"] }
+                                                ]
+                                            },
+                                            lastSeenEpisode: {
+                                                $arrayElemAt: [
+                                                    "$series.lastSeenEpisode",
+                                                    { $indexOfArray: ["$series.seriesId", "$$id"] }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            { $unwind: "$content" },
+            { $sort: { "content.lastModifiedAt": -1 } },
+            { $skip: (pageNumber - 1) * pageSize },
+            { $limit: pageSize }
+        ]);
+
+        const items = seenContent.map((content) => {
+            return SeenItemFactory.create(content.contentType, content.content);
+        });
+        const totalItems = await this.getSeenContentSize(userId);
+        return new Page(pageNumber, pageSize, totalItems, items);
+
+    }
+
+    async getSeenContentSize(userId: number): Promise<number> {
+        const result = await SeenContentModel.aggregate([
+            { $match: { userId: userId } },
+            {
+                $project: {
+                    totalSize: {
+                        $add: [
+                            { $size: "$movies" },
+                            { $size: "$series" }
+                        ]
+                    }
+                }
+            }
+        ]);
+        return result[0] ? result[0].totalSize : 0;
+    }
+
 
     async addMovie(userId: number, movieId: Number): Promise<void> {
         await SeenContentModel.updateOne(

@@ -20,6 +20,13 @@ export class SeenContentController {
         return await this.seenContentService.create(userId);
     }
 
+    public async getSeenContent(req: Request<any>, res: Response<any>) {
+        const userId = Number(req.params.userId);
+        const pageSize = Number(req.query.pageSize) || 20;
+        const pageNumber = Number(req.query.page) || 1;
+        return await this.seenContentService.getSeenContent(userId, pageSize, pageNumber);
+    }
+
     public async getMovies(req: Request<any>, res: Response<any>) {
         const userId = Number(res.locals.userId);
         const pageSize = Number(req.query.pageSize) || 20;

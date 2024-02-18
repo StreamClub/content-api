@@ -1,5 +1,9 @@
 import { seenContentRepository } from "@dal";
-import { Page, SeasonEpisode, SeenContent, SeenEpisode, SeenMovie, SeenSeason, SeenSeries, UserContentList } from "@entities";
+import {
+    Page, SeasonEpisode, SeenContent, SeenEpisode,
+    SeenMovie,
+    SeenMovieItem, SeenSeason, SeenSeries
+} from "@entities";
 import { AlreadyExistsException, NotFoundException } from "@exceptions";
 import AppDependencies from "appDependencies";
 
@@ -15,12 +19,16 @@ export class SeenContentService {
         return await seenContentRepository.create(userId);
     }
 
+    public async getSeenContent(userId: number, pageSize: number, pageNumber: number) {
+        await this.failIfListDoesNotExist(userId);
+        return await seenContentRepository.getContentList(userId, pageSize, pageNumber);
+    }
+
     public async getMovies(userId: number, pageSize: number, pageNumber: number) {
         const found = await this.failIfListDoesNotExist(userId);
         const seenMovies = found.movies.map((movie) => new SeenMovie(movie));
         const results = seenMovies.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
-        const page = new Page(pageNumber, pageSize, seenMovies.length, results);
-        return new UserContentList(Number(userId), page);
+        return new Page(pageNumber, pageSize, seenMovies.length, results);
     }
 
     public async addMovie(userId: number, movieId: number) {

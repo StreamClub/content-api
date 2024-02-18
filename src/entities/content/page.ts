@@ -1,14 +1,14 @@
 export class Page {
-    pageNumber: number;
+    page: number;
     totalPages: number;
     totalResults: number;
     results: any[];
 
-    constructor(pageNumber: number, pageSize: number, totalResults: number, results: any[]) {
-        this.pageNumber = pageNumber;
+    constructor(page: number, pageSize: number, totalResults: number, results: any[]) {
+        this.page = page;
         this.totalResults = totalResults;
         this.totalPages = Math.ceil(this.totalResults / pageSize);
-        this.results = results.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+        this.results = results.slice((page - 1) * pageSize, page * pageSize);
     }
 
 }

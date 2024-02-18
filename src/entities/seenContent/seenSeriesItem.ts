@@ -1,14 +1,14 @@
-import { LastSeenEpisode, SeenSeason } from "@entities";
+import { LastSeenEpisode } from "@entities";
+import { SeenItem } from "./seenItem";
 
-export class SeenSeries {
+export class SeenSeriesItem extends SeenItem {
     public seriesId: number;
-    public seasons: SeenSeason[];
     public totalWatchedEpisodes: number;
     public lastSeenEpisode: LastSeenEpisode
 
-    public constructor(seenSeries: SeenSeries) {
+    public constructor(seenSeries: SeenSeriesItem) {
+        super("series", seenSeries.updatedAt);
         this.seriesId = seenSeries.seriesId;
-        this.seasons = seenSeries.seasons.map((season) => new SeenSeason(season));
         this.totalWatchedEpisodes = seenSeries.totalWatchedEpisodes;
         this.lastSeenEpisode = seenSeries.lastSeenEpisode;
     }
