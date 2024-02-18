@@ -12,7 +12,7 @@ export class ArtistController {
     }
 
     public async searchArtist(req: Request<SearchContentDto>, res: Response<any>) {
-        const userId = res.locals.userId;
+        const userId = Number(req.params.userId);
         const query = req.query.query as string;
         const page = parseInt(req.query.page as string || '1');
         return await this.tmdbService.searchArtist(userId, query, page);

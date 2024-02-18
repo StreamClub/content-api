@@ -1,10 +1,10 @@
 import { ShowResponse } from "moviedb-promise";
 
 export class SimilarSeries {
-    id: number;
-    title: string;
-    posterPath: string;
-    releaseDate: string;
+    public id: number;
+    public title: string;
+    public posterPath: string;
+    public releaseDate: string;
 
     constructor(series: ShowResponse) {
         this.id = series.id;

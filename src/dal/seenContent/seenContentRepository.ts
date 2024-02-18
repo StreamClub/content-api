@@ -1,20 +1,121 @@
-import { SeenContent, SeenEpisode, SeenSeason } from '@entities';
+import { Page, SeenContent, SeenEpisode, SeenItemFactory, SeenSeason } from '@entities';
 import { SeenContentModel } from './seenContentModel'
 import { SPECIALS_SEASON_ID } from '@config';
 
 class SeenContentRepository {
 
-    async create(userId: string): Promise<SeenContent> {
+    async create(userId: number): Promise<SeenContent> {
         const seenContent = new SeenContentModel({ userId });
         await seenContent.save();
         return new SeenContent(seenContent);
     }
 
-    async get(userId: string): Promise<SeenContent> {
+    async get(userId: number): Promise<SeenContent> {
         return await SeenContentModel.findOne({ userId });
     }
 
-    async addMovie(userId: string, movieId: Number): Promise<void> {
+    async getContentList(userId: number, pageSize: number, pageNumber: number): Promise<Page> {
+        const seenContent = await SeenContentModel.aggregate([
+            { $match: { userId: userId } },
+            {
+                $project: {
+                    contentType: { $literal: 'movie' },
+                    content: {
+                        $map: {
+                            input: "$movies.movieId",
+                            as: "id",
+                            in: {
+                                id: "$$id",
+                                updatedAt: {
+                                    $arrayElemAt: [
+                                        "$movies.updatedAt",
+                                        { $indexOfArray: ["$movies.movieId", "$$id"] }
+                                    ]
+                                },
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    contentType: 1,
+                    content: 1,
+                }
+            },
+            {
+                $unionWith: {
+                    coll: 'seencontents',
+                    pipeline: [
+                        { $match: { userId: userId } },
+                        {
+                            $project: {
+                                contentType: { $literal: 'series' },
+                                content: {
+                                    $map: {
+                                        input: "$series.seriesId",
+                                        as: "id",
+                                        in: {
+                                            id: "$$id",
+                                            updatedAt: {
+                                                $arrayElemAt: [
+                                                    "$series.updatedAt",
+                                                    { $indexOfArray: ["$series.seriesId", "$$id"] }
+                                                ]
+                                            },
+                                            totalWatchedEpisodes: {
+                                                $arrayElemAt: [
+                                                    "$series.totalWatchedEpisodes",
+                                                    { $indexOfArray: ["$series.seriesId", "$$id"] }
+                                                ]
+                                            },
+                                            lastSeenEpisode: {
+                                                $arrayElemAt: [
+                                                    "$series.lastSeenEpisode",
+                                                    { $indexOfArray: ["$series.seriesId", "$$id"] }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            { $unwind: "$content" },
+            { $sort: { "content.lastModifiedAt": -1 } },
+            { $skip: (pageNumber - 1) * pageSize },
+            { $limit: pageSize }
+        ]);
+
+        const items = seenContent.map((content) => {
+            return SeenItemFactory.create(content.contentType, content.content);
+        });
+        const totalItems = await this.getSeenContentSize(userId);
+        return new Page(pageNumber, pageSize, totalItems, items);
+
+    }
+
+    async getSeenContentSize(userId: number): Promise<number> {
+        const result = await SeenContentModel.aggregate([
+            { $match: { userId: userId } },
+            {
+                $project: {
+                    totalSize: {
+                        $add: [
+                            { $size: "$movies" },
+                            { $size: "$series" }
+                        ]
+                    }
+                }
+            }
+        ]);
+        return result[0] ? result[0].totalSize : 0;
+    }
+
+
+    async addMovie(userId: number, movieId: Number): Promise<void> {
         await SeenContentModel.updateOne(
             {
                 userId,
@@ -33,7 +134,7 @@ class SeenContentRepository {
         );
     }
 
-    async removeMovie(userId: string, movieId: Number): Promise<void> {
+    async removeMovie(userId: number, movieId: Number): Promise<void> {
         await SeenContentModel.updateOne(
             {
                 userId,
@@ -45,7 +146,7 @@ class SeenContentRepository {
         );
     }
 
-    async isASeenMovie(userId: string, movieId: Number): Promise<boolean> {
+    async isASeenMovie(userId: number, movieId: Number): Promise<boolean> {
         const seenContent = await SeenContentModel.findOne({
             userId,
             'movies': { $elemMatch: { movieId } }
@@ -53,7 +154,7 @@ class SeenContentRepository {
         return !!seenContent;
     }
 
-    private async incrementTotalWatchedEpisodes(userId: string, seriesId: number, seasonId: number, quantity = 1) {
+    private async incrementTotalWatchedEpisodes(userId: number, seriesId: number, seasonId: number, quantity = 1) {
         if (seasonId != SPECIALS_SEASON_ID) {
             await SeenContentModel.updateOne(
                 { userId, 'series.seriesId': seriesId },
@@ -66,7 +167,7 @@ class SeenContentRepository {
         }
     }
 
-    public async addSeries(userId: string, seriesId: number, seenSeasons: SeenSeason[]) {
+    public async addSeries(userId: number, seriesId: number, seenSeasons: SeenSeason[]) {
         const seasonsData = seenSeasons.map(seenSeason => ({
             'seasonId': seenSeason.seasonId,
             'episodes': seenSeason.episodes.map(seenEpisode => ({ 'episodeId': seenEpisode.episodeId })),
@@ -93,7 +194,7 @@ class SeenContentRepository {
         );
     }
 
-    public async removeSeries(userId: string, seriesId: number) {
+    public async removeSeries(userId: number, seriesId: number) {
         await SeenContentModel.updateOne(
             { userId, 'series.seriesId': seriesId },
             {
@@ -102,7 +203,7 @@ class SeenContentRepository {
         );
     }
 
-    public async addNewSeason(userId: string, seriesId: number, seasonId: number, seenEpisodes: SeenEpisode[]) {
+    public async addNewSeason(userId: number, seriesId: number, seasonId: number, seenEpisodes: SeenEpisode[]) {
         const result = await SeenContentModel.updateOne(
             {
                 userId,
@@ -123,7 +224,7 @@ class SeenContentRepository {
         }
     }
 
-    public async addToSeason(userId: string, seriesId: number, seasonId: number, seenEpisodes: SeenEpisode[]) {
+    public async addToSeason(userId: number, seriesId: number, seasonId: number, seenEpisodes: SeenEpisode[]) {
         const result = await SeenContentModel.updateOne(
             {
                 userId,
@@ -146,7 +247,7 @@ class SeenContentRepository {
         }
     }
 
-    public async removeSeason(userId: string, seriesId: number, seasonId: number, seasonEpisodesCount: number) {
+    public async removeSeason(userId: number, seriesId: number, seasonId: number, seasonEpisodesCount: number) {
         const result = await SeenContentModel.updateOne(
             { userId, 'series.seriesId': seriesId, 'series.seasons.seasonId': seasonId },
             {
@@ -158,7 +259,7 @@ class SeenContentRepository {
         }
     }
 
-    public async addEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
+    public async addEpisode(userId: number, seriesId: number, seasonId: number, episodeId: number) {
         const result = await SeenContentModel.updateOne(
             {
                 userId,
@@ -182,7 +283,7 @@ class SeenContentRepository {
         }
     }
 
-    public async removeEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
+    public async removeEpisode(userId: number, seriesId: number, seasonId: number, episodeId: number) {
         const result = await SeenContentModel.updateOne(
             {
                 userId,
@@ -202,7 +303,7 @@ class SeenContentRepository {
         }
     }
 
-    public async addLastSeenEpisode(userId: string, seriesId: number, seasonId: number, episodeId: number) {
+    public async addLastSeenEpisode(userId: number, seriesId: number, seasonId: number, episodeId: number) {
         if (seasonId !== SPECIALS_SEASON_ID) {
             await SeenContentModel.updateOne(
                 { userId, 'series.seriesId': seriesId },
@@ -218,7 +319,7 @@ class SeenContentRepository {
         }
     }
 
-    public async getLastSeenEpisode(userId: string, seriesId: number): Promise<SeenEpisode> {
+    public async getLastSeenEpisode(userId: number, seriesId: number): Promise<SeenEpisode> {
         const seenContent = await SeenContentModel.findOne({ userId, 'series.seriesId': seriesId });
         if (seenContent) {
             const series = seenContent.series.find(series => series.seriesId === seriesId);
@@ -232,7 +333,7 @@ class SeenContentRepository {
         return null;
     }
 
-    public async getTotalWatchedEpisodes(userId: string, seriesId: number): Promise<number> {
+    public async getTotalWatchedEpisodes(userId: number, seriesId: number): Promise<number> {
         const result = await SeenContentModel.aggregate([
             { $match: { userId, 'series.seriesId': seriesId } },
             { $unwind: '$series' },
@@ -242,7 +343,7 @@ class SeenContentRepository {
         return result.length > 0 ? result[0].totalWatchedEpisodes : 0;
     }
 
-    public async getSeenEpisodes(userId: string, seriesId: number, seasonId: number): Promise<number[]> {
+    public async getSeenEpisodes(userId: number, seriesId: number, seasonId: number): Promise<number[]> {
         const result = await SeenContentModel.aggregate([
             { $match: { userId, 'series.seriesId': seriesId } },
             { $unwind: '$series' },

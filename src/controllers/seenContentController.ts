@@ -1,7 +1,7 @@
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { SeenContentService, TmdbService } from '@services';
-import { Season, SeasonEpisode, SeenEpisode, SeenSeason } from '@entities';
+import { Season, SeasonEpisode, SeenEpisode, SeenItem, SeenMovieItemResume, SeenSeason, SeenSeriesItem, SeenSeriesItemResume } from '@entities';
 import moment from 'moment';
 import { SPECIALS_SEASON_ID } from '@config';
 import { EpisodeHasNotAiredException } from '@exceptions';
@@ -16,31 +16,49 @@ export class SeenContentController {
     }
 
     public async create(req: Request<any>, res: Response<any>) {
-        const userId = res.locals.userId;
+        const userId = Number(res.locals.userId);
         return await this.seenContentService.create(userId);
     }
 
+    public async getSeenContent(req: Request<any>, res: Response<any>) {
+        const userId = Number(req.params.userId);
+        const pageSize = Number(req.query.pageSize) || 20;
+        const pageNumber = Number(req.query.page) || 1;
+        const seenContent = await this.seenContentService.getSeenContent(userId, pageSize, pageNumber);
+        seenContent.results = await Promise.all(seenContent.results.map(async (content: SeenItem) => {
+            if (content.contentType === 'series') {
+                const seriesBasicInfo = await this.tmdbService.getSeriesBasicInfo(content.id);
+                return new SeenSeriesItemResume(content as SeenSeriesItem, seriesBasicInfo);
+            } else {
+                const poster = await
+                    this.tmdbService.getPoster(content.contentType, content.id);
+                return new SeenMovieItemResume(content, poster);
+            }
+        }));
+        return seenContent;
+    }
+
     public async getMovies(req: Request<any>, res: Response<any>) {
-        const userId = res.locals.userId;
+        const userId = Number(res.locals.userId);
         const pageSize = Number(req.query.pageSize) || 20;
         const pageNumber = Number(req.query.page) || 1;
         return await this.seenContentService.getMovies(userId, pageSize, pageNumber);
     }
 
     public async addMovie(req: Request<any>, res: Response<any>) {
-        const userId = res.locals.userId;
+        const userId = Number(res.locals.userId);
         const movieId = req.params.movieId;
         return await this.seenContentService.addMovie(userId, Number(movieId));
     }
 
     public async removeMovie(req: Request<any>, res: Response<any>) {
-        const userId = res.locals.userId;
+        const userId = Number(res.locals.userId);
         const movieId = req.params.movieId;
         return await this.seenContentService.removeMovie(userId, Number(movieId));
     }
 
     public async addSeries(req: Request<any>, res: Response<any>) {
-        const userId = res.locals.userId;
+        const userId = Number(res.locals.userId);
         const seriesId = Number(req.params.seriesId);
         const series = await this.tmdbService.getSeries(userId, seriesId, 'AR');
         const seasons = series.seasons.filter(season => season.id !== SPECIALS_SEASON_ID);
@@ -55,13 +73,13 @@ export class SeenContentController {
     }
 
     public async removeSeries(req: Request<any>, res: Response<any>) {
-        const userId = res.locals.userId;
+        const userId = Number(res.locals.userId);
         const seriesId = Number(req.params.seriesId);
         return await this.seenContentService.removeSeries(userId, seriesId);
     }
 
     public async addSeason(req: Request<any>, res: Response<any>) {
-        const userId = res.locals.userId;
+        const userId = Number(res.locals.userId);
         const seriesId = Number(req.params.seriesId);
         const seasonId = Number(req.params.seasonId);
         const season = await this.tmdbService.getSeason(seriesId, seasonId);
@@ -71,14 +89,14 @@ export class SeenContentController {
     }
 
     public async removeSeason(req: Request<any>, res: Response<any>) {
-        const userId = res.locals.userId;
+        const userId = Number(res.locals.userId);
         const seriesId = Number(req.params.seriesId);
         const seasonId = Number(req.params.seasonId);
         return await this.seenContentService.removeSeason(userId, seriesId, seasonId);
     }
 
     public async addEpisode(req: Request<any>, res: Response<any>) {
-        const userId = res.locals.userId;
+        const userId = Number(res.locals.userId);
         const seriesId = Number(req.params.seriesId);
         const seasonId = Number(req.params.seasonId);
         const episodeId = Number(req.params.episodeId);
@@ -90,7 +108,7 @@ export class SeenContentController {
     }
 
     public async removeEpisode(req: Request<any>, res: Response<any>) {
-        const userId = res.locals.userId;
+        const userId = Number(res.locals.userId);
         const seriesId = req.params.seriesId;
         const seasonId = req.params.seasonId;
         const episodeId = req.params.episodeId;

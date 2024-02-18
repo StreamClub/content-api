@@ -4,7 +4,6 @@ import { WatchlistItem } from "./watchlistItem";
 export class Watchlist extends MongoObject {
     userId: number;
     watchlist: WatchlistItem[];
-    series: WatchlistItem[];
 
     constructor(watchlist: Watchlist) {
         super(watchlist);

@@ -1,4 +1,4 @@
 export const contentTypes = {
-    MOVIE: 'MOVIE',
-    SERIES: 'SERIES',
+    MOVIE: 'movie',
+    SERIES: 'series',
 }

@@ -1,15 +1,15 @@
 /// <reference types="@types/jest" />;
 /**
-* @group watchlist
+* @group seenContent
 */
 
 import { generateTestJwt } from '../../helpers';
-import { createWatchlist } from '../../helpers/watchlistHelper';
+import { createSeenContentList } from '../../helpers/seenContentHelper';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
-const endpoint = '/watchlist';
+const endpoint = '/seenContent';
 
-describe('Get Watchlist', () => {
+describe('Get Seen Content List', () => {
     setupBeforeAndAfter();
 
     const invalidQueryCases = [
@@ -50,10 +50,10 @@ describe('Get Watchlist', () => {
         });
     });
 
-    it('should return an empty watchlist when provided asked for a new watchlist', async () => {
+    it('should return an empty seen content list when provided asked for a new content list', async () => {
         const userId = 1;
         const testJwt = generateTestJwt(userId, "test@test.com");
-        await createWatchlist(userId);
+        await createSeenContentList(userId);
         const response = await server.get(`${endpoint}/${userId}`).set('Authorization', `Bearer ${testJwt}`);
         expect(response.status).toBe(200);
         expect(response.body.results).toEqual([]);
@@ -62,7 +62,7 @@ describe('Get Watchlist', () => {
         expect(response.body.totalResults).toBe(0);
     });
 
-    it('should return 404 when provided with an id of a user with no watchlist', async () => {
+    it('should return 404 when provided with an id of a user with no Seen Content List', async () => {
         const userId = 1;
         const testJwt = generateTestJwt(userId, "test@test.com");
         const response = await server.get(`${endpoint}/${userId}`).set('Authorization', `Bearer ${testJwt}`);

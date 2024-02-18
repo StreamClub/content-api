@@ -4,13 +4,14 @@
 */
 
 import { contentTypes } from '@config';
-import { generateTestJwt } from '../../helpers';
+import { generateTestJwt, testMovie1 } from '../../helpers';
 import { addContentToWatchlist, createWatchlist } from '../../helpers/watchlistHelper';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
+import { mockMovieInfo } from '../../setup/mocksSetUp';
 
 const endpoint = '/watchlist';
 
-describe('Create Watchlist', () => {
+describe('Remove Content From Watchlist', () => {
     setupBeforeAndAfter();
 
     const invalidQueryCases = [
@@ -72,6 +73,7 @@ describe('Create Watchlist', () => {
     });
 
     it('should remove the expected content type when theres a movie and a series with same id in the watchlist', async () => {
+        mockMovieInfo.mockReturnValue(testMovie1)
         const userId = 1;
         const testJwt = generateTestJwt(userId, "test@test.com");
         await createWatchlist(userId);
