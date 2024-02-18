@@ -55,7 +55,6 @@ describe('Get Seen Content List', () => {
         const testJwt = generateTestJwt(userId, "test@test.com");
         await createSeenContentList(userId);
         const response = await server.get(`${endpoint}/${userId}`).set('Authorization', `Bearer ${testJwt}`);
-        console.log(response.body)
         expect(response.status).toBe(200);
         expect(response.body.results).toEqual([]);
         expect(response.body.page).toBe(1);

@@ -1,16 +1,16 @@
 import { TvResult } from "moviedb-promise";
 
 export class SeriesResume {
-    id: number;
-    title: string;
-    poster: string;
-    available: boolean;
-    releaseDate: string;
-    score: number;
-    seen: number;
-    inWatchlist: boolean;
-    status: string;
-    lastEpisodeReleaseDate: string;
+    public id: number;
+    public title: string;
+    public poster: string;
+    public available: boolean;
+    public releaseDate: string;
+    public score: number;
+    public seen: number;
+    public inWatchlist: boolean;
+    public status: string;
+    public lastEpisodeReleaseDate: string;
 
     constructor(series: TvResult) {
         this.id = series.id;

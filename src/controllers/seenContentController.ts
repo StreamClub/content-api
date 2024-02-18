@@ -1,7 +1,7 @@
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { SeenContentService, TmdbService } from '@services';
-import { Season, SeasonEpisode, SeenEpisode, SeenSeason } from '@entities';
+import { Season, SeasonEpisode, SeenEpisode, SeenItem, SeenMovieItemResume, SeenSeason, SeenSeriesItem, SeenSeriesItemResume } from '@entities';
 import moment from 'moment';
 import { SPECIALS_SEASON_ID } from '@config';
 import { EpisodeHasNotAiredException } from '@exceptions';
@@ -24,7 +24,18 @@ export class SeenContentController {
         const userId = Number(req.params.userId);
         const pageSize = Number(req.query.pageSize) || 20;
         const pageNumber = Number(req.query.page) || 1;
-        return await this.seenContentService.getSeenContent(userId, pageSize, pageNumber);
+        const seenContent = await this.seenContentService.getSeenContent(userId, pageSize, pageNumber);
+        seenContent.results = await Promise.all(seenContent.results.map(async (content: SeenItem) => {
+            if (content.contentType === 'series') {
+                const seriesBasicInfo = await this.tmdbService.getSeriesBasicInfo(content.id);
+                return new SeenSeriesItemResume(content as SeenSeriesItem, seriesBasicInfo);
+            } else {
+                const poster = await
+                    this.tmdbService.getPoster(content.contentType, content.id);
+                return new SeenMovieItemResume(content, poster);
+            }
+        }));
+        return seenContent;
     }
 
     public async getMovies(req: Request<any>, res: Response<any>) {

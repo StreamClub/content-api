@@ -2,7 +2,7 @@ import { contentTypes, seriesStatus } from "@config";
 import { seenContentRepository, watchlistRepository } from "@dal";
 import {
     Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult,
-    TmdbSeries, Series, LastSeenEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode
+    TmdbSeries, Series, LastSeenEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode, SeriesBasicInfo
 } from "@entities";
 import { NotFoundException } from "@exceptions";
 import { getRedirectLinks } from "@utils";
@@ -55,6 +55,13 @@ export class TmdbService {
         })
     }
 
+    public async getSeriesBasicInfo(seriesId: number) {
+        return await this.getContentSafely(async () => {
+            const serie = await this.tmdb.tvInfo({ id: seriesId, language: this.language });
+            return new SeriesBasicInfo(serie);
+        });
+    }
+
     public async getEpisode(serieId: number, seasonId: number, episodeNumber: number) {
         const season = await this.getSeason(serieId, seasonId);
         const episode = season.episodes.find(episode => episode.episodeId === episodeNumber);
@@ -105,7 +112,6 @@ export class TmdbService {
             return new Season(season);
         });
     }
-
 
     public async getUserSeason(userId: number, serieId: number, seasonId: number) {
         const season = await this.getSeason(serieId, seasonId);

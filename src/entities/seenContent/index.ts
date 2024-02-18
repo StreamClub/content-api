@@ -7,3 +7,5 @@ export * from './seenMovieItem';
 export * from './seenSeriesItem';
 export * from './seenItem';
 export * from './seenItemFactory';
+export * from './seenMovieItemResume';
+export * from './seenSeriesItemResume';

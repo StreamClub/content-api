@@ -25,7 +25,7 @@ class SeenContentRepository {
                             input: "$movies.movieId",
                             as: "id",
                             in: {
-                                movieId: "$$id",
+                                id: "$$id",
                                 updatedAt: {
                                     $arrayElemAt: [
                                         "$movies.updatedAt",
@@ -56,7 +56,7 @@ class SeenContentRepository {
                                         input: "$series.seriesId",
                                         as: "id",
                                         in: {
-                                            seriesId: "$$id",
+                                            id: "$$id",
                                             updatedAt: {
                                                 $arrayElemAt: [
                                                     "$series.updatedAt",

@@ -1,11 +1,11 @@
 import { SeasonEpisode } from "@entities";
 
 export class LastSeenEpisode {
-    photo: string;
-    airDate: string;
-    name: string;
-    episodeId: number;
-    seasonId: number;
+    public photo: string;
+    public airDate: string;
+    public name: string;
+    public episodeId: number;
+    public seasonId: number;
 
     constructor(episode: SeasonEpisode, seasonId: number) {
         this.photo = episode.poster;

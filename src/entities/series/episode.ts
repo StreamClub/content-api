@@ -2,14 +2,14 @@ import { EpisodeResult } from "moviedb-promise";
 
 
 export class SeasonEpisode {
-    airDate: string;
-    episodeId: number;
-    seasonId: number;
-    name: string;
-    overview: string;
-    runtime: string;
-    poster: string;
-    seen: boolean;
+    public airDate: string;
+    public episodeId: number;
+    public seasonId: number;
+    public name: string;
+    public overview: string;
+    public runtime: string;
+    public poster: string;
+    public seen: boolean;
 
     constructor(tmdbEpisode: EpisodeResult) {
         this.airDate = tmdbEpisode.air_date;
