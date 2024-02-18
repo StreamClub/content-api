@@ -2,7 +2,7 @@ import { contentTypes, seriesStatus } from "@config";
 import { seenContentRepository, watchlistRepository } from "@dal";
 import {
     Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult,
-    TmdbSeries, Series, LastSeenEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode, SeriesBasicInfo
+    TmdbSeries, Series, LastSeenEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode, SeriesBasicInfo, Platform
 } from "@entities";
 import { NotFoundException } from "@exceptions";
 import { getRedirectLinks } from "@utils";
@@ -165,6 +165,16 @@ export class TmdbService {
             await this.tmdb.movieInfo({ id: contentId, language: this.language }) :
             await this.tmdb.tvInfo({ id: contentId, language: this.language });
         return tmdbContent.poster_path;
+    }
+
+    public async getStreamServices(country: string) {
+        const streamServices = await this.tmdb.movieWatchProviderList({
+            language: this.language,
+            watch_region: country
+        });
+        return await Promise.all(streamServices.results.map(async (result) => {
+            return new Platform(result);
+        }));
     }
 
     private async getProvidersData(contentType: string, contentId: number, country: string) {

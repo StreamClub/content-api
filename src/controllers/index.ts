@@ -3,3 +3,4 @@ export * from './watchlistController';
 export * from './seriesController';
 export * from './artistController';
 export * from './seenContentController';
+export * from './streamServiceController';
