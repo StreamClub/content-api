@@ -18,7 +18,7 @@ describe('Create User\'s Stream Services List', () => {
         const response = await server.post(endpoint).set('Authorization', `Bearer ${testJwt}`);
         expect(response.status).toBe(201);
         expect(response.body.userId).toBe(userId);
-        expect(response.body.providerIds).toEqual([]);
+        expect(response.body.providerId).toEqual([]);
     });
 
     it('should return 409 when provided with a token of a new user with a Stream Service List', async () => {

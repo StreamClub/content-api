@@ -8,8 +8,6 @@ class StreamProviderRepository {
         return new UserStreamProviders(providersList);
     }
 
-
-
     async doesUserHaveWatchlist(userId: number): Promise<boolean> {
         const count = await StreamProvidersModel.countDocuments({ userId });
         return count > 0;
@@ -25,12 +23,12 @@ class StreamProviderRepository {
             {
                 $project: {
                     _id: 0,
-                    providerIds: 1,
+                    providerId: 1,
                 },
             },
             {
                 $unwind: {
-                    'path': '$providerIds'
+                    'path': '$providerId'
                 }
             },
             {
@@ -44,6 +42,29 @@ class StreamProviderRepository {
         return new Page(page, pageSize, length, founded);
     }
 
+    async addProvider(userId: number, providerId: string): Promise<void> {
+        await StreamProvidersModel.updateOne(
+            {
+                userId,
+                'providerId': {
+                    $not: {
+                        $elemMatch: {
+                            $eq: providerId
+                        }
+                    }
+                }
+            },
+            {
+                $push: {
+                    providerId: {
+                        $each: [providerId],
+                        $position: 0
+                    }
+                }
+            }
+        );
+    }
+
     async getStreamProvidersAmount(userId: number): Promise<number> {
         const size = await StreamProvidersModel.aggregate([
             {
@@ -53,7 +74,7 @@ class StreamProviderRepository {
             },
             {
                 $project: {
-                    length: { $size: "$providerIds" },
+                    length: { $size: "$providerId" },
                 },
             },
         ]);

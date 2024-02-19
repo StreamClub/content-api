@@ -7,7 +7,7 @@ import {
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
-import { GetContentListSchema, GetStreamServiceSchema } from "@dtos";
+import { AddProviderSchema, GetContentListSchema, GetStreamServiceSchema } from "@dtos";
 import { StreamProvidersController } from "@controllers";
 
 export function StreamServiceRouter(dependencies: AppDependencies) {
@@ -30,6 +30,13 @@ export function StreamServiceRouter(dependencies: AppDependencies) {
             (req, res) => streamServiceController.create(req, res),
             StatusCodes.CREATED
         )
+    );
+
+    router.put(
+        '/',
+        loadUserContext,
+        validateSchema(AddProviderSchema, [FieldOptions.params, FieldOptions.body]),
+        handleRequest((req, res) => streamServiceController.addProvider(req, res), StatusCodes.CREATED)
     )
 
     router.get(

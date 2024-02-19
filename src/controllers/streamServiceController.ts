@@ -29,8 +29,12 @@ export class StreamProvidersController {
         const pageSize = Number(req.query.pageSize) || 20;
         const pageNumber = Number(req.query.page) || 1;
         return await this.streamProvidersService.get(userId, pageSize, pageNumber);
-        // const streamServices = await this.tmdbService.getUserStreamServices(userId);
-        // return { streamServices };
+    }
+
+    public async addProvider(req: Request<any>, res: Response<any>) {
+        const userId = Number(res.locals.userId);
+        const providerId = req.body.providerId;
+        return await this.streamProvidersService.addProvider(userId, providerId);
     }
 
 }

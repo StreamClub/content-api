@@ -19,10 +19,15 @@ export class StreamProvidersService {
         return await streamProviderRepository.get(userId, pageNumber, pageSize);
     }
 
+    public async addProvider(userId: number, providerId: string) {
+        await this.failIfWatchlistDoesNotExist(userId);
+        return await streamProviderRepository.addProvider(userId, providerId);
+    }
+
     private async failIfWatchlistDoesNotExist(userId: number) {
         const watchlist = await streamProviderRepository.doesUserHaveWatchlist(userId);
         if (!watchlist) {
-            throw new NotFoundException('Watchlist does not exist');
+            throw new NotFoundException('Stream Provider List does not exist');
         }
     }
 

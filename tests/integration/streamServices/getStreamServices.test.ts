@@ -29,8 +29,8 @@ describe('Get Stream Services', () => {
     });
 
     it('should return a stream service list when provided with a valid country code', async () => {
-        mockGetStreamServices.mockReturnValue(testStreamServices01)
-        const testJwt = generateTestJwt(1, "test@test.com")
+        mockGetStreamServices.mockReturnValue(testStreamServices01);
+        const testJwt = generateTestJwt(1, "test@test.com");
         const country = 'AR';
         const response = await
             server.get(`${endpoint}`).query({ country }).set('Authorization', `Bearer ${testJwt}`);

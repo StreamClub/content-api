@@ -9,7 +9,7 @@ const StreamProvidersTypeSchema = new Schema<StreamProvidersType>({
         required: true,
         unique: true,
     },
-    providerIds: {
+    providerId: {
         type: [Number],
         default: [],
     }
