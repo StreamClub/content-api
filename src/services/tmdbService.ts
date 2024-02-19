@@ -167,7 +167,7 @@ export class TmdbService {
         return tmdbContent.poster_path;
     }
 
-    public async getStreamServices(country: string) {
+    public async getStreamProviders(country: string) {
         const streamServices = await this.tmdb.movieWatchProviderList({
             language: this.language,
             watch_region: country
