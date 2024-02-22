@@ -44,20 +44,23 @@ describe('Add Stream Provider To User', () => {
         const userId = 1;
         const testJwt = generateTestJwt(userId, "test@test.com");
         await createStreamProvidersList(userId);
+        const providerId = 2;
         const response = await server.put(`${endpoint}`)
             .set('Authorization', `Bearer ${testJwt}`)
-            .send({ providerId: 1, });
+            .send({ providerId });
         expect(response.status).toBe(201);
-        const getResponse = await server.get(`${endpoint}/${userId}`).set('Authorization', `Bearer ${testJwt}`);
+        const getResponse = await server.get(`${endpoint}/${userId}`)
+            .query({ country: 'AR' })
+            .set('Authorization', `Bearer ${testJwt}`);
         expect(getResponse.status).toBe(200);
         expect(getResponse.body.results.length).toBe(1);
-        expect(getResponse.body.results[0].providerId).toBe(1);
+        expect(getResponse.body.results[0].providerId).toBe(providerId);
     });
 
     it('should not add a Stream Provider Twice to the user', async () => {
         mockGetStreamServices.mockReturnValue(testStreamServices01);
         const userId = 1;
-        const providerId = 1;
+        const providerId = 2;
         const testJwt = generateTestJwt(userId, "test@test.com");
         await createStreamProvidersList(userId);
         const response = await server.put(`${endpoint}`)
@@ -68,7 +71,9 @@ describe('Add Stream Provider To User', () => {
             .set('Authorization', `Bearer ${testJwt}`)
             .send({ providerId });
         expect(response2.status).toBe(201);
-        const getResponse = await server.get(`${endpoint}/${userId}`).set('Authorization', `Bearer ${testJwt}`);
+        const getResponse = await server.get(`${endpoint}/${userId}`)
+            .query({ country: 'AR' })
+            .set('Authorization', `Bearer ${testJwt}`);
         expect(getResponse.status).toBe(200);
         expect(getResponse.body.results.length).toBe(1);
         expect(getResponse.body.results[0].providerId).toBe(providerId);
