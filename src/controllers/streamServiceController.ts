@@ -34,8 +34,14 @@ export class StreamProvidersController {
 
     public async addProvider(req: Request<any>, res: Response<any>) {
         const userId = Number(res.locals.userId);
-        const providerId = req.body.providerId;
+        const providerId = Number(req.body.providerId);
         return await this.streamProvidersService.addProvider(userId, providerId);
+    }
+
+    public async deleteProvider(req: Request<any>, res: Response<any>) {
+        const userId = Number(res.locals.userId);
+        const providerId = Number(req.body.providerId);
+        return await this.streamProvidersService.deleteProvider(userId, providerId);
     }
 
 }

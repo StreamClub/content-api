@@ -35,8 +35,18 @@ export function StreamServiceRouter(dependencies: AppDependencies) {
     router.put(
         '/',
         loadUserContext,
-        validateSchema(AddProviderSchema, [FieldOptions.params, FieldOptions.body]),
+        validateSchema(AddProviderSchema, [FieldOptions.body]),
         handleRequest((req, res) => streamServiceController.addProvider(req, res), StatusCodes.CREATED)
+    )
+
+    router.delete(
+        "/",
+        loadUserContext,
+        validateSchema(AddProviderSchema, [FieldOptions.body]),
+        handleRequest(
+            (req, res) => streamServiceController.deleteProvider(req, res),
+            StatusCodes.OK
+        )
     )
 
     router.get(

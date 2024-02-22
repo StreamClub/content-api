@@ -20,9 +20,14 @@ export class StreamProvidersService {
         return await streamProviderRepository.get(userId, pageNumber, pageSize, streamServices);
     }
 
-    public async addProvider(userId: number, providerId: string) {
+    public async addProvider(userId: number, providerId: number) {
         await this.failIfWatchlistDoesNotExist(userId);
         return await streamProviderRepository.addProvider(userId, providerId);
+    }
+
+    public async deleteProvider(userId: number, providerId: number) {
+        await this.failIfWatchlistDoesNotExist(userId);
+        return await streamProviderRepository.deleteProvider(userId, providerId);
     }
 
     private async failIfWatchlistDoesNotExist(userId: number) {

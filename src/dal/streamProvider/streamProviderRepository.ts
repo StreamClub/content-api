@@ -47,7 +47,7 @@ class StreamProviderRepository {
         return new Page(page, pageSize, length, userServices);
     }
 
-    async addProvider(userId: number, providerId: string): Promise<void> {
+    async addProvider(userId: number, providerId: number): Promise<void> {
         await StreamProvidersModel.updateOne(
             {
                 userId,
@@ -84,6 +84,20 @@ class StreamProviderRepository {
             },
         ]);
         return size[0] ? size[0].length : 0;
+    }
+
+    async deleteProvider(userId: number, providerId: number): Promise<void> {
+        await StreamProvidersModel.updateOne(
+            {
+                userId,
+                'providerId': providerId
+            },
+            {
+                $pull: {
+                    providerId: providerId
+                }
+            }
+        );
     }
 
 }
