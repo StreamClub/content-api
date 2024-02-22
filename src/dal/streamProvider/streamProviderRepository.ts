@@ -1,4 +1,4 @@
-import { Page, UserStreamProviders } from '@entities'
+import { Page, Platform, UserStreamProviders } from '@entities'
 import { StreamProvidersModel } from './streamProviderModel';
 
 class StreamProviderRepository {
@@ -13,11 +13,13 @@ class StreamProviderRepository {
         return count > 0;
     }
 
-    async get(userId: number, page: number, pageSize: number): Promise<Page> {
+    async get(userId: number, page: number, pageSize: number, streamServices: Platform[]): Promise<Page> {
+        const providerIds = streamServices.map(platform => platform.providerId);
         const founded = await StreamProvidersModel.aggregate([
             {
                 $match: {
                     userId: userId,
+                    'providerId': { $in: providerIds }
                 },
             },
             {
@@ -38,8 +40,11 @@ class StreamProviderRepository {
                 $limit: pageSize,
             }
         ]);
+        const userServices = founded.map((provider: any) => {
+            return streamServices.find(platform => platform.providerId === provider.providerId);
+        });
         const length = await this.getStreamProvidersAmount(userId);
-        return new Page(page, pageSize, length, founded);
+        return new Page(page, pageSize, length, userServices);
     }
 
     async addProvider(userId: number, providerId: string): Promise<void> {

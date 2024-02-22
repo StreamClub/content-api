@@ -1,4 +1,5 @@
 import { streamProviderRepository } from "@dal";
+import { Platform } from "@entities";
 import { AlreadyExistsException, NotFoundException } from "@exceptions";
 import AppDependencies from "appDependencies";
 
@@ -14,9 +15,9 @@ export class StreamProvidersService {
         return await streamProviderRepository.create(userId);
     }
 
-    public async get(userId: number, pageSize: number, pageNumber: number) {
+    public async get(userId: number, pageSize: number, pageNumber: number, streamServices: Platform[]) {
         await this.failIfWatchlistDoesNotExist(userId);
-        return await streamProviderRepository.get(userId, pageNumber, pageSize);
+        return await streamProviderRepository.get(userId, pageNumber, pageSize, streamServices);
     }
 
     public async addProvider(userId: number, providerId: string) {

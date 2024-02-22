@@ -1,5 +1,3 @@
-
-import { GetMovieDto } from '@dtos';
 import { StreamProvidersService, TmdbService } from '@services';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
@@ -26,9 +24,12 @@ export class StreamProvidersController {
 
     public async getUserStreamProviders(req: Request<any>, res: Response<any>) {
         const userId = Number(req.params.userId);
+        const country = req.query.country as string;
         const pageSize = Number(req.query.pageSize) || 20;
         const pageNumber = Number(req.query.page) || 1;
-        return await this.streamProvidersService.get(userId, pageSize, pageNumber);
+        const streamServices = await this.tmdbService.getStreamProviders(country);
+        const page = await this.streamProvidersService.get(userId, pageSize, pageNumber, streamServices);
+        return page;
     }
 
     public async addProvider(req: Request<any>, res: Response<any>) {
