@@ -33,18 +33,10 @@ class StreamProviderRepository {
                     'path': '$providerId'
                 }
             },
-            {
-                $skip: (page - 1) * pageSize,
-            },
-            {
-                $limit: pageSize,
-            }
         ]);
-        const userServices = founded.map((provider: any) => {
-            return streamServices.find(platform => platform.providerId === provider.providerId);
-        });
-        const length = await this.getStreamProvidersAmount(userId);
-        return new Page(page, pageSize, length, userServices);
+        const userServices = streamServices.filter(platform => founded.some(provider => provider.providerId === platform.providerId));
+        const results = userServices.slice((page - 1) * pageSize, page * pageSize);
+        return new Page(page, pageSize, userServices.length, results);
     }
 
     async addProvider(userId: number, providerId: number): Promise<void> {
@@ -68,22 +60,6 @@ class StreamProviderRepository {
                 }
             }
         );
-    }
-
-    async getStreamProvidersAmount(userId: number): Promise<number> {
-        const size = await StreamProvidersModel.aggregate([
-            {
-                $match: {
-                    userId: userId,
-                },
-            },
-            {
-                $project: {
-                    length: { $size: "$providerId" },
-                },
-            },
-        ]);
-        return size[0] ? size[0].length : 0;
     }
 
     async deleteProvider(userId: number, providerId: number): Promise<void> {
