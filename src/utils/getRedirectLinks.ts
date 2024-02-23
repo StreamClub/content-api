@@ -31,7 +31,7 @@ const safeGet = async (url: string): Promise<AxiosResponse<any, any>> => {
         return await axios.get(url);
     } catch (error) {
         if (error.response.status == 429) {
-            logger.warn(`Rate limit exceeded, waiting 1 seconds`);
+            logger.warn(`Rate limit exceeded, waiting 1 second`);
             await new Promise(resolve => setTimeout(resolve, 1000));
             return safeGet(url);
         }

@@ -17,7 +17,7 @@ export class Series extends Content {
     public seen: number;
     public inWatchlist: boolean;
 
-    constructor(tmdbShow: TmdbSeries, country: string, provider: ProvidersDictionary, nextEpisode: LastSeenEpisode) {
+    constructor(tmdbShow: TmdbSeries, country: string, provider: ProvidersDictionary) {
         super(tmdbShow, country, provider);
         this.title = tmdbShow.name;
         this.status = seriesStatus[tmdbShow.status];
@@ -28,7 +28,6 @@ export class Series extends Content {
         this.seasons = tmdbShow.seasons.map((season) => new SeasonResume(season));
         this.similar = tmdbShow.recommendations.results.slice(0, 10).map((series) => new SimilarSeries(series));
         this.releaseDate = tmdbShow.first_air_date;
-        this.nextEpisode = nextEpisode;
     }
 
     public setSeen(totalEpisodes: number, totalWatchedEpisodes: number) {
