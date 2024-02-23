@@ -10,6 +10,7 @@ import { Series } from '@entities';
 import { testSeason01, testSeries01, testProviders01 } from '../../helpers';
 import { seriesStatus } from '@config';
 import { createSeenContentList, seeEpisode } from '../../helpers/seenContentHelper';
+import { createStreamProvidersList } from '../../helpers/streamProviderHelper';
 
 const endpoint = '/series';
 
@@ -38,6 +39,7 @@ describe('Get Series', () => {
         mockGetSeasonDetails.mockReturnValue(testSeason01);
         mockGetRedirectLinks.mockReturnValue(testProviders01);
         const testJwt = generateTestJwt(1, "test@test.com")
+        await createStreamProvidersList(1);
         const id = 2150;
         const country = 'AR';
         const response = await server.get(`${endpoint}/${id}`)
@@ -78,6 +80,7 @@ describe('Get Series', () => {
     it('should return a 404 if the series does not exist', async () => {
         mockGetShowDetails.mockRejectedValue({ response: { status: 404 } });
         const testJwt = generateTestJwt(1, "test@test.com")
+        await createStreamProvidersList(1);
         const id = 0;
         const country = 'AR';
         const response = await server.get(`${endpoint}/${id}`)
@@ -90,6 +93,7 @@ describe('Get Series', () => {
         mockGetSeasonDetails.mockReturnValue(testSeason01);
         mockGetRedirectLinks.mockReturnValue(testProviders01);
         const testJwt = generateTestJwt(1, "test@test.com")
+        await createStreamProvidersList(1);
         const id = 2150;
         const country = 'AR';
         const response = await server.get(`${endpoint}/${id}`)
@@ -107,6 +111,7 @@ describe('Get Series', () => {
         mockGetRedirectLinks.mockReturnValue(testProviders01);
         const userId = 1;
         const testJwt = generateTestJwt(userId, "test@test.com")
+        await createStreamProvidersList(userId);
         await createSeenContentList(userId);
         await seeEpisode(userId, testSeries02.id, 1, 1);
         const id = testSeries02.id;
@@ -125,6 +130,7 @@ describe('Get Series', () => {
         mockGetRedirectLinks.mockReturnValue(testProviders01);
         const userId = 1;
         const testJwt = generateTestJwt(userId, "test@test.com")
+        await createStreamProvidersList(userId);
         await createSeenContentList(userId);
         await seeEpisode(userId, testSeries02.id, 1, 61);
         const id = testSeries02.id;

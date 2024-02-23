@@ -8,6 +8,8 @@ import { mockGetRedirectLinks, mockMovieInfo } from '../../setup/mocksSetUp';
 import { generateTestJwt, testMovie1 } from '../../helpers';
 import { Movie } from '@entities';
 import { testProviders01 } from '../../helpers/mocks/testProviders';
+import { createStreamProvidersList } from '../../helpers/streamProviderHelper';
+import { createSeenContentList } from '../../helpers/seenContentHelper';
 
 const endpoint = '/movies';
 
@@ -34,7 +36,10 @@ describe('Get Movie', () => {
     it('should return a Movie with the correct format', async () => {
         mockMovieInfo.mockReturnValue(testMovie1);
         mockGetRedirectLinks.mockResolvedValue(testProviders01);
-        const testJwt = generateTestJwt(1, "test@test.com")
+        const userId = 1;
+        const testJwt = generateTestJwt(userId, "test@test.com");
+        await createStreamProvidersList(userId);
+        // await createSeenContentList(userId);
         const id = 2150;
         const country = 'AR';
         const response = await server.get(`${endpoint}/${id}`)
