@@ -24,6 +24,8 @@ export class TmdbService {
 
     public async getMovie(userId: number, movieId: number, country: string): Promise<Movie> {
         const scMovie = await this.getStreamClubMovie(movieId, country);
+        const providersData = await this.getContentProviders(this.contentTypes.MOVIE, movieId, country);
+        scMovie.setProviders(providersData);
         scMovie.inWatchlist = await watchlistRepository
             .isInWatchlist(userId, scMovie.id.toString(), contentTypes.MOVIE);
         scMovie.seen = await seenContentRepository
@@ -37,8 +39,7 @@ export class TmdbService {
                 id: movieId, language: this.language,
                 append_to_response: 'credits,watch/providers,recommendations,videos'
             }) as TmdbMovie;
-            const providersData = await this.getContentProviders(this.contentTypes.MOVIE, movieId, country);
-            return new Movie(movie, country, providersData);
+            return new Movie(movie, country);
         })
     }
 
@@ -48,13 +49,14 @@ export class TmdbService {
                 id: seriesId, language: this.language,
                 append_to_response: 'credits,watch/providers,recommendations,videos'
             }) as TmdbSeries;
-            const providersData = await this.getContentProviders(this.contentTypes.SERIES, seriesId, country);
-            return new Series(serie, country, providersData);
+            return new Series(serie, country);
         })
     }
 
     public async getSeries(userId: number, seriesId: number, country: string): Promise<Series> {
         const scSeries = await this.getStreamClubSeries(seriesId, country);
+        const providersData = await this.getContentProviders(this.contentTypes.SERIES, seriesId, country);
+        scSeries.setProviders(providersData);
         const nextEpisode = await this.getNextEpisode(userId, scSeries.id, scSeries.seasons);
         scSeries.nextEpisode = nextEpisode;
         const totalWatchedEpisodes = await seenContentRepository
@@ -131,7 +133,7 @@ export class TmdbService {
         return season;
     }
 
-    public async searchMovie(userId: number, query: string, page: number) {
+    public async searchMovie(userId: number, query: string, page: number, country: string) {
         const result = await this.tmdb.searchMovie({ query, language: this.language, page });
         const movies = await Promise.all(result.results.map(async (movie: MovieResult) => {
             const movieResume = new MovieResume(movie)
@@ -139,7 +141,7 @@ export class TmdbService {
                 .isInWatchlist(userId, movie.id.toString(), contentTypes.MOVIE);
             movieResume.seen = await seenContentRepository
                 .isASeenMovie(userId, movie.id);
-            const scMovie = await this.getStreamClubMovie(movie.id, 'US'); //TODO: deshardcodear el pais
+            const scMovie = await this.getStreamClubMovie(movie.id, country);
             const providersIds = scMovie.platforms.map(platform => platform.providerId);
             movieResume.available = await streamProviderRepository.doesUserHaveOneOf(userId, providersIds)
             return movieResume;
@@ -147,7 +149,7 @@ export class TmdbService {
         return new PaginatedResult(result.page, result.total_pages, result.total_results, movies);
     }
 
-    public async searchSeries(userId: number, query: string, page: number) {
+    public async searchSeries(userId: number, query: string, page: number, country: string) {
         const result = await this.tmdb.searchTv({ query, language: this.language, page });
         const series = await Promise.all(result.results.map(async (serie: TvResult) => {
             const serieResume = new SeriesResume(serie)
@@ -155,7 +157,7 @@ export class TmdbService {
                 .isInWatchlist(userId, serie.id.toString(), contentTypes.SERIES);
             const totalWatchedEpisodes = await seenContentRepository
                 .getTotalWatchedEpisodes(userId, serie.id)
-            const scSeries = await this.getStreamClubSeries(serie.id, 'US'); //TODO: deshardcodear el pais
+            const scSeries = await this.getStreamClubSeries(serie.id, country);
             serieResume.setSeen(scSeries.numberOfEpisodes, totalWatchedEpisodes)
             serieResume.status = seriesStatus[scSeries.status];
             serieResume.lastEpisodeReleaseDate = scSeries.lastAirDate;

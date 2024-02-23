@@ -15,18 +15,18 @@ export abstract class Content {
     releaseDate: string;
     trailers: Video[];
 
-    constructor(content: TmdbContent, country: string, provider: ProvidersDictionary) {
+    constructor(content: TmdbContent, country: string) {
         this.id = content.id;
         this.overview = content.overview;
         this.poster = content.poster_path;
         this.backdrop = content.backdrop_path;
         this.genres = content.genres.map((genre) => genre.name);
         this.cast = content.credits.cast.slice(0, 10);
-        this.getPlatforms(content, country, provider);
         this.trailers = this.getTrailers(content);
+        this.setPlatforms(content, country);
     }
 
-    protected getPlatforms(tmdbContent: TmdbContent, country: string, provider: ProvidersDictionary) {
+    public setPlatforms(tmdbContent: TmdbContent, country: string) {
         const countryPlatforms = Object.entries(tmdbContent["watch/providers"].results).filter(([key, _]) => {
             return key === country;
         });
@@ -37,7 +37,6 @@ export abstract class Content {
             }
         }
         this.platforms = platforms;
-        this.setProvidersData(provider)
     }
 
     protected getTrailers(tmdbContent: TmdbContent) {
@@ -45,7 +44,7 @@ export abstract class Content {
         return youtubeTrailers.length > 0 ? youtubeTrailers : null;
     }
 
-    protected setProvidersData(provider: ProvidersDictionary) {
+    public setProviders(provider: ProvidersDictionary) {
         for (const platform of this.platforms) {
             const logoPath = platform.logoPath;
             const matchingKey = Object.keys(provider).find(key => key.endsWith(logoPath));

@@ -17,8 +17,8 @@ export class Series extends Content {
     public seen: number;
     public inWatchlist: boolean;
 
-    constructor(tmdbShow: TmdbSeries, country: string, provider: ProvidersDictionary) {
-        super(tmdbShow, country, provider);
+    constructor(tmdbShow: TmdbSeries, country: string) {
+        super(tmdbShow, country);
         this.title = tmdbShow.name;
         this.status = seriesStatus[tmdbShow.status];
         this.createdBy = tmdbShow.created_by.map((creator) => creator.name);

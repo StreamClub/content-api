@@ -14,8 +14,8 @@ export class Movie extends Content {
     seen: boolean;
     inWatchlist: boolean;
 
-    constructor(tmdbMovie: TmdbMovie, country: string, provider: ProvidersDictionary) {
-        super(tmdbMovie, country, provider);
+    constructor(tmdbMovie: TmdbMovie, country: string) {
+        super(tmdbMovie, country);
         this.title = tmdbMovie.title;
         this.releaseDate = tmdbMovie.release_date;
         this.runtime = tmdbMovie.runtime;
