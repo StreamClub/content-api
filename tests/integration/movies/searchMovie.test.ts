@@ -5,8 +5,8 @@
 
 import { MAX_STRING_LENGTH } from '@config';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
-import { mockSearchMovie } from '../../setup/mocksSetUp';
-import { generateTestJwt, movieSearch1 } from '../../helpers';
+import { mockGetRedirectLinks, mockMovieInfo, mockSearchMovie } from '../../setup/mocksSetUp';
+import { generateTestJwt, movieSearch1, testMovie1, testProviders01 } from '../../helpers';
 
 const endpoint = '/movies';
 
@@ -34,6 +34,8 @@ describe('Search Movie', () => {
     });
 
     it('should return a list of movies with the correct format', async () => {
+        mockGetRedirectLinks.mockResolvedValue(testProviders01);
+        mockMovieInfo.mockReturnValue(testMovie1);
         mockSearchMovie.mockReturnValue(movieSearch1);
         const query = 'test';
         const testJwt = generateTestJwt(1, "test@test.com");
