@@ -1,6 +1,5 @@
 import { TmdbMovie } from "./tmdbMovie";
 import { SimilarMovie } from "./similarMovie";
-import { ProvidersDictionary } from "@entities";
 import { Content } from "../content";
 
 export class Movie extends Content {

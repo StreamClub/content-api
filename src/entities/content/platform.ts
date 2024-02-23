@@ -7,6 +7,7 @@ export class Platform {
     providerId?: number;
     providerName?: string;
     link: string;
+    doesUserHaveAccess: boolean;
 
     constructor(platform: WatchProvider) {
         this.displayPriority = platform.display_priority;

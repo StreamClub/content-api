@@ -25,7 +25,8 @@ export class TmdbService {
     public async getMovie(userId: number, movieId: number, country: string): Promise<Movie> {
         const scMovie = await this.getStreamClubMovie(movieId, country);
         const providersData = await this.getContentProviders(this.contentTypes.MOVIE, movieId, country);
-        scMovie.setProviders(providersData);
+        const userPlatforms = await streamProviderRepository.getAll(userId);
+        scMovie.setProviders(providersData, userPlatforms.providerId);
         scMovie.inWatchlist = await watchlistRepository
             .isInWatchlist(userId, scMovie.id.toString(), contentTypes.MOVIE);
         scMovie.seen = await seenContentRepository
@@ -56,7 +57,8 @@ export class TmdbService {
     public async getSeries(userId: number, seriesId: number, country: string): Promise<Series> {
         const scSeries = await this.getStreamClubSeries(seriesId, country);
         const providersData = await this.getContentProviders(this.contentTypes.SERIES, seriesId, country);
-        scSeries.setProviders(providersData);
+        const userPlatforms = await streamProviderRepository.getAll(userId);
+        scSeries.setProviders(providersData, userPlatforms.providerId);
         const nextEpisode = await this.getNextEpisode(userId, scSeries.id, scSeries.seasons);
         scSeries.nextEpisode = nextEpisode;
         const totalWatchedEpisodes = await seenContentRepository

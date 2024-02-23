@@ -1,9 +1,9 @@
-import { Content, ProvidersDictionary } from "@entities";
+import { Content } from "@entities";
 import { LastSeenEpisode } from "./lastSeenEpisode";
 import { TmdbSeries } from "./tmdbSeries";
 import { SimilarSeries } from "./similarSeries";
 import { SeasonResume } from "./seasonResume";
-import { seriesStatus as seriesStatus } from "@config";
+import { seriesStatus } from "@config";
 
 export class Series extends Content {
     public status: string;

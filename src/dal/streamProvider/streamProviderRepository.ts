@@ -39,6 +39,11 @@ class StreamProviderRepository {
         return new Page(page, pageSize, userServices.length, results);
     }
 
+    async getAll(userId: number): Promise<UserStreamProviders> {
+        const providersList = await StreamProvidersModel.findOne({ userId });
+        return new UserStreamProviders(providersList);
+    }
+
     async addProvider(userId: number, providerId: number): Promise<void> {
         await StreamProvidersModel.updateOne(
             {

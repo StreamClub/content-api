@@ -44,13 +44,14 @@ export abstract class Content {
         return youtubeTrailers.length > 0 ? youtubeTrailers : null;
     }
 
-    public setProviders(provider: ProvidersDictionary) {
+    public setProviders(provider: ProvidersDictionary, userPlatforms: number[]) {
         for (const platform of this.platforms) {
             const logoPath = platform.logoPath;
             const matchingKey = Object.keys(provider).find(key => key.endsWith(logoPath));
             if (matchingKey) {
                 platform.link = provider[matchingKey].link;
             }
+            platform.doesUserHaveAccess = userPlatforms.includes(platform.providerId);
         }
     }
 
