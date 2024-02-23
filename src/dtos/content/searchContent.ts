@@ -10,6 +10,6 @@ export class SearchContentDto {
 
 export const SearchContentSchema = Joi.object({
     query: Joi.string().max(MAX_STRING_LENGTH).required(),
-    page: Joi.number().min(MIN_PAGE),
+    page: Joi.number().min(MIN_PAGE).integer(),
     country: Joi.string().custom(validateCountry).required(),
 });

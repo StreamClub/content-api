@@ -7,7 +7,7 @@ import {
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
-import { GetArtistSchema, SearchContentSchema } from "@dtos";
+import { GetArtistSchema, SearchArtistSchema, SearchContentSchema } from "@dtos";
 import { ArtistController } from "@controllers";
 
 export function ArtistRouter(dependencies: AppDependencies) {
@@ -17,7 +17,7 @@ export function ArtistRouter(dependencies: AppDependencies) {
     router.get(
         "/",
         loadUserContext,
-        validateSchema(SearchContentSchema, [FieldOptions.query]),
+        validateSchema(SearchArtistSchema, [FieldOptions.query]),
         handleRequest(
             (req, res) => artistController.searchArtist(req, res),
             StatusCodes.OK

@@ -159,7 +159,7 @@ export class TmdbService {
                 .getTotalWatchedEpisodes(userId, serie.id)
             const scSeries = await this.getStreamClubSeries(serie.id, country);
             serieResume.setSeen(scSeries.numberOfEpisodes, totalWatchedEpisodes)
-            serieResume.status = seriesStatus[scSeries.status];
+            serieResume.status = scSeries.status;
             serieResume.lastEpisodeReleaseDate = scSeries.lastAirDate;
             const providersIds = scSeries.platforms.map(platform => platform.providerId);
             serieResume.available = await streamProviderRepository.doesUserHaveOneOf(userId, providersIds)
