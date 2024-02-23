@@ -1,5 +1,5 @@
-import { contentTypes, seriesStatus } from "@config";
-import { seenContentRepository, watchlistRepository } from "@dal";
+import { config, contentTypes, seriesStatus } from "@config";
+import { seenContentRepository, streamProviderRepository, watchlistRepository } from "@dal";
 import {
     Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult,
     TmdbSeries, Series, LastSeenEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode, SeriesBasicInfo, Platform
@@ -18,22 +18,27 @@ export class TmdbService {
     }
 
     public constructor(dependencies: AppDependencies) {
-        this.tmdb = new MovieDb(process.env.TMDB_API_KEY);
+        this.tmdb = new MovieDb(config.tmdbApiKey);
+
     }
 
     public async getMovie(userId: number, movieId: number, country: string): Promise<Movie> {
+        const scMovie = await this.getStreamClubMovie(movieId, country);
+        scMovie.inWatchlist = await watchlistRepository
+            .isInWatchlist(userId, scMovie.id.toString(), contentTypes.MOVIE);
+        scMovie.seen = await seenContentRepository
+            .isASeenMovie(userId, scMovie.id);
+        return scMovie;
+    }
+
+    private async getStreamClubMovie(movieId: number, country: string): Promise<Movie> {
         return await this.getContentSafely(async () => {
             const movie = await this.tmdb.movieInfo({
                 id: movieId, language: this.language,
                 append_to_response: 'credits,watch/providers,recommendations,videos'
             }) as TmdbMovie;
-            const providersData = await this.getProvidersData(this.contentTypes.MOVIE, movieId, country);
-            const scMovie = new Movie(movie, country, providersData);
-            scMovie.inWatchlist = await watchlistRepository
-                .isInWatchlist(userId, movie.id.toString(), contentTypes.MOVIE);
-            scMovie.seen = await seenContentRepository
-                .isASeenMovie(userId, movie.id);
-            return scMovie;
+            const providersData = await this.getContentProviders(this.contentTypes.MOVIE, movieId, country);
+            return new Movie(movie, country, providersData);
         })
     }
 
@@ -44,7 +49,7 @@ export class TmdbService {
                 append_to_response: 'credits,watch/providers,recommendations,videos'
             }) as TmdbSeries;
             const nextEpisode = await this.getNextEpisode(userId, serie.id, serie.seasons);
-            const providersData = await this.getProvidersData(this.contentTypes.SERIES, seriesId, country);
+            const providersData = await this.getContentProviders(this.contentTypes.SERIES, seriesId, country);
             const series = new Series(serie, country, providersData, nextEpisode);
             const totalWatchedEpisodes = await seenContentRepository
                 .getTotalWatchedEpisodes(userId, serie.id)
@@ -129,6 +134,9 @@ export class TmdbService {
                 .isInWatchlist(userId, movie.id.toString(), contentTypes.MOVIE);
             movieResume.seen = await seenContentRepository
                 .isASeenMovie(userId, movie.id);
+            const scMovie = await this.getStreamClubMovie(movie.id, 'US');
+            const providersIds = scMovie.platforms.map(platform => platform.providerId);
+            movieResume.available = await streamProviderRepository.doesUserHaveOneOf(userId, providersIds)
             return movieResume;
         }));
         return new PaginatedResult(result.page, result.total_pages, result.total_results, movies);
@@ -177,7 +185,7 @@ export class TmdbService {
         }));
     }
 
-    private async getProvidersData(contentType: string, contentId: number, country: string) {
+    private async getContentProviders(contentType: string, contentId: number, country: string) {
         const providersUrl = `https://www.themoviedb.org/${contentType}/${contentId}/watch?locale=${country}`;
         return await getRedirectLinks(providersUrl);
     }

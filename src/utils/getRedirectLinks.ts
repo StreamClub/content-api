@@ -1,10 +1,11 @@
 import { TMDB_PROVIDER_CLASS, TMDB_STREAM_PROVIDER_CLASS, TMDB_STREAM_PROVIDER_TYPE } from "@config";
 import { ProvidersDictionary } from "@entities";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import cheerio from "cheerio";
+import { logger } from "./logger";
 
 export const getRedirectLinks = async (providersUrl: string) => {
-    const providers = await axios.get(providersUrl);
+    const providers = await safeGet(providersUrl);
     const $ = cheerio.load(providers.data);
     const providersData: ProvidersDictionary = {};
 
@@ -23,4 +24,17 @@ export const getRedirectLinks = async (providersUrl: string) => {
         }
     });
     return providersData;
+}
+
+const safeGet = async (url: string): Promise<AxiosResponse<any, any>> => {
+    try {
+        return await axios.get(url);
+    } catch (error) {
+        if (error.response.status == 429) {
+            logger.warn(`Rate limit exceeded, waiting 1 seconds`);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            return safeGet(url);
+        }
+        throw error;
+    }
 }

@@ -62,6 +62,14 @@ class StreamProviderRepository {
         );
     }
 
+    async doesUserHaveOneOf(userId: number, providerIds: number[]): Promise<boolean> {
+        const count = await StreamProvidersModel.countDocuments({
+            userId,
+            'providerId': { $in: providerIds }
+        });
+        return count > 0;
+    }
+
     async deleteProvider(userId: number, providerId: number): Promise<void> {
         await StreamProvidersModel.updateOne(
             {
