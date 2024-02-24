@@ -7,18 +7,18 @@ import {
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
-import { AddProviderSchema, GetContentListSchema, GetSUserStreamServiceSchema, GetStreamServiceSchema } from "@dtos";
-import { StreamProvidersController } from "@controllers";
+import { AddProviderSchema, GetSUserStreamServiceSchema, GetStreamServiceSchema } from "@dtos";
+import { StreamProviderController } from "@controllers";
 
-export function StreamServiceRouter(dependencies: AppDependencies) {
+export function StreamProvider(dependencies: AppDependencies) {
     const router = Router();
-    const streamServiceController = new StreamProvidersController(dependencies);
+    const streamProviderController = new StreamProviderController(dependencies);
 
     router.get(
         "/",
         validateSchema(GetStreamServiceSchema, [FieldOptions.query]),
         handleRequest(
-            (req, res) => streamServiceController.getStreamProviders(req, res),
+            (req, res) => streamProviderController.getStreamProviders(req, res),
             StatusCodes.OK
         )
     );
@@ -27,7 +27,7 @@ export function StreamServiceRouter(dependencies: AppDependencies) {
         "/",
         loadUserContext,
         handleRequest(
-            (req, res) => streamServiceController.create(req, res),
+            (req, res) => streamProviderController.create(req, res),
             StatusCodes.CREATED
         )
     );
@@ -36,7 +36,7 @@ export function StreamServiceRouter(dependencies: AppDependencies) {
         '/',
         loadUserContext,
         validateSchema(AddProviderSchema, [FieldOptions.body]),
-        handleRequest((req, res) => streamServiceController.addProvider(req, res), StatusCodes.CREATED)
+        handleRequest((req, res) => streamProviderController.addProvider(req, res), StatusCodes.CREATED)
     )
 
     router.delete(
@@ -44,7 +44,7 @@ export function StreamServiceRouter(dependencies: AppDependencies) {
         loadUserContext,
         validateSchema(AddProviderSchema, [FieldOptions.body]),
         handleRequest(
-            (req, res) => streamServiceController.deleteProvider(req, res),
+            (req, res) => streamProviderController.deleteProvider(req, res),
             StatusCodes.OK
         )
     )
@@ -54,7 +54,7 @@ export function StreamServiceRouter(dependencies: AppDependencies) {
         loadUserContext,
         validateSchema(GetSUserStreamServiceSchema, [FieldOptions.params, FieldOptions.query]),
         handleRequest(
-            (req, res) => streamServiceController.getUserStreamProviders(req, res),
+            (req, res) => streamProviderController.getUserStreamProviders(req, res),
             StatusCodes.OK
         )
     )

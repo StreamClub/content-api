@@ -1,13 +1,13 @@
 /// <reference types="@types/jest" />;
 /**
-* @group streamServices
+* @group streamProviders
 */
 
 import { generateTestJwt } from '../../helpers';
 import { createStreamProvidersList } from '../../helpers/streamProviderHelper';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
-const endpoint = '/streamServices';
+const endpoint = '/streamProviders';
 
 describe('Create User\'s Stream Services List', () => {
     setupBeforeAndAfter();

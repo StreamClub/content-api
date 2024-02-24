@@ -3,7 +3,7 @@ import { Platform } from "@entities";
 import { AlreadyExistsException, NotFoundException } from "@exceptions";
 import AppDependencies from "appDependencies";
 
-export class StreamProvidersService {
+export class StreamProviderService {
     public constructor(dependencies: AppDependencies) {
     }
 

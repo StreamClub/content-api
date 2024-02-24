@@ -1,16 +1,15 @@
 /// <reference types="@types/jest" />;
 /**
-* @group streamServices
+* @group streamProviders
 */
-
-import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 import { generateTestJwt, testStreamServices01 } from '../../helpers';
-import { addStreamProvider, createStreamProvidersList } from '../../helpers/streamProviderHelper';
+import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 import { mockGetStreamServices } from '../../setup/mocksSetUp';
+import { createStreamProvidersList } from '../../helpers/streamProviderHelper';
 
-const endpoint = '/streamServices';
+const endpoint = '/streamProviders';
 
-describe('Remove User\'s Stream Services', () => {
+describe('Add Stream Provider To User', () => {
     setupBeforeAndAfter();
 
     const invalidQueryCases = [
@@ -24,56 +23,59 @@ describe('Remove User\'s Stream Services', () => {
         it(`should return ${status} when provided with an ${description} ${field}`, async () => {
             const testJwt = generateTestJwt(1, "test@test.com");
             const providerId = value;
-            const response = await server.delete(`${endpoint}`)
+            const response = await server.put(`${endpoint}`)
                 .send({ providerId })
                 .set('Authorization', `Bearer ${testJwt}`);
             expect(response.status).toBe(status);
         });
     });
 
-    it('should return 404 when trying to remove a service of a user without service list', async () => {
+    it('should return 404 when trying to add a provider to a user without Stream Provider List', async () => {
         const userId = 1;
-        const providerId = 2;
         const testJwt = generateTestJwt(userId, "test@test.com");
-        const response = await server.delete(`${endpoint}`)
-            .send({ providerId })
-            .set('Authorization', `Bearer ${testJwt}`);
+        const response = await server.put(`${endpoint}`)
+            .set('Authorization', `Bearer ${testJwt}`)
+            .send({ providerId: 2150 });
         expect(response.status).toBe(404);
     });
 
-    it('should remove a service of the user', async () => {
+    it('should add a stream provider to the user', async () => {
+        mockGetStreamServices.mockReturnValue(testStreamServices01);
+        const userId = 1;
+        const testJwt = generateTestJwt(userId, "test@test.com");
+        await createStreamProvidersList(userId);
+        const providerId = 2;
+        const response = await server.put(`${endpoint}`)
+            .set('Authorization', `Bearer ${testJwt}`)
+            .send({ providerId });
+        expect(response.status).toBe(201);
+        const getResponse = await server.get(`${endpoint}/${userId}`)
+            .query({ country: 'AR' })
+            .set('Authorization', `Bearer ${testJwt}`);
+        expect(getResponse.status).toBe(200);
+        expect(getResponse.body.results.length).toBe(1);
+        expect(getResponse.body.results[0].providerId).toBe(providerId);
+    });
+
+    it('should not add a Stream Provider Twice to the user', async () => {
         mockGetStreamServices.mockReturnValue(testStreamServices01);
         const userId = 1;
         const providerId = 2;
         const testJwt = generateTestJwt(userId, "test@test.com");
         await createStreamProvidersList(userId);
-        await addStreamProvider(userId, providerId);
-        const response = await server.delete(`${endpoint}`)
+        const response = await server.put(`${endpoint}`)
             .set('Authorization', `Bearer ${testJwt}`)
             .send({ providerId });
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(201);
+        const response2 = await server.put(`${endpoint}`)
+            .set('Authorization', `Bearer ${testJwt}`)
+            .send({ providerId });
+        expect(response2.status).toBe(201);
         const getResponse = await server.get(`${endpoint}/${userId}`)
             .query({ country: 'AR' })
             .set('Authorization', `Bearer ${testJwt}`);
         expect(getResponse.status).toBe(200);
-        expect(getResponse.body.results.length).toBe(0);
+        expect(getResponse.body.results.length).toBe(1);
+        expect(getResponse.body.results[0].providerId).toBe(providerId);
     });
-
-    it('should respond 200 and do nothing if the content is not in the watchlist', async () => {
-        mockGetStreamServices.mockReturnValue(testStreamServices01);
-        const userId = 1;
-        const providerId = 2;
-        const testJwt = generateTestJwt(userId, "test@test.com");
-        await createStreamProvidersList(userId);
-        const response = await server.delete(`${endpoint}`)
-            .set('Authorization', `Bearer ${testJwt}`)
-            .send({ providerId });
-        expect(response.status).toBe(200);
-        const getResponse = await server.get(`${endpoint}/${userId}`)
-            .query({ country: 'AR' })
-            .set('Authorization', `Bearer ${testJwt}`);
-        expect(getResponse.status).toBe(200);
-        expect(getResponse.body.results.length).toBe(0);
-    });
-
 });
