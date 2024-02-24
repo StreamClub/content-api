@@ -1,14 +1,14 @@
 import { validateCountry } from "@utils";
 import Joi from "joi";
 
-export class GetSUserStreamServiceDto {
+export class GetUserStreamServiceDto {
     userId: string;
     country: string;
     page: number;
     pageSize: number;
 }
 
-export const GetSUserStreamServiceSchema = Joi.object({
+export const GetUserStreamServiceSchema = Joi.object({
     userId: Joi.number().required().min(1).integer(),
     country: Joi.string().custom(validateCountry).required(),
     page: Joi.number().optional().default(1).min(1).integer(),

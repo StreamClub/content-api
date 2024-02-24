@@ -2,7 +2,7 @@ import { Express } from 'express'
 import AppDependencies from 'appDependencies'
 import {
     MovieRouter, WatchlistRouter, SeriesRouter,
-    ArtistRouter, SeenContentRouter, StreamProvider
+    ArtistRouter, SeenContentRouter, StreamProviderRouter
 } from '@routes';
 
 export function registerRouters(app: Express, dependencies: AppDependencies) {
@@ -12,5 +12,5 @@ export function registerRouters(app: Express, dependencies: AppDependencies) {
     app.use("/series", SeriesRouter(dependencies));
     app.use("/artists", ArtistRouter(dependencies));
     app.use("/seenContent", SeenContentRouter(dependencies));
-    app.use("/streamProviders", StreamProvider(dependencies));
+    app.use("/streamProviders", StreamProviderRouter(dependencies));
 }

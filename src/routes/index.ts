@@ -4,4 +4,4 @@ export * from "./seriesRouter";
 export * from "./artistRouter";
 export * from "./watchlistRouter";
 export * from "./seenContentRouter";
-export * from "./streamServiceRouter";
+export * from "./streamProviderRouter";

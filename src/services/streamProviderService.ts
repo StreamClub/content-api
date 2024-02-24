@@ -10,7 +10,7 @@ export class StreamProviderService {
     public async create(userId: number) {
         const providers = await streamProviderRepository.doesUserHaveWatchlist(userId);
         if (providers) {
-            throw new AlreadyExistsException('Watchlist already exists');
+            throw new AlreadyExistsException('Stream Provider List already exists');
         }
         return await streamProviderRepository.create(userId);
     }
