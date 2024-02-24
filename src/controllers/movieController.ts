@@ -19,10 +19,11 @@ export class MovieController {
     }
 
     public async searchMovie(req: Request<GetMovieDto>, res: Response<any>) {
+        const country = req.query.country as string;
         const userId = Number(res.locals.userId);
         const query = req.query.query as string;
         const page = parseInt(req.query.page as string || '1');
-        return await this.tmdbService.searchMovie(userId, query, page);
+        return await this.tmdbService.searchMovie(userId, query, page, country);
     }
 
 }

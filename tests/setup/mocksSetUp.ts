@@ -8,6 +8,7 @@ export let mockGetRedirectLinks = jest.spyOn(require('../../src/utils/getRedirec
 export let mockGetShowDetails = jest.fn()
 export let mockGetSeasonDetails = jest.fn()
 export let mockGetArtistDetails = jest.fn()
+export let mockGetStreamServices = jest.fn()
 
 export const setUpMocks = () => {
     MovieDb.prototype.searchTv = mockSearchSeries
@@ -17,4 +18,5 @@ export const setUpMocks = () => {
     MovieDb.prototype.seasonInfo = mockGetSeasonDetails
     MovieDb.prototype.searchPerson = mockSearchArtist
     MovieDb.prototype.personInfo = mockGetArtistDetails
+    MovieDb.prototype.movieWatchProviderList = mockGetStreamServices
 }

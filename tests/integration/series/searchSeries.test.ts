@@ -22,13 +22,22 @@ describe('Search Series', () => {
         [400, 'page', 'notANumber', 'not a number'],
         [400, 'page', '1.5', 'not an integer'],
         [400, 'page', '', 'empty'],
+        [400, 'country', '', 'empty'],
+        [400, 'country', 'notACode', 'too long'],
+        [400, 'country', 'a', 'too short'],
+        [400, 'country', 'ar', 'lowercase'],
     ]
 
     invalidQueryCases.forEach(([status, field, value, description]) => {
         it(`should return ${status} when provided with an ${description} ${field}`, async () => {
             const testJwt = generateTestJwt(1, "test@test.com");
+            const validQuery = {
+                page: 1,
+                query: "something",
+                country: 'AR'
+            }
             const response = await server.get(`${endpoint}`)
-                .query({ [field]: value })
+                .query({ ...validQuery, [field]: value })
                 .set('Authorization', `Bearer ${testJwt}`);
             expect(response.status).toBe(status);
         });
@@ -38,10 +47,12 @@ describe('Search Series', () => {
         mockSearchSeries.mockReturnValue(testSearchSeries01);
         mockGetShowDetails.mockReturnValue(testSeries01);
         const query = 'test';
+        const country = 'AR';
         const testJwt = generateTestJwt(1, "test@test.com");
         const page = 1;
         const response = await server.get(`${endpoint}`)
-            .query({ query, page }).set('Authorization', `Bearer ${testJwt}`);
+            .query({ query, page, country })
+            .set('Authorization', `Bearer ${testJwt}`);
         const series = response.body.results;
         expect(response.status).toBe(200);
         expect(series.length).toBeLessThanOrEqual(20);

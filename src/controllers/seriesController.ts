@@ -12,10 +12,11 @@ export class SeriesController {
     }
 
     public async searchSeries(req: Request<GetMovieDto>, res: Response<any>) {
+        const country = req.query.country as string;
         const userId = Number(res.locals.userId);
         const query = req.query.query as string;
         const page = parseInt(req.query.page as string || '1');
-        return await this.tmdbService.searchSeries(userId, query, page);
+        return await this.tmdbService.searchSeries(userId, query, page, country);
     }
 
     public async getSeries(req: Request<GetMovieDto>, res: Response<any>) {

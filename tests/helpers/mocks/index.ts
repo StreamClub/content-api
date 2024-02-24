@@ -3,3 +3,4 @@ export * from './testArtists';
 export * from './testMovies';
 export * from './testSeries';
 export * from './testSeasons';
+export * from './testStreamServices';
