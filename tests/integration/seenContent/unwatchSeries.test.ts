@@ -4,6 +4,7 @@
 */
 import { generateTestJwt, testProviders01, testSeason01, testSeason02, testSeries02 } from '../../helpers';
 import { createSeenContentList, getSeenContentList, seeEpisode } from '../../helpers/seenContentHelper';
+import { createStreamProvidersList } from '../../helpers/streamProviderHelper';
 import { mockGetRedirectLinks, mockGetSeasonDetails, mockGetShowDetails } from '../../setup/mocksSetUp';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
@@ -38,6 +39,7 @@ describe('Remove Series from Seen Content List', () => {
         mockGetSeasonDetails.mockReturnValueOnce(testSeason02);
         const userId = 1;
         const seriesId = 37854;
+        await createStreamProvidersList(userId);
         await createSeenContentList(userId);
         const testJwt = generateTestJwt(userId, "test@test.com");
         const putResponse = await server

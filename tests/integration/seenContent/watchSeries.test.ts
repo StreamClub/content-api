@@ -7,6 +7,7 @@ import { generateTestJwt, testProviders01, testSeason01, testSeason02, testSerie
 import { createSeenContentList, getSeenContentList, seeEpisode } from '../../helpers/seenContentHelper';
 import { mockGetRedirectLinks, mockGetSeasonDetails, mockGetShowDetails } from '../../setup/mocksSetUp';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
+import { createStreamProvidersList } from '../../helpers/streamProviderHelper';
 
 const endpoint = '/seenContent/series';
 
@@ -39,6 +40,7 @@ describe('Add Series To Seen Content List', () => {
         const userId = 1;
         const seriesId = 1;
         await createSeenContentList(userId);
+        await createStreamProvidersList(userId);
         const testJwt = generateTestJwt(userId, "test@test.com");
         const response = await server
             .put(`${endpoint}/${seriesId}`)
@@ -65,6 +67,7 @@ describe('Add Series To Seen Content List', () => {
         mockGetSeasonDetails.mockReturnValueOnce(testSeason02);
         const userId = 1;
         const seriesId = 1;
+        await createStreamProvidersList(userId);
         await createSeenContentList(userId);
         await seeEpisode(userId, seriesId, 1, 1);
         const testJwt = generateTestJwt(userId, "test@test.com");
