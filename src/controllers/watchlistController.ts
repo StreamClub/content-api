@@ -24,8 +24,8 @@ export class WatchlistController {
         const userId = Number(req.params.userId);
         const userContent = await this.watchlistService.get(userId, pageSize, pageNumber);
         userContent.results = await Promise.all(userContent.results.map(async (content: WatchlistItem) => {
-            const poster = await this.tmdbService.getPoster(content.contentType, content.id);
-            return new WatchlistItemResume(content, poster);
+            const { poster, title } = await this.tmdbService.getNameAndPoster(content.contentType, content.id);
+            return new WatchlistItemResume(content, poster, title);
         }));
         return userContent;
     }

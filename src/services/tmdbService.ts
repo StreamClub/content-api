@@ -7,12 +7,12 @@ import {
 import { NotFoundException } from "@exceptions";
 import { getRedirectLinks } from "@utils";
 import AppDependencies from "appDependencies";
-import { MovieDb, MovieResult, TvResult, TvSeasonResponse } from 'moviedb-promise'
+import { MovieDb, MovieResponse, MovieResult, ShowResponse, TvResult, TvSeasonResponse } from 'moviedb-promise'
 
 export class TmdbService {
     private tmdb: MovieDb;
     private language = 'es';
-    private contentTypes = {
+    private tmdbContentTypes = {
         MOVIE: 'movie',
         SERIES: 'tv'
     }
@@ -24,7 +24,7 @@ export class TmdbService {
 
     public async getMovie(userId: number, movieId: number, country: string): Promise<Movie> {
         const scMovie = await this.getStreamClubMovie(movieId, country);
-        const providersData = await this.getContentProviders(this.contentTypes.MOVIE, movieId, country);
+        const providersData = await this.getContentProviders(this.tmdbContentTypes.MOVIE, movieId, country);
         const userPlatforms = await streamProviderRepository.getAll(userId);
         scMovie.setProviders(providersData, userPlatforms.providerId);
         scMovie.inWatchlist = await watchlistRepository
@@ -56,7 +56,7 @@ export class TmdbService {
 
     public async getSeries(userId: number, seriesId: number, country: string): Promise<Series> {
         const scSeries = await this.getStreamClubSeries(seriesId, country);
-        const providersData = await this.getContentProviders(this.contentTypes.SERIES, seriesId, country);
+        const providersData = await this.getContentProviders(this.tmdbContentTypes.SERIES, seriesId, country);
         const userPlatforms = await streamProviderRepository.getAll(userId);
         scSeries.setProviders(providersData, userPlatforms.providerId);
         const nextEpisode = await this.getNextEpisode(userId, scSeries.id, scSeries.seasons);
@@ -179,11 +179,28 @@ export class TmdbService {
         return new PaginatedResult(result.page, result.total_pages, result.total_results, artists);
     }
 
-    public async getPoster(contentType: string, contentId: number) {
-        const tmdbContent = contentType == this.contentTypes.MOVIE ?
+    public async getNameAndPoster(contentType: string, contentId: number) {
+        const tmdbContent = contentType == this.tmdbContentTypes.MOVIE ?
             await this.tmdb.movieInfo({ id: contentId, language: this.language }) :
             await this.tmdb.tvInfo({ id: contentId, language: this.language });
-        return tmdbContent.poster_path;
+        const title = this.getTmdbContentName(tmdbContent, contentType);
+        return {
+            poster: tmdbContent.poster_path,
+            title
+        };
+    }
+
+    private getTmdbContentName(tmdbContent: MovieResponse | ShowResponse, contentType: string) {
+        const defaultName = ""
+        if (!tmdbContent) {
+            return defaultName;
+        }
+        if (contentType == contentTypes.MOVIE) {
+            return (tmdbContent as TmdbMovie).title;
+        } else if (contentType == contentTypes.SERIES) {
+            return (tmdbContent as TmdbSeries).name;
+        }
+        return defaultName;
     }
 
     public async getStreamProviders(country: string) {
