@@ -58,6 +58,7 @@ describe('Add Content To Watchlist', () => {
         expect(getResponse.body.results[0].id).toBe(2150);
         expect(getResponse.body.results[0].contentType).toBe(contentTypes.MOVIE);
         expect(getResponse.body.results[0].createdAt).toBeDefined();
+        expect(getResponse.body.results[0].title).toBe(testMovie1.title);
     });
 
     it('should add a series to the watchlist of the user', async () => {
@@ -75,6 +76,7 @@ describe('Add Content To Watchlist', () => {
         expect(getResponse.body.results[0].id).toBe(2150);
         expect(getResponse.body.results[0].contentType).toBe(contentTypes.SERIES);
         expect(getResponse.body.results[0].createdAt).toBeDefined();
+        expect(getResponse.body.results[0].title).toBe(testSeries01.name);
     });
 
     it('should let you add a movie and a series with the same id to the watchlist of the user', async () => {

@@ -30,9 +30,9 @@ export class SeenContentController {
                 const seriesBasicInfo = await this.tmdbService.getSeriesBasicInfo(content.id);
                 return new SeenSeriesItemResume(content as SeenSeriesItem, seriesBasicInfo);
             } else {
-                const poster = await
-                    this.tmdbService.getPoster(content.contentType, content.id);
-                return new SeenMovieItemResume(content, poster);
+                const { poster, title } = await
+                    this.tmdbService.getNameAndPoster(content.contentType, content.id);
+                return new SeenMovieItemResume(content, poster, title);
             }
         }));
         return seenContent;
