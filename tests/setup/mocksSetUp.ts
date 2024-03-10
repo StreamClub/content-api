@@ -1,6 +1,7 @@
 import { MovieDb } from "moviedb-promise"
 
 export let mockMovieInfo = jest.fn()
+export let mockGetMovieCredits = jest.fn()
 export let mockSearchMovie = jest.fn()
 export let mockSearchSeries = jest.fn()
 export let mockSearchArtist = jest.fn()
@@ -13,6 +14,7 @@ export let mockGetStreamServices = jest.fn()
 export const setUpMocks = () => {
     MovieDb.prototype.searchTv = mockSearchSeries
     MovieDb.prototype.movieInfo = mockMovieInfo
+    MovieDb.prototype.movieCredits = mockGetMovieCredits
     MovieDb.prototype.tvInfo = mockGetShowDetails
     MovieDb.prototype.searchMovie = mockSearchMovie
     MovieDb.prototype.seasonInfo = mockGetSeasonDetails

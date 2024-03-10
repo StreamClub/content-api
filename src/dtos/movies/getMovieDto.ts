@@ -7,6 +7,6 @@ export class GetMovieDto {
 }
 
 export const GetMovieSchema = Joi.object({
-    movieId: Joi.number().required(),
+    movieId: Joi.number().required().min(0).integer(),
     country: Joi.string().custom(validateCountry).required(),
 });
