@@ -27,6 +27,9 @@ export class Season {
     }
 
     getAiredEpisodes = () => {
+        if (!this.episodes || this.episodes.length === 0) {
+            return [];
+        }
         return this.episodes.filter(episode => moment(episode.airDate).format('YYYY-MM-DD') <= moment().format('YYYY-MM-DD'));
     }
 
@@ -38,6 +41,9 @@ export class Season {
     }
 
     getLastAiredEpisode = () => {
+        if (!this.episodes || this.episodes.length === 0) {
+            return null;
+        }
         return this.getAiredEpisodes().reduce((prev, current) => (prev.airDate > current.airDate) ? prev : current);
     }
 
