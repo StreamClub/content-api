@@ -1,8 +1,8 @@
-import { config, contentTypes, seriesStatus } from "@config";
+import { config, contentTypes } from "@config";
 import { seenContentRepository, streamProviderRepository, watchlistRepository } from "@dal";
 import {
     Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult,
-    TmdbSeries, Series, LastSeenEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode, SeriesBasicInfo, Platform
+    TmdbSeries, Series, LastSeenEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode, SeriesBasicInfo, Platform, ContentCredits
 } from "@entities";
 import { NotFoundException } from "@exceptions";
 import { getRedirectLinks } from "@utils";
@@ -32,6 +32,18 @@ export class TmdbService {
         scMovie.seen = await seenContentRepository
             .isASeenMovie(userId, scMovie.id);
         return scMovie;
+    }
+
+    public async getContentCredits(contentId: number, contentType: string) {
+        return await this.getContentSafely(async () => {
+            let credits;
+            if (contentType == contentTypes.MOVIE) {
+                credits = await this.tmdb.movieCredits({ id: contentId, language: this.language });
+            } else {
+                credits = await this.tmdb.tvCredits({ id: contentId, language: this.language });
+            }
+            return new ContentCredits(credits);
+        });
     }
 
     private async getStreamClubMovie(movieId: number, country: string): Promise<Movie> {
