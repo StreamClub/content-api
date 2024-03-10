@@ -34,9 +34,14 @@ export class TmdbService {
         return scMovie;
     }
 
-    public async getMovieCredits(movieId: number) {
+    public async getContentCredits(contentId: number, contentType: string) {
         return await this.getContentSafely(async () => {
-            const credits = await this.tmdb.movieCredits({ id: movieId, language: this.language });
+            let credits;
+            if (contentType == contentTypes.MOVIE) {
+                credits = await this.tmdb.movieCredits({ id: contentId, language: this.language });
+            } else {
+                credits = await this.tmdb.tvCredits({ id: contentId, language: this.language });
+            }
             return new ContentCredits(credits);
         });
     }

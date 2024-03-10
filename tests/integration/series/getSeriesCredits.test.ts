@@ -1,23 +1,22 @@
 /// <reference types="@types/jest" />;
 /**
-* @group movies
+* @group series
 */
 
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
-import { mockGetMovieCredits } from '../../setup/mocksSetUp';
-import { generateTestJwt, testMovie1 } from '../../helpers';
-import { createStreamProvidersList } from '../../helpers/streamProviderHelper';
+import { mockGetSeriesCredits } from '../../setup/mocksSetUp';
+import { generateTestJwt, testSeries01 } from '../../helpers';
 
-const endpoint = '/movies';
+const endpoint = '/series';
 
-describe('Get Movie Credits', () => {
+describe('Get Series Credits', () => {
     setupBeforeAndAfter();
 
     const invalidParamsCases = [
-        [400, 'movieId', '-1', 'negative'],
-        [400, 'movieId', 'notANumber', 'not a number'],
-        [400, 'movieId', '1.5', 'not an integer'],
-        [400, 'movieId', '', 'empty'],
+        [400, 'seriesId', '-1', 'negative'],
+        [400, 'seriesId', 'notANumber', 'not a number'],
+        [400, 'seriesId', '1.5', 'not an integer'],
+        [400, 'seriesId', '', 'empty'],
     ]
 
     invalidParamsCases.forEach(([status, field, value, description]) => {
@@ -31,11 +30,10 @@ describe('Get Movie Credits', () => {
         });
     });
 
-    it('should return movie credits with the correct format', async () => {
-        mockGetMovieCredits.mockReturnValue(testMovie1.credits);
+    it('should return series credits with the correct format', async () => {
+        mockGetSeriesCredits.mockReturnValue(testSeries01.credits);
         const userId = 1;
         const testJwt = generateTestJwt(userId, "test@test.com");
-        await createStreamProvidersList(userId);
         const id = 2150;
         const response = await server.get(`${endpoint}/${id}/credits`)
             .set('Authorization', `Bearer ${testJwt}`);
@@ -60,7 +58,7 @@ describe('Get Movie Credits', () => {
     });
 
     it('should return a 404 if the movie does not exist', async () => {
-        mockGetMovieCredits.mockRejectedValue({ response: { status: 404 } });
+        mockGetSeriesCredits.mockRejectedValue({ response: { status: 404 } });
         const testJwt = generateTestJwt(1, "test@test.com")
         const id = 0;
         const response = await server.get(`${endpoint}/${id}/credits`)

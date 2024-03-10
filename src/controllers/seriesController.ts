@@ -3,6 +3,7 @@ import { GetMovieDto } from '@dtos';
 import { TmdbService } from '@services';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
+import { contentTypes } from '@config';
 
 export class SeriesController {
     private tmdbService: TmdbService;
@@ -31,6 +32,11 @@ export class SeriesController {
         const seriesId = Number(req.params.seriesId);
         const seasonId = Number(req.params.seasonId);
         return await this.tmdbService.getUserSeason(userId, seriesId, seasonId);
+    }
+
+    public async getSeriesCredits(req: Request<GetMovieDto>, res: Response<any>) {
+        const seriesId = Number(req.params.seriesId);
+        return await this.tmdbService.getContentCredits(seriesId, contentTypes.SERIES);
     }
 
 }

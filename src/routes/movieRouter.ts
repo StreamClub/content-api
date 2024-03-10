@@ -37,7 +37,7 @@ export function MovieRouter(dependencies: AppDependencies) {
     router.get(
         "/:movieId/credits",
         loadUserContext,
-        validateSchema(GetMovieCreditsSchema, [FieldOptions.params, FieldOptions.query]),
+        validateSchema(GetMovieCreditsSchema, [FieldOptions.params]),
         handleRequest(
             (req, res) => movieController.getMovieCredits(req, res),
             StatusCodes.OK
