@@ -3,6 +3,7 @@ import { GetMovieDto } from '@dtos';
 import { TmdbService } from '@services';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
+import { contentTypes } from '@config';
 
 export class MovieController {
     private tmdbService: TmdbService;
@@ -24,6 +25,11 @@ export class MovieController {
         const query = req.query.query as string;
         const page = parseInt(req.query.page as string || '1');
         return await this.tmdbService.searchMovie(userId, query, page, country);
+    }
+
+    public async getMovieCredits(req: Request<GetMovieDto>, res: Response<any>) {
+        const movieId = parseInt(req.params.movieId);
+        return await this.tmdbService.getContentCredits(movieId, contentTypes.MOVIE);
     }
 
 }

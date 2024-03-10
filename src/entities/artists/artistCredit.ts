@@ -1,4 +1,4 @@
-export class artistCastCredit {
+export class ArtistCastCredit {
     public id: number;
     public title: string;
     public poster: string;
@@ -15,7 +15,7 @@ export class artistCastCredit {
 
 }
 
-export class artistCrewCredit {
+export class ArtistCrewCredit {
     public id: number;
     public title: string;
     public poster: string;

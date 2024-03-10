@@ -8,7 +8,7 @@ import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
 import { MovieController } from "@controllers";
-import { GetMovieSchema, SearchContentSchema } from "@dtos";
+import { GetMovieCreditsSchema, GetMovieSchema, SearchContentSchema } from "@dtos";
 
 export function MovieRouter(dependencies: AppDependencies) {
     const router = Router();
@@ -30,6 +30,16 @@ export function MovieRouter(dependencies: AppDependencies) {
         validateSchema(GetMovieSchema, [FieldOptions.params, FieldOptions.query]),
         handleRequest(
             (req, res) => movieController.getMovie(req, res),
+            StatusCodes.OK
+        )
+    );
+
+    router.get(
+        "/:movieId/credits",
+        loadUserContext,
+        validateSchema(GetMovieCreditsSchema, [FieldOptions.params]),
+        handleRequest(
+            (req, res) => movieController.getMovieCredits(req, res),
             StatusCodes.OK
         )
     );
