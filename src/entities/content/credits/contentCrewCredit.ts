@@ -10,7 +10,7 @@ export class ContentCrewCredit {
     public constructor(crewCredits: Crew) {
         this.id = crewCredits.id;
         this.name = crewCredits.name;
-        this.poster = crewCredits.profile_path ? crewCredits.profile_path : undefined;
+        this.poster = crewCredits.profile_path ? crewCredits.profile_path : null;
         this.department = crewCredits.department;
         this.job = crewCredits.job;
     }

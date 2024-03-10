@@ -9,7 +9,7 @@ export class ContentCastCredit {
     public constructor(castCredits: Cast) {
         this.id = castCredits.id;
         this.name = castCredits.name;
-        this.poster = castCredits.profile_path ? castCredits.profile_path : undefined;
+        this.poster = castCredits.profile_path ? castCredits.profile_path : null;
         this.character = castCredits.character;
     }
 
