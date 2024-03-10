@@ -65,11 +65,15 @@ export class SeenContentController {
         let latestSeenEpisode: SeasonEpisode = null;
         const seenSeasons: SeenSeason[] = await Promise.all(seasons.map(async (season) => {
             const seasonInfo: Season = await this.tmdbService.getSeason(seriesId, season.id);
-            const episodes: SeenEpisode[] = seasonInfo.toSeenEpisodes();
-            latestSeenEpisode = seasonInfo.getLatestEpisode(latestSeenEpisode);
-            return new SeenSeason({ seasonId: season.id, episodes });
+            if (seasonInfo.episodes.length !== 0) {
+                const episodes: SeenEpisode[] = seasonInfo.toSeenEpisodes();
+                latestSeenEpisode = seasonInfo.getLatestEpisode(latestSeenEpisode);
+                return new SeenSeason({ seasonId: season.id, episodes });
+            }
         }));
-        return await this.seenContentService.addSeries(userId, seriesId, seenSeasons, latestSeenEpisode);
+        const filteredSeenSeasons = seenSeasons.filter(season => season !== undefined);
+        return await this.seenContentService
+            .addSeries(userId, seriesId, filteredSeenSeasons, latestSeenEpisode);
     }
 
     public async removeSeries(req: Request<any>, res: Response<any>) {
@@ -83,9 +87,11 @@ export class SeenContentController {
         const seriesId = Number(req.params.seriesId);
         const seasonId = Number(req.params.seasonId);
         const season = await this.tmdbService.getSeason(seriesId, seasonId);
-        const episodes: SeenEpisode[] = season.toSeenEpisodes();
-        const lastSeenEpisode = season.getLatestEpisode(null);
-        return await this.seenContentService.addSeason(userId, seriesId, seasonId, episodes, lastSeenEpisode);
+        if (season.episodes.length !== 0) {
+            const episodes: SeenEpisode[] = season.toSeenEpisodes();
+            const lastSeenEpisode = season.getLatestEpisode(null);
+            return await this.seenContentService.addSeason(userId, seriesId, seasonId, episodes, lastSeenEpisode);
+        }
     }
 
     public async removeSeason(req: Request<any>, res: Response<any>) {
