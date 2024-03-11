@@ -2,7 +2,7 @@ import { seenContentRepository } from "@dal";
 import {
     Page, SeasonEpisode, SeenContent, SeenEpisode,
     SeenMovie,
-    SeenMovieItem, SeenSeason, SeenSeries
+    SeenSeason, SeenSeries
 } from "@entities";
 import { AlreadyExistsException, NotFoundException } from "@exceptions";
 import AppDependencies from "appDependencies";
@@ -24,6 +24,7 @@ export class SeenContentService {
         return await seenContentRepository.getContentList(userId, pageSize, pageNumber);
     }
 
+    //TODO: eliminar este método
     public async getMovies(userId: number, pageSize: number, pageNumber: number) {
         const found = await this.failIfListDoesNotExist(userId);
         const seenMovies = found.movies.map((movie) => new SeenMovie(movie));

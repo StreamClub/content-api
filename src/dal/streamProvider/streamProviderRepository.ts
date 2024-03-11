@@ -34,6 +34,7 @@ class StreamProviderRepository {
                 }
             },
         ]);
+        //TODO: revisar si esto es necesario o se puede realizar desde la consulta de mongo
         const userServices = streamServices.filter(platform => founded.some(provider => provider.providerId === platform.providerId));
         const results = userServices.slice((page - 1) * pageSize, page * pageSize);
         return new Page(page, pageSize, userServices.length, results);
