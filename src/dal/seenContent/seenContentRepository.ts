@@ -84,11 +84,10 @@ class SeenContentRepository {
                 }
             },
             { $unwind: "$content" },
-            { $sort: { "content.lastModifiedAt": -1 } },
+            { $sort: { "content.updatedAt": -1 } },
             { $skip: (pageNumber - 1) * pageSize },
             { $limit: pageSize }
         ]);
-
         const items = seenContent.map((content) => {
             return SeenItemFactory.create(content.contentType, content.content);
         });

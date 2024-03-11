@@ -26,12 +26,8 @@ class WatchlistRepository {
                     'path': '$watchlist'
                 }
             },
-            {
-                $skip: (page - 1) * pageSize,
-            },
-            {
-                $limit: pageSize,
-            }
+            { $skip: (page - 1) * pageSize },
+            { $limit: pageSize }
         ]);
         const watchlistLength = await this.getWatchlistSize(userId);
         const watchlist = founded.map((content) => {
