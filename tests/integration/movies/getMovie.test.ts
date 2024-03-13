@@ -9,6 +9,7 @@ import { generateTestJwt, testMovie1 } from '../../helpers';
 import { Movie } from '@entities';
 import { testProviders01 } from '../../helpers/mocks/testProviders';
 import { createStreamProvidersList } from '../../helpers/streamProviderHelper';
+import { movieStatus } from '@config';
 
 const endpoint = '/movies';
 
@@ -54,7 +55,7 @@ describe('Get Movie', () => {
         expect(movie.runtime).toBe(testMovie1.runtime);
         expect(movie.budget).toBe(testMovie1.budget);
         expect(movie.revenue).toBe(testMovie1.revenue);
-        expect(movie.status).toBe(testMovie1.status);
+        expect(movie.status).toBe(movieStatus[testMovie1.status]);
         expect(movie.platforms.length).toBeGreaterThanOrEqual(1);
         expect(movie.cast.length).toBeLessThanOrEqual(10);
         expect(movie.similar.length).toBeLessThanOrEqual(10);
