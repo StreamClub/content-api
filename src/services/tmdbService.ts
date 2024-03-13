@@ -156,6 +156,7 @@ export class TmdbService {
             movieResume.seen = await seenContentRepository
                 .isASeenMovie(userId, movie.id);
             const scMovie = await this.getStreamClubMovie(movie.id, country);
+            movieResume.status = scMovie.status;
             const providersIds = scMovie.platforms.map(platform => platform.providerId);
             movieResume.available = await streamProviderRepository.doesUserHaveOneOf(userId, providersIds)
             return movieResume;

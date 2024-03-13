@@ -1,14 +1,16 @@
+import { movieStatus } from "@config";
 import { MovieResult } from "moviedb-promise";
 
 export class MovieResume {
-    id: number;
-    title: string;
-    poster: string;
-    available: boolean;
-    releaseDate: string;
-    score: number;
-    seen: boolean;
-    inWatchlist: boolean;
+    public id: number;
+    public title: string;
+    public poster: string;
+    public available: boolean;
+    public releaseDate: string;
+    public status: string;
+    public score: number;
+    public seen: boolean;
+    public inWatchlist: boolean;
 
     constructor(movie: MovieResult) {
         this.id = movie.id;
