@@ -16,7 +16,6 @@ export class SeriesResume {
         this.id = series.id;
         this.title = series.name;
         this.poster = series.poster_path;
-        this.available = Math.round(Math.random() * 1) == 1; //TODO: cambiar el available segun los servicios del usuario
         this.releaseDate = series.first_air_date;
         this.score = series.vote_average; //TODO: cambiar el score por el de la base de datos
     }
