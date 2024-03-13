@@ -9,9 +9,11 @@ export class Artist extends ArtistResume {
         crew: ArtistCrewCredit[]
     };
     public externalIds: ArtistExternalIds;
+    public biography: string;
 
     public constructor(tmdbPerson: TmdbPerson) {
         super(tmdbPerson);
+        this.biography = tmdbPerson.biography;
         this.knownFor = tmdbPerson.known_for_department;
         const cast = tmdbPerson.combined_credits.cast.map(castCredits => new ArtistCastCredit(castCredits));
         const crew = tmdbPerson.combined_credits.crew.map(crewCredits => new ArtistCrewCredit(crewCredits));

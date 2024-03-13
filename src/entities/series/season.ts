@@ -10,6 +10,7 @@ export class Season {
     public overview: string;
     public poster: string;
     public episodes: SeasonEpisode[];
+    public seen: boolean;
 
     constructor(tmdbSeason: TvSeasonResponse) {
         this.id = tmdbSeason.season_number;
@@ -17,6 +18,7 @@ export class Season {
         this.name = tmdbSeason.name;
         this.overview = tmdbSeason.overview;
         this.poster = tmdbSeason.poster_path;
+        this.seen = false;
         this.episodes = tmdbSeason.episodes.map((episode: EpisodeResult) => new SeasonEpisode(episode));
     }
 
@@ -24,6 +26,9 @@ export class Season {
         this.episodes.forEach(episode => {
             episode.seen = seenEpisodes.includes(episode.episodeId);
         });
+        if (seenEpisodes.length === this.episodes.length) {
+            this.seen = true;
+        }
     }
 
     getAiredEpisodes = () => {
