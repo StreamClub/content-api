@@ -1,4 +1,4 @@
-import { Review } from "@entities";
+import { Page, Review } from "@entities";
 import { ReviewModel } from "./reviewModel";
 import { AddReviewDto } from "@dtos";
 
@@ -19,10 +19,23 @@ class ReviewRepository {
         );
     }
 
-    async getReviewsByUserId(userId: number): Promise<Review[]> {
-        //TODO: agregar paginación
-        const reviews = await ReviewModel.find({ userId });
-        return reviews.map((review) => new Review(review));
+    async getReviewsByUserId(userId: number, page: number, pageSize: number): Promise<Page> {
+        const reviews = await ReviewModel.aggregate([
+            {
+                $match: {
+                    userId,
+                },
+            },
+            { $skip: (page - 1) * pageSize },
+            { $limit: pageSize }
+        ])
+        const amountOfReviews = await this.getUsersAmountOfReviews(userId);
+        const results = reviews.map((review) => new Review(review));
+        return new Page(page, pageSize, amountOfReviews, results)
+    }
+
+    async getUsersAmountOfReviews(userId: number): Promise<number> {
+        return await ReviewModel.countDocuments({ userId });
     }
 
 }

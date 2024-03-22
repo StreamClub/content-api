@@ -2,7 +2,6 @@ import { AddReviewDto } from '@dtos';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { ReviewService } from '@services';
-import { Review } from '@entities';
 
 export class ReviewController {
     private reviewService: ReviewService;
@@ -13,12 +12,13 @@ export class ReviewController {
 
     public async addReview(req: Request<AddReviewDto>, res: Response<any>) {
         const userId = Number(res.locals.userId);
-        const { contentId, contentType, review, liked } = req.body;
         return await this.reviewService.addReview(userId, req.body);
     }
 
     public async getReviewsByUserId(req: Request<any>, res: Response<any>) {
         const userId = Number(req.params.userId);
-        return await this.reviewService.getReviewsByUserId(userId);
+        const pageSize = Number(req.query.pageSize) || 20;
+        const pageNumber = Number(req.query.page) || 1;
+        return await this.reviewService.getReviewsByUserId(userId, pageNumber, pageSize);
     }
 }

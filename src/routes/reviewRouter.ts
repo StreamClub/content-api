@@ -2,7 +2,7 @@ import { FieldOptions, handleRequest, loadUserContext, validateSchema } from '@m
 import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import AppDependencies from 'appDependencies'
-import { AddReviewSchema, UserReviewSchema } from '@dtos'
+import { AddReviewSchema, GetContentListSchema, UserReviewSchema } from '@dtos'
 import { ReviewController } from '@controllers'
 
 export function ReviewRouter(dependencies: AppDependencies) {
@@ -19,7 +19,7 @@ export function ReviewRouter(dependencies: AppDependencies) {
     router.get(
         "/users/:userId",
         loadUserContext,
-        validateSchema(UserReviewSchema, [FieldOptions.params]),
+        validateSchema(GetContentListSchema, [FieldOptions.params, FieldOptions.query]),
         handleRequest((req, res) => reviewController.getReviewsByUserId(req, res), StatusCodes.OK)
     )
 
