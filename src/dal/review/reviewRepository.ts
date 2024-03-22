@@ -47,7 +47,6 @@ class ReviewRepository {
     }
 
     async getReviewsByContent(contentId: number, contentType: string, page: number, pageSize: number): Promise<Page> {
-        console.log(contentId, contentType, page, pageSize)
         const reviews = await ReviewModel.aggregate([
             {
                 $match: {
