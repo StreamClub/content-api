@@ -2,7 +2,10 @@ import { FieldOptions, handleRequest, loadUserContext, validateSchema } from '@m
 import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import AppDependencies from 'appDependencies'
-import { AddReviewSchema, DeleteReviewSchema, GetContentListSchema, GetMovieReviewSchema, GetSeriesReviewSchema } from '@dtos'
+import {
+    AddReviewSchema, DeleteReviewSchema, GetContentListSchema,
+    GetMovieReviewSchema, GetSeriesReviewSchema
+} from '@dtos'
 import { ReviewController } from '@controllers'
 
 export function ReviewRouter(dependencies: AppDependencies) {

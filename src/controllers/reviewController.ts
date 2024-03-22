@@ -1,4 +1,7 @@
-import { AddReviewDto, DeleteReviewDto, GetContentListDto, GetMovieReviewDto, GetSeriesReviewDto } from '@dtos';
+import {
+    AddReviewDto, DeleteReviewDto, GetContentListDto,
+    GetMovieReviewDto, GetSeriesReviewDto
+} from '@dtos';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { ReviewService } from '@services';
