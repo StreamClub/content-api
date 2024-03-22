@@ -1,3 +1,3 @@
 export * from "./addReviewDto";
-export * from "./userReviewDto";
+export * from "./getContentReview";
 export * from "./deleteReviewDto";

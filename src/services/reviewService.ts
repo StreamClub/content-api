@@ -17,4 +17,8 @@ export class ReviewService {
     public async getReviewsByUserId(userId: number, page: number, pageSize: number) {
         return await reviewRepository.getReviewsByUserId(userId, page, pageSize);
     }
+
+    public async getReviewsByContent(contentId: number, contentType: string, page: number, pageSize: number) {
+        return await reviewRepository.getReviewsByContent(contentId, contentType, page, pageSize);
+    }
 }
