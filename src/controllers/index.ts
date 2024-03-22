@@ -4,3 +4,4 @@ export * from './seriesController';
 export * from './artistController';
 export * from './seenContentController';
 export * from './streamProviderController';
+export * from './reviewController';

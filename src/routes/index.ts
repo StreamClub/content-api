@@ -5,3 +5,4 @@ export * from "./artistRouter";
 export * from "./watchlistRouter";
 export * from "./seenContentRouter";
 export * from "./streamProviderRouter";
+export * from "./reviewRouter";

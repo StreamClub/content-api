@@ -14,6 +14,6 @@ const StreamProvidersTypeSchema = new Schema<StreamProvidersType>({
         default: [],
     }
 })
-StreamProvidersTypeSchema.index({ userId: 1 })
+StreamProvidersTypeSchema.index({ userId: 1 }, { unique: true })
 
 export const StreamProvidersModel = model<StreamProvidersType>('StreamProvider', StreamProvidersTypeSchema)
