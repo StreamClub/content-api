@@ -14,7 +14,11 @@ export class ReviewController {
     public async addReview(req: Request<AddReviewDto>, res: Response<any>) {
         const userId = Number(res.locals.userId);
         const { contentId, contentType, review, liked } = req.body;
-        const userReview = new Review(userId, contentId, contentType, liked, review);
-        return await this.reviewService.addReview(userReview);
+        return await this.reviewService.addReview(userId, req.body);
+    }
+
+    public async getReviewsByUserId(req: Request<any>, res: Response<any>) {
+        const userId = Number(req.params.userId);
+        return await this.reviewService.getReviewsByUserId(userId);
     }
 }
