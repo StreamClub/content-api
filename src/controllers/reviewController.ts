@@ -1,7 +1,8 @@
-import { AddReviewDto, DeleteReviewDto, GetContentListDto, GetContentReviewDto } from '@dtos';
+import { AddReviewDto, DeleteReviewDto, GetContentListDto, GetMovieReviewDto, GetSeriesReviewDto } from '@dtos';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { ReviewService } from '@services';
+import { contentTypes } from '@config';
 
 export class ReviewController {
     private reviewService: ReviewService;
@@ -27,11 +28,19 @@ export class ReviewController {
         return await this.reviewService.getReviewsByUserId(userId, pageNumber, pageSize);
     }
 
-    public async getReviewsByContentId(req: Request<GetContentReviewDto>, res: Response<any>) {
-        const contentId = Number(req.params.contentId);
-        const contentType = req.params.contentType;
+    public async getReviewsByMovieId(req: Request<GetMovieReviewDto>, res: Response<any>) {
+        const contentId = Number(req.params.movieId);
         const pageSize = Number(req.query.pageSize) || 20;
         const pageNumber = Number(req.query.page) || 1;
-        return await this.reviewService.getReviewsByContent(contentId, contentType, pageNumber, pageSize);
+        return await this.reviewService.getReviewsByContent(contentId, contentTypes.MOVIE,
+            pageNumber, pageSize);
+    }
+
+    public async getReviewsBySeriesId(req: Request<GetSeriesReviewDto>, res: Response<any>) {
+        const contentId = Number(req.params.seriesId);
+        const pageSize = Number(req.query.pageSize) || 20;
+        const pageNumber = Number(req.query.page) || 1;
+        return await this.reviewService.getReviewsByContent(contentId, contentTypes.SERIES,
+            pageNumber, pageSize);
     }
 }

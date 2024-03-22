@@ -2,7 +2,7 @@ import { FieldOptions, handleRequest, loadUserContext, validateSchema } from '@m
 import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import AppDependencies from 'appDependencies'
-import { AddReviewSchema, DeleteReviewSchema, GetContentListSchema, GetContentReviewSchema } from '@dtos'
+import { AddReviewSchema, DeleteReviewSchema, GetContentListSchema, GetMovieReviewSchema, GetSeriesReviewSchema } from '@dtos'
 import { ReviewController } from '@controllers'
 
 export function ReviewRouter(dependencies: AppDependencies) {
@@ -31,10 +31,17 @@ export function ReviewRouter(dependencies: AppDependencies) {
     )
 
     router.get(
-        "/content/:contentType/:contentId",
+        "/content/movies/:movieId",
         loadUserContext,
-        validateSchema(GetContentReviewSchema, [FieldOptions.params, FieldOptions.query]),
-        handleRequest((req, res) => reviewController.getReviewsByContentId(req, res), StatusCodes.OK)
+        validateSchema(GetMovieReviewSchema, [FieldOptions.params, FieldOptions.query]),
+        handleRequest((req, res) => reviewController.getReviewsByMovieId(req, res), StatusCodes.OK)
+    )
+
+    router.get(
+        "/content/series/:seriesId",
+        loadUserContext,
+        validateSchema(GetSeriesReviewSchema, [FieldOptions.params, FieldOptions.query]),
+        handleRequest((req, res) => reviewController.getReviewsBySeriesId(req, res), StatusCodes.OK)
     )
 
     return router
