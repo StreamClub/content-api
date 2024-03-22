@@ -19,6 +19,14 @@ class ReviewRepository {
         );
     }
 
+    async deleteReview(userId: number, review: AddReviewDto): Promise<void> {
+        await ReviewModel.findOneAndDelete({
+            userId: userId,
+            contentId: review.contentId,
+            contentType: review.contentType
+        });
+    }
+
     async getReviewsByUserId(userId: number, page: number, pageSize: number): Promise<Page> {
         const reviews = await ReviewModel.aggregate([
             {

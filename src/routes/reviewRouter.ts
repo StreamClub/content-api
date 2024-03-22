@@ -2,7 +2,7 @@ import { FieldOptions, handleRequest, loadUserContext, validateSchema } from '@m
 import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import AppDependencies from 'appDependencies'
-import { AddReviewSchema, GetContentListSchema, UserReviewSchema } from '@dtos'
+import { AddReviewSchema, DeleteReviewSchema, GetContentListSchema } from '@dtos'
 import { ReviewController } from '@controllers'
 
 export function ReviewRouter(dependencies: AppDependencies) {
@@ -14,6 +14,13 @@ export function ReviewRouter(dependencies: AppDependencies) {
         loadUserContext,
         validateSchema(AddReviewSchema, [FieldOptions.body]),
         handleRequest((req, res) => reviewController.addReview(req, res), StatusCodes.CREATED)
+    )
+
+    router.delete(
+        '/',
+        loadUserContext,
+        validateSchema(DeleteReviewSchema, [FieldOptions.body]),
+        handleRequest((req, res) => reviewController.deleteReview(req, res), StatusCodes.OK)
     )
 
     router.get(
