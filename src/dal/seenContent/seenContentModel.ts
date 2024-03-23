@@ -20,6 +20,6 @@ const SeenContentSchema = new Schema<SeenContentType>({
         default: [],
     },
 })
-SeenContentSchema.index({ userId: 1 })
+SeenContentSchema.index({ userId: 1 }, { unique: true })
 
 export const SeenContentModel = model<SeenContentType>('SeenContent', SeenContentSchema)
