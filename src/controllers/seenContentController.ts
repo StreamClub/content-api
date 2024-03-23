@@ -1,7 +1,10 @@
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { SeenContentService, TmdbService } from '@services';
-import { Season, SeasonEpisode, SeenEpisode, SeenItem, SeenMovieItemResume, SeenSeason, SeenSeriesItem, SeenSeriesItemResume } from '@entities';
+import {
+    Season, SeasonEpisode, SeenEpisode, SeenItem, SeenMovieItemResume,
+    SeenSeason, SeenSeriesItem, SeenSeriesItemResume
+} from '@entities';
 import moment from 'moment';
 import { SPECIALS_SEASON_ID } from '@config';
 import { EpisodeHasNotAiredException } from '@exceptions';

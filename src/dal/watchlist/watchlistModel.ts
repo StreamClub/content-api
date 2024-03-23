@@ -18,6 +18,6 @@ const WatchlistSchema = new Schema<WatchlistType>({
         default: [],
     }
 })
-WatchlistSchema.index({ userId: 1 })
+WatchlistSchema.index({ userId: 1 }, { unique: true })
 
 export const WatchlistModel = model<WatchlistType>('Watchlist', WatchlistSchema)
