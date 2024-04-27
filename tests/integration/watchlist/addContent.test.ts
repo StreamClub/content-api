@@ -34,15 +34,6 @@ describe('Add Content To Watchlist', () => {
         });
     });
 
-    it('should return 404 when trying to add content to a watchlist of a user without watchlist', async () => {
-        const userId = 1;
-        const testJwt = generateTestJwt(userId, "test@test.com");
-        const response = await server.put(`${endpoint}`)
-            .set('Authorization', `Bearer ${testJwt}`)
-            .send({ contentId: 2150, contentType: contentTypes.MOVIE });
-        expect(response.status).toBe(404);
-    });
-
     it('should add a movie to the watchlist of the user', async () => {
         mockMovieInfo.mockReturnValue(testMovie1)
         const userId = 1;

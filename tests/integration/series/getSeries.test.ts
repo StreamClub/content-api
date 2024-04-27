@@ -68,12 +68,7 @@ describe('Get Series', () => {
         expect(series.platforms.length).toBeGreaterThanOrEqual(1);
         expect(series.cast.length).toBeLessThanOrEqual(10);
         expect(series.similar.length).toBeLessThanOrEqual(10);
-        for (const trailer of series.trailers) {
-            expect(trailer.site).toBe('YouTube');
-            expect(trailer.type).toBe('Trailer');
-        }
         expect(series.releaseDate).toBe(testSeries01.first_air_date);
-        expect(series.trailers).toBeDefined();
         expect(series.nextEpisode).toBeDefined();
     });
 

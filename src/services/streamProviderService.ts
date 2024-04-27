@@ -1,6 +1,5 @@
 import { streamProviderRepository } from "@dal";
 import { Platform } from "@entities";
-import { AlreadyExistsException, NotFoundException } from "@exceptions";
 import AppDependencies from "appDependencies";
 
 export class StreamProviderService {
@@ -10,7 +9,7 @@ export class StreamProviderService {
     public async create(userId: number) {
         const providers = await streamProviderRepository.doesUserHaveWatchlist(userId);
         if (providers) {
-            throw new AlreadyExistsException('Stream Provider List already exists');
+            return;
         }
         return await streamProviderRepository.create(userId);
     }
@@ -18,6 +17,16 @@ export class StreamProviderService {
     public async get(userId: number, pageSize: number, pageNumber: number, streamServices: Platform[]) {
         await this.failIfWatchlistDoesNotExist(userId);
         return await streamProviderRepository.get(userId, pageNumber, pageSize, streamServices);
+    }
+
+    public async getAll(userId: number) {
+        await this.failIfWatchlistDoesNotExist(userId);
+        return await streamProviderRepository.getAll(userId);
+    }
+
+    public async doesUserHaveOneOf(userId: number, providers: number[]) {
+        await this.failIfWatchlistDoesNotExist(userId);
+        return await streamProviderRepository.doesUserHaveOneOf(userId, providers);
     }
 
     public async addProvider(userId: number, providerId: number) {
@@ -31,9 +40,9 @@ export class StreamProviderService {
     }
 
     private async failIfWatchlistDoesNotExist(userId: number) {
-        const watchlist = await streamProviderRepository.doesUserHaveWatchlist(userId);
-        if (!watchlist) {
-            throw new NotFoundException('Stream Provider List does not exist');
+        const streamProvidersList = await streamProviderRepository.doesUserHaveWatchlist(userId);
+        if (!streamProvidersList) {
+            await this.create(userId);
         }
     }
 

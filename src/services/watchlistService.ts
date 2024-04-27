@@ -1,5 +1,4 @@
 import { watchlistRepository } from "@dal";
-import { AlreadyExistsException, NotFoundException } from "@exceptions";
 import AppDependencies from "appDependencies";
 
 export class WatchlistService {
@@ -9,7 +8,7 @@ export class WatchlistService {
     public async create(userId: number) {
         const watchlist = await watchlistRepository.doesUserHaveWatchlist(userId);
         if (watchlist) {
-            throw new AlreadyExistsException('Watchlist already exists');
+            return;
         }
         return await watchlistRepository.create(userId);
     }
@@ -29,10 +28,15 @@ export class WatchlistService {
         return await watchlistRepository.removeContent(userId, contentId, contentType);
     }
 
+    public async isInWatchlist(userId: number, contentId: string, contentType: string) {
+        await this.failIfWatchlistDoesNotExist(userId);
+        return await watchlistRepository.isInWatchlist(userId, contentId, contentType);
+    }
+
     private async failIfWatchlistDoesNotExist(userId: number) {
         const watchlist = await watchlistRepository.doesUserHaveWatchlist(userId);
         if (!watchlist) {
-            throw new NotFoundException('Watchlist does not exist');
+            await this.create(userId);
         }
     }
 

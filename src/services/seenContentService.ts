@@ -4,7 +4,6 @@ import {
     SeenMovie,
     SeenSeason, SeenSeries
 } from "@entities";
-import { AlreadyExistsException, NotFoundException } from "@exceptions";
 import AppDependencies from "appDependencies";
 
 export class SeenContentService {
@@ -14,7 +13,7 @@ export class SeenContentService {
     public async create(userId: number) {
         const seenContent = await seenContentRepository.get(userId);
         if (seenContent) {
-            throw new AlreadyExistsException('Seen Content List already exists');
+            return;
         }
         return await seenContentRepository.create(userId);
     }
@@ -114,10 +113,30 @@ export class SeenContentService {
         await seenContentRepository.removeEpisode(userId, seriesId, seasonId, episodeId);
     }
 
+    public async isASeenMovie(userId: number, movieId: number) {
+        await this.failIfListDoesNotExist(userId);
+        return await seenContentRepository.isASeenMovie(userId, movieId);
+    }
+
+    public async getTotalWatchedEpisodes(userId: number, seriesId: number) {
+        await this.failIfListDoesNotExist(userId);
+        return await seenContentRepository.getTotalWatchedEpisodes(userId, seriesId);
+    }
+
+    public async getLastSeenEpisode(userId: number, seriesId: number) {
+        await this.failIfListDoesNotExist(userId);
+        return await seenContentRepository.getLastSeenEpisode(userId, seriesId);
+    }
+
+    public async getSeenEpisodes(userId: number, seriesId: number, seasonId: number) {
+        await this.failIfListDoesNotExist(userId);
+        return await seenContentRepository.getSeenEpisodes(userId, seriesId, seasonId);
+    }
+
     private async failIfListDoesNotExist(userId: number) {
         const seenContent = await seenContentRepository.get(userId);
         if (!seenContent) {
-            throw new NotFoundException('Seen Content List does not exist');
+            await this.create(userId);
         }
         return seenContent;
     }

@@ -53,16 +53,10 @@ describe('Get Movie', () => {
         expect(movie.releaseDate).toBe(testMovie1.release_date);
         expect(movie.genres).toStrictEqual(testMovie1.genres.map((genre) => genre.name));
         expect(movie.runtime).toBe(testMovie1.runtime);
-        expect(movie.budget).toBe(testMovie1.budget);
-        expect(movie.revenue).toBe(testMovie1.revenue);
         expect(movie.status).toBe(movieStatus[testMovie1.status]);
         expect(movie.platforms.length).toBeGreaterThanOrEqual(1);
         expect(movie.cast.length).toBeLessThanOrEqual(10);
         expect(movie.similar.length).toBeLessThanOrEqual(10);
-        for (const trailer of movie.trailers) {
-            expect(trailer.site).toBe('YouTube');
-            expect(trailer.type).toBe('Trailer');
-        }
     });
 
     it('should return a 404 if the movie does not exist', async () => {

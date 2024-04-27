@@ -31,16 +31,6 @@ describe('Remove User\'s Stream Services', () => {
         });
     });
 
-    it('should return 404 when trying to remove a service of a user without service list', async () => {
-        const userId = 1;
-        const providerId = 2;
-        const testJwt = generateTestJwt(userId, "test@test.com");
-        const response = await server.delete(`${endpoint}`)
-            .send({ providerId })
-            .set('Authorization', `Bearer ${testJwt}`);
-        expect(response.status).toBe(404);
-    });
-
     it('should remove a service of the user', async () => {
         mockGetStreamServices.mockReturnValue(testStreamServices01);
         const userId = 1;
