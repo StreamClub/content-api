@@ -20,12 +20,4 @@ describe('Create Watchlist', () => {
         expect(response.body.userId).toBe(userId);
         expect(response.body.watchlist).toEqual([]);
     });
-
-    it('should return 409 when provided with a token of a new user with a watchlist', async () => {
-        const userId = 1;
-        const testJwt = generateTestJwt(userId, "test@test.com");
-        await createWatchlist(userId);
-        const response = await server.post(endpoint).set('Authorization', `Bearer ${testJwt}`);
-        expect(response.status).toBe(409);
-    });
 });

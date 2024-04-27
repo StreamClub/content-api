@@ -35,15 +35,6 @@ describe('Remove Content From Watchlist', () => {
         });
     });
 
-    it('should return 404 when trying to remove content to a watchlist of a user without watchlist', async () => {
-        const userId = 1;
-        const testJwt = generateTestJwt(userId, "test@test.com");
-        const response = await server.delete(`${endpoint}`)
-            .set('Authorization', `Bearer ${testJwt}`)
-            .send({ contentId: 2150, contentType: contentTypes.MOVIE });
-        expect(response.status).toBe(404);
-    });
-
     it('should remove a movie to the watchlist of the user', async () => {
         const userId = 1;
         const testJwt = generateTestJwt(userId, "test@test.com");

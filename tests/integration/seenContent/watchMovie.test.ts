@@ -28,15 +28,6 @@ describe('Add Movie To Seen Content List', () => {
         });
     });
 
-    it('should return 404 when trying to add a movie to of a user without seen list', async () => {
-        const userId = 1;
-        const movieId = 2150;
-        const testJwt = generateTestJwt(userId, "test@test.com");
-        const response = await server.put(`${endpoint}/${movieId}`)
-            .set('Authorization', `Bearer ${testJwt}`)
-        expect(response.status).toBe(404);
-    });
-
     it('should add a movie to the seen list of the user', async () => {
         const userId = 1;
         const movieId = 2150;

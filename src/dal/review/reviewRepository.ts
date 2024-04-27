@@ -66,6 +66,15 @@ class ReviewRepository {
         return await ReviewModel.countDocuments({ contentId, contentType });
     }
 
+    async getReview(userId: number, contentId: number, contentType: string): Promise<Review> {
+        const review = await ReviewModel.findOne({
+            userId, contentId, contentType
+        });
+        if (!review)
+            return null;
+        return new Review(review);
+    }
+
 }
 
 export const reviewRepository = new ReviewRepository();

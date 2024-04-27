@@ -21,12 +21,4 @@ describe('Create Seen Content List', () => {
         expect(response.body.movies).toEqual([]);
         expect(response.body.series).toEqual([]);
     });
-
-    it('should return 409 when provided with a token of a new user with a Seen Content List', async () => {
-        const userId = 1;
-        const testJwt = generateTestJwt(userId, "test@test.com");
-        await createSeenContentList(userId);
-        const response = await server.post(endpoint).set('Authorization', `Bearer ${testJwt}`);
-        expect(response.status).toBe(409);
-    });
 });

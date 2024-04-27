@@ -1,10 +1,10 @@
 import { config, contentTypes } from "@config";
-import { seenContentRepository, streamProviderRepository, watchlistRepository } from "@dal";
 import {
     Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult,
     TmdbSeries, Series, LastSeenEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode, SeriesBasicInfo, Platform, ContentCredits
 } from "@entities";
 import { NotFoundException } from "@exceptions";
+import { ReviewService, SeenContentService, StreamProviderService, WatchlistService } from "@services";
 import { getRedirectLinks } from "@utils";
 import AppDependencies from "appDependencies";
 import { MovieDb, MovieResponse, MovieResult, ShowResponse, TvResult, TvSeasonResponse } from 'moviedb-promise'
@@ -16,21 +16,29 @@ export class TmdbService {
         MOVIE: 'movie',
         SERIES: 'tv'
     }
+    private streamProviderService: StreamProviderService;
+    private seenContentService: SeenContentService;
+    private watchlistService: WatchlistService;
+    private reviewService: ReviewService;
 
     public constructor(dependencies: AppDependencies) {
         this.tmdb = new MovieDb(config.tmdbApiKey);
-
+        this.streamProviderService = new StreamProviderService(dependencies);
+        this.seenContentService = new SeenContentService(dependencies);
+        this.watchlistService = new WatchlistService(dependencies);
+        this.reviewService = new ReviewService(dependencies);
     }
 
     public async getMovie(userId: number, movieId: number, country: string): Promise<Movie> {
         const scMovie = await this.getStreamClubMovie(movieId, country);
         const providersData = await this.getContentProviders(this.tmdbContentTypes.MOVIE, movieId, country);
-        const userPlatforms = await streamProviderRepository.getAll(userId);
+        const userPlatforms = await this.streamProviderService.getAll(userId);
         scMovie.setProviders(providersData, userPlatforms.providerId);
-        scMovie.inWatchlist = await watchlistRepository
+        scMovie.inWatchlist = await this.watchlistService
             .isInWatchlist(userId, scMovie.id.toString(), contentTypes.MOVIE);
-        scMovie.seen = await seenContentRepository
+        scMovie.seen = await this.seenContentService
             .isASeenMovie(userId, scMovie.id);
+        scMovie.userReview = await this.reviewService.getReview(userId, scMovie.id, contentTypes.MOVIE);
         return scMovie;
     }
 
@@ -50,7 +58,7 @@ export class TmdbService {
         return await this.getContentSafely(async () => {
             const movie = await this.tmdb.movieInfo({
                 id: movieId, language: this.language,
-                append_to_response: 'credits,watch/providers,recommendations,videos'
+                append_to_response: 'credits,watch/providers,recommendations'
             }) as TmdbMovie;
             return new Movie(movie, country);
         })
@@ -60,7 +68,7 @@ export class TmdbService {
         return await this.getContentSafely(async () => {
             const serie = await this.tmdb.tvInfo({
                 id: seriesId, language: this.language,
-                append_to_response: 'credits,watch/providers,recommendations,videos'
+                append_to_response: 'credits,watch/providers,recommendations'
             }) as TmdbSeries;
             return new Series(serie, country);
         })
@@ -69,15 +77,16 @@ export class TmdbService {
     public async getSeries(userId: number, seriesId: number, country: string): Promise<Series> {
         const scSeries = await this.getStreamClubSeries(seriesId, country);
         const providersData = await this.getContentProviders(this.tmdbContentTypes.SERIES, seriesId, country);
-        const userPlatforms = await streamProviderRepository.getAll(userId);
+        const userPlatforms = await this.streamProviderService.getAll(userId);
         scSeries.setProviders(providersData, userPlatforms.providerId);
         const nextEpisode = await this.getNextEpisode(userId, scSeries.id, scSeries.seasons);
         scSeries.nextEpisode = nextEpisode;
-        const totalWatchedEpisodes = await seenContentRepository
+        const totalWatchedEpisodes = await this.seenContentService
             .getTotalWatchedEpisodes(userId, scSeries.id)
         scSeries.setSeen(scSeries.numberOfEpisodes, totalWatchedEpisodes)
-        scSeries.inWatchlist = await watchlistRepository
+        scSeries.inWatchlist = await this.watchlistService
             .isInWatchlist(userId, seriesId.toString(), contentTypes.SERIES);
+        scSeries.userReview = await this.reviewService.getReview(userId, seriesId, contentTypes.SERIES);
         return scSeries;
     }
 
@@ -108,7 +117,8 @@ export class TmdbService {
     }
 
     private async getNextEpisode(userId: number, serieId: number, seasons: TvSeasonResponse[]): Promise<LastSeenEpisode> {
-        const lastSeenEpisode: SeenEpisode = await seenContentRepository.getLastSeenEpisode(userId, serieId);
+        const lastSeenEpisode: SeenEpisode = await this.seenContentService
+            .getLastSeenEpisode(userId, serieId);
         if (!lastSeenEpisode) {
             return this.getSeasonFirstEpisode(serieId, 1, seasons);
         } else {
@@ -141,7 +151,7 @@ export class TmdbService {
 
     public async getUserSeason(userId: number, serieId: number, seasonId: number) {
         const season = await this.getSeason(serieId, seasonId);
-        const seenEpisodes = await seenContentRepository
+        const seenEpisodes = await this.seenContentService
             .getSeenEpisodes(userId, serieId, seasonId);
         season.setSeenEpisodes(seenEpisodes);
         return season;
@@ -151,14 +161,14 @@ export class TmdbService {
         const result = await this.tmdb.searchMovie({ query, language: this.language, page });
         const movies = await Promise.all(result.results.map(async (movie: MovieResult) => {
             const movieResume = new MovieResume(movie)
-            movieResume.inWatchlist = await watchlistRepository
+            movieResume.inWatchlist = await this.watchlistService
                 .isInWatchlist(userId, movie.id.toString(), contentTypes.MOVIE);
-            movieResume.seen = await seenContentRepository
+            movieResume.seen = await this.seenContentService
                 .isASeenMovie(userId, movie.id);
             const scMovie = await this.getStreamClubMovie(movie.id, country);
             movieResume.status = scMovie.status;
             const providersIds = scMovie.platforms.map(platform => platform.providerId);
-            movieResume.available = await streamProviderRepository.doesUserHaveOneOf(userId, providersIds)
+            movieResume.available = await this.streamProviderService.doesUserHaveOneOf(userId, providersIds)
             return movieResume;
         }));
         return new PaginatedResult(result.page, result.total_pages, result.total_results, movies);
@@ -168,16 +178,16 @@ export class TmdbService {
         const result = await this.tmdb.searchTv({ query, language: this.language, page });
         const series = await Promise.all(result.results.map(async (serie: TvResult) => {
             const serieResume = new SeriesResume(serie)
-            serieResume.inWatchlist = await watchlistRepository
+            serieResume.inWatchlist = await this.watchlistService
                 .isInWatchlist(userId, serie.id.toString(), contentTypes.SERIES);
-            const totalWatchedEpisodes = await seenContentRepository
+            const totalWatchedEpisodes = await this.seenContentService
                 .getTotalWatchedEpisodes(userId, serie.id)
             const scSeries = await this.getStreamClubSeries(serie.id, country);
             serieResume.setSeen(scSeries.numberOfEpisodes, totalWatchedEpisodes)
             serieResume.status = scSeries.status;
             serieResume.lastEpisodeReleaseDate = scSeries.lastAirDate;
             const providersIds = scSeries.platforms.map(platform => platform.providerId);
-            serieResume.available = await streamProviderRepository.doesUserHaveOneOf(userId, providersIds)
+            serieResume.available = await this.streamProviderService.doesUserHaveOneOf(userId, providersIds)
             return serieResume;
         }));
         return new PaginatedResult(result.page, result.total_pages, result.total_results, series);

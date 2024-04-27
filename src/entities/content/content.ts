@@ -1,5 +1,5 @@
-import { Platform, ProvidersDictionary } from "@entities";
-import { Cast, Video } from "moviedb-promise";
+import { Platform, ProvidersDictionary, Review } from "@entities";
+import { Cast } from "moviedb-promise";
 import { TmdbContent } from "./tmdbContent";
 
 
@@ -13,7 +13,7 @@ export abstract class Content {
     platforms: Platform[];
     cast: Cast[];
     releaseDate: string;
-    trailers: Video[];
+    public userReview: Review;
 
     constructor(content: TmdbContent, country: string) {
         this.id = content.id;
@@ -22,7 +22,6 @@ export abstract class Content {
         this.backdrop = content.backdrop_path;
         this.genres = content.genres.map((genre) => genre.name);
         this.cast = content.credits.cast.slice(0, 10);
-        this.trailers = this.getTrailers(content);
         this.setPlatforms(content, country);
     }
 
@@ -37,11 +36,6 @@ export abstract class Content {
             }
         }
         this.platforms = platforms;
-    }
-
-    protected getTrailers(tmdbContent: TmdbContent) {
-        const youtubeTrailers = tmdbContent.videos.results.filter((video) => video.site === 'YouTube' && video.type === 'Trailer');
-        return youtubeTrailers.length > 0 ? youtubeTrailers : null;
     }
 
     public setProviders(provider: ProvidersDictionary, userPlatforms: number[]) {

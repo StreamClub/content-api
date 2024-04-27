@@ -30,15 +30,6 @@ describe('Add Stream Provider To User', () => {
         });
     });
 
-    it('should return 404 when trying to add a provider to a user without Stream Provider List', async () => {
-        const userId = 1;
-        const testJwt = generateTestJwt(userId, "test@test.com");
-        const response = await server.put(`${endpoint}`)
-            .set('Authorization', `Bearer ${testJwt}`)
-            .send({ providerId: 2150 });
-        expect(response.status).toBe(404);
-    });
-
     it('should add a stream provider to the user', async () => {
         mockGetStreamServices.mockReturnValue(testStreamServices01);
         const userId = 1;

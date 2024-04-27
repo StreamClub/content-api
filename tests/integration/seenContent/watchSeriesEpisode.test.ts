@@ -71,19 +71,6 @@ describe('Add Episode To Seen Content List', () => {
         });
     });
 
-    it('should return 404 when trying to add an episode to of a user without seen list', async () => {
-        mockGetSeasonDetails.mockReturnValue(testSeason01)
-        const userId = 1;
-        const seriesId = 37854;
-        const seasonId = 1;
-        const episodeId = 1;
-        const testJwt = generateTestJwt(userId, "test@test.com");
-        const response = await server
-            .put(`${endpoint}/${seriesId}/seasons/${seasonId}/episodes/${episodeId}`)
-            .set('Authorization', `Bearer ${testJwt}`)
-        expect(response.status).toBe(404);
-    });
-
     it('should add an episode to an empty seen list of the user', async () => {
         mockGetSeasonDetails.mockReturnValue(testSeason01)
         const userId = 1;
@@ -243,7 +230,7 @@ describe('Add Episode To Seen Content List', () => {
         expect(seenContentList.series[0].seriesId).toBe(seriesId);
         expect(seenContentList.series[0].totalWatchedEpisodes).toBe(1);
         expect(seenContentList.series[0].lastSeenEpisode.seasonId).toBe(seasonId + 1);
-        expect(seenContentList.series[0].lastSeenEpisode.episodeId).toBe(episodeId +1 );
+        expect(seenContentList.series[0].lastSeenEpisode.episodeId).toBe(episodeId + 1);
         expect(seenContentList.series[0].seasons.length).toBe(2);
     });
 

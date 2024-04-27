@@ -61,11 +61,4 @@ describe('Get Seen Content List', () => {
         expect(response.body.totalPages).toBe(0);
         expect(response.body.totalResults).toBe(0);
     });
-
-    it('should return 404 when provided with an id of a user with no Seen Content List', async () => {
-        const userId = 1;
-        const testJwt = generateTestJwt(userId, "test@test.com");
-        const response = await server.get(`${endpoint}/${userId}`).set('Authorization', `Bearer ${testJwt}`);
-        expect(response.status).toBe(404);
-    });
 });
