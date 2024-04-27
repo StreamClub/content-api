@@ -21,4 +21,8 @@ export class ReviewService {
     public async getReviewsByContent(contentId: number, contentType: string, page: number, pageSize: number) {
         return await reviewRepository.getReviewsByContent(contentId, contentType, page, pageSize);
     }
+
+    public async getReview(userId: number, contentId: number, contentType: string) {
+        return await reviewRepository.getReview(userId, contentId, contentType);
+    }
 }

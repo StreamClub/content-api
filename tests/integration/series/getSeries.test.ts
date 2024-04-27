@@ -57,6 +57,7 @@ describe('Get Series', () => {
         expect(series.lastAirDate).toBe(testSeries01.last_air_date);
         expect(series.numberOfEpisodes).toBe(testSeries01.number_of_episodes);
         expect(series.numberOfSeasons).toBe(testSeries01.number_of_seasons);
+        expect(series.userReview).toBeDefined();
         expect(series.seasons).toStrictEqual(testSeries01.seasons.map((season: any) => {
             return {
                 id: season.season_number,

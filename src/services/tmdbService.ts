@@ -4,7 +4,7 @@ import {
     TmdbSeries, Series, LastSeenEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode, SeriesBasicInfo, Platform, ContentCredits
 } from "@entities";
 import { NotFoundException } from "@exceptions";
-import { SeenContentService, StreamProviderService, WatchlistService } from "@services";
+import { ReviewService, SeenContentService, StreamProviderService, WatchlistService } from "@services";
 import { getRedirectLinks } from "@utils";
 import AppDependencies from "appDependencies";
 import { MovieDb, MovieResponse, MovieResult, ShowResponse, TvResult, TvSeasonResponse } from 'moviedb-promise'
@@ -19,13 +19,14 @@ export class TmdbService {
     private streamProviderService: StreamProviderService;
     private seenContentService: SeenContentService;
     private watchlistService: WatchlistService;
+    private reviewService: ReviewService;
 
     public constructor(dependencies: AppDependencies) {
         this.tmdb = new MovieDb(config.tmdbApiKey);
         this.streamProviderService = new StreamProviderService(dependencies);
         this.seenContentService = new SeenContentService(dependencies);
         this.watchlistService = new WatchlistService(dependencies);
-
+        this.reviewService = new ReviewService(dependencies);
     }
 
     public async getMovie(userId: number, movieId: number, country: string): Promise<Movie> {
@@ -37,6 +38,7 @@ export class TmdbService {
             .isInWatchlist(userId, scMovie.id.toString(), contentTypes.MOVIE);
         scMovie.seen = await this.seenContentService
             .isASeenMovie(userId, scMovie.id);
+        scMovie.userReview = await this.reviewService.getReview(userId, scMovie.id, contentTypes.MOVIE);
         return scMovie;
     }
 
@@ -84,6 +86,7 @@ export class TmdbService {
         scSeries.setSeen(scSeries.numberOfEpisodes, totalWatchedEpisodes)
         scSeries.inWatchlist = await this.watchlistService
             .isInWatchlist(userId, seriesId.toString(), contentTypes.SERIES);
+        scSeries.userReview = await this.reviewService.getReview(userId, seriesId, contentTypes.SERIES);
         return scSeries;
     }
 

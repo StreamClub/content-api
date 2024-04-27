@@ -1,5 +1,5 @@
-import { Platform, ProvidersDictionary } from "@entities";
-import { Cast, Video } from "moviedb-promise";
+import { Platform, ProvidersDictionary, Review } from "@entities";
+import { Cast } from "moviedb-promise";
 import { TmdbContent } from "./tmdbContent";
 
 
@@ -13,6 +13,7 @@ export abstract class Content {
     platforms: Platform[];
     cast: Cast[];
     releaseDate: string;
+    public userReview: Review;
 
     constructor(content: TmdbContent, country: string) {
         this.id = content.id;

@@ -57,6 +57,7 @@ describe('Get Movie', () => {
         expect(movie.platforms.length).toBeGreaterThanOrEqual(1);
         expect(movie.cast.length).toBeLessThanOrEqual(10);
         expect(movie.similar.length).toBeLessThanOrEqual(10);
+        expect(movie.userReview).toBeDefined();
     });
 
     it('should return a 404 if the movie does not exist', async () => {
