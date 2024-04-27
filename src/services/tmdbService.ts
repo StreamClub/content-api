@@ -50,7 +50,7 @@ export class TmdbService {
         return await this.getContentSafely(async () => {
             const movie = await this.tmdb.movieInfo({
                 id: movieId, language: this.language,
-                append_to_response: 'credits,watch/providers,recommendations,videos'
+                append_to_response: 'credits,watch/providers,recommendations'
             }) as TmdbMovie;
             return new Movie(movie, country);
         })
@@ -60,7 +60,7 @@ export class TmdbService {
         return await this.getContentSafely(async () => {
             const serie = await this.tmdb.tvInfo({
                 id: seriesId, language: this.language,
-                append_to_response: 'credits,watch/providers,recommendations,videos'
+                append_to_response: 'credits,watch/providers,recommendations'
             }) as TmdbSeries;
             return new Series(serie, country);
         })

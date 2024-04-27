@@ -6,8 +6,6 @@ import { movieStatus } from "@config";
 export class Movie extends Content {
     public releaseDate: string;
     public runtime: number;
-    public budget: number;
-    public revenue: number;
     public status: string;
     public directors: string[];
     public similar: SimilarMovie[];
@@ -19,8 +17,6 @@ export class Movie extends Content {
         this.title = tmdbMovie.title;
         this.releaseDate = tmdbMovie.release_date;
         this.runtime = tmdbMovie.runtime;
-        this.budget = tmdbMovie.budget;
-        this.revenue = tmdbMovie.revenue;
         this.status = movieStatus[tmdbMovie.status];
         this.directors = tmdbMovie.credits.crew.filter((crew) => crew.job === 'Director').map((crew) => crew.name);
         this.similar = tmdbMovie.recommendations.results.slice(0, 10).map((movie) => new SimilarMovie(movie));
