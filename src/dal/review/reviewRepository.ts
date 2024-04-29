@@ -3,8 +3,8 @@ import { ReviewModel } from "./reviewModel";
 import { AddReviewDto, DeleteReviewDto } from "@dtos";
 
 class ReviewRepository {
-    async addReview(userId: number, review: AddReviewDto): Promise<void> {
-        await ReviewModel.findOneAndUpdate(
+    async addReview(userId: number, review: AddReviewDto): Promise<Review> {
+        const created = await ReviewModel.findOneAndUpdate(
             {
                 userId: userId,
                 contentId: review.contentId,
@@ -17,6 +17,7 @@ class ReviewRepository {
             },
             { upsert: true }
         );
+        return new Review(created);
     }
 
     async deleteReview(userId: number, review: DeleteReviewDto): Promise<void> {
