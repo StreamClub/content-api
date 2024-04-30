@@ -1,6 +1,6 @@
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
-import { SeenContentService, TmdbService } from '@services';
+import { ReviewService, SeenContentService, TmdbService } from '@services';
 import {
     Season, SeasonEpisode, SeenEpisode, SeenItem, SeenMovieItemResume,
     SeenSeason, SeenSeriesItem, SeenSeriesItemResume
@@ -11,11 +11,13 @@ import { EpisodeHasNotAiredException } from '@exceptions';
 
 export class SeenContentController {
     private seenContentService: SeenContentService;
+    private reviewService: ReviewService;
     private tmdbService: TmdbService;
 
     public constructor(dependencies: AppDependencies) {
         this.seenContentService = new SeenContentService(dependencies);
         this.tmdbService = new TmdbService(dependencies);
+        this.reviewService = new ReviewService(dependencies);
     }
 
     public async create(req: Request<any>, res: Response<any>) {
@@ -29,13 +31,20 @@ export class SeenContentController {
         const pageNumber = Number(req.query.page) || 1;
         const seenContent = await this.seenContentService.getSeenContent(userId, pageSize, pageNumber);
         seenContent.results = await Promise.all(seenContent.results.map(async (content: SeenItem) => {
+            const review = await this.reviewService.getReview(userId, content.id, content.contentType);
             if (content.contentType === 'series') {
                 const seriesBasicInfo = await this.tmdbService.getSeriesBasicInfo(content.id);
-                return new SeenSeriesItemResume(content as SeenSeriesItem, seriesBasicInfo);
+                const seenSeries = new SeenSeriesItemResume(content as SeenSeriesItem, seriesBasicInfo);
+                seenSeries.hasReview = review?.review !== undefined;
+                seenSeries.liked = review?.liked;
+                return seenSeries;
             } else {
                 const { poster, title } = await
                     this.tmdbService.getNameAndPoster(content.contentType, content.id);
-                return new SeenMovieItemResume(content, poster, title);
+                const seenMovie = new SeenMovieItemResume(content, poster, title);
+                seenMovie.hasReview = review?.review !== undefined;
+                seenMovie.liked = review?.liked;
+                return seenMovie;
             }
         }));
         return seenContent;
