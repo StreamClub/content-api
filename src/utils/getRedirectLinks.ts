@@ -28,6 +28,7 @@ export const getRedirectLinks = async (providersUrl: string) => {
 
 const safeGet = async (url: string): Promise<AxiosResponse<any, any>> => {
     try {
+        console.log(url)
         return await axios.get(url);
     } catch (error) {
         if (error.response.status == 429) {
@@ -35,6 +36,30 @@ const safeGet = async (url: string): Promise<AxiosResponse<any, any>> => {
             await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * 1000) + 1000));
             return safeGet(url);
         }
-        throw error;
+        logger.error(`Error getting ${url}: ${error.message}`);
+        const emptyResponse: AxiosResponse<any> = {
+            data: {}, // or use `null` or `undefined` depending on what you mean by "empty"
+            status: 200, // Assuming OK status
+            statusText: 'OK',
+            headers: {
+                'content-type': 'application/json'
+            },
+            config: {
+                url: '',
+                method: 'get',
+                headers: null,
+                transformRequest: [],
+                transformResponse: [],
+                timeout: 0,
+                xsrfCookieName: 'XSRF-TOKEN',
+                xsrfHeaderName: 'X-XSRF-TOKEN',
+                maxContentLength: -1,
+                validateStatus: () => true
+            },
+            request: {} // You often also need to mock the request object
+        };
+
+        return Promise.resolve(emptyResponse);
     }
+
 }
