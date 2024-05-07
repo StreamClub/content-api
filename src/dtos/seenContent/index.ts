@@ -1,4 +1,5 @@
 export * from './addMovie'
 export * from './addEpisode'
 export * from './addSeason'
+export * from './getAll'
 export * from './addSeries'
