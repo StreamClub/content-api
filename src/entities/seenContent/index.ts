@@ -9,3 +9,4 @@ export * from './seenItem';
 export * from './seenItemFactory';
 export * from './seenMovieItemResume';
 export * from './seenSeriesItemResume';
+export * from './seenContentResume';
