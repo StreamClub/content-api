@@ -25,6 +25,12 @@ export class SeenContentController {
         return await this.seenContentService.create(userId);
     }
 
+    public async getAll(req: Request<any>, res: Response<any>) {
+        const pageNumber = Number(req.query.page) || 1;
+        const pageSize = 1;
+        return await this.seenContentService.getAll(pageSize, pageNumber);
+    }
+
     public async getSeenContent(req: Request<any>, res: Response<any>) {
         const userId = Number(req.params.userId);
         const pageSize = Number(req.query.pageSize) || 20;

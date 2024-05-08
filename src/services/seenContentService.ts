@@ -18,38 +18,42 @@ export class SeenContentService {
         return await seenContentRepository.create(userId);
     }
 
+    public async getAll(pageSize: number, pageNumber: number) {
+        return await seenContentRepository.getAll(pageSize, pageNumber);
+    }
+
     public async getSeenContent(userId: number, pageSize: number, pageNumber: number) {
-        await this.failIfListDoesNotExist(userId);
+        await this.createIfListDoesNotExist(userId);
         return await seenContentRepository.getContentList(userId, pageSize, pageNumber);
     }
 
     //TODO: eliminar este método
     public async getMovies(userId: number, pageSize: number, pageNumber: number) {
-        const found = await this.failIfListDoesNotExist(userId);
+        const found = await this.createIfListDoesNotExist(userId);
         const seenMovies = found.movies.map((movie) => new SeenMovie(movie));
         const results = seenMovies.slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
         return new Page(pageNumber, pageSize, seenMovies.length, results);
     }
 
     public async addMovie(userId: number, movieId: number) {
-        await this.failIfListDoesNotExist(userId);
+        await this.createIfListDoesNotExist(userId);
         await seenContentRepository.addMovie(userId, movieId);
     }
 
     public async removeMovie(userId: number, movieId: number) {
-        await this.failIfListDoesNotExist(userId);
+        await this.createIfListDoesNotExist(userId);
         await seenContentRepository.removeMovie(userId, movieId);
     }
 
     public async addSeries(userId: number, seriesId: number, seasons: SeenSeason[], latestSeenEpisode: SeasonEpisode) {
-        const seenContent = await this.failIfListDoesNotExist(userId);
+        const seenContent = await this.createIfListDoesNotExist(userId);
         await this.addSeasons(userId, seriesId, seasons, seenContent.series.find(series => series.seriesId === seriesId));
         await seenContentRepository.addLastSeenEpisode(userId, seriesId,
             latestSeenEpisode.seasonId, latestSeenEpisode.episodeId);
     }
 
     public async removeSeries(userId: number, seriesId: number) {
-        await this.failIfListDoesNotExist(userId);
+        await this.createIfListDoesNotExist(userId);
         await seenContentRepository.removeSeries(userId, seriesId);
     }
 
@@ -72,7 +76,7 @@ export class SeenContentService {
     }
 
     public async addSeason(userId: number, seriesId: number, seasonId: number, episodes: SeenEpisode[], latestSeenEpisode: SeasonEpisode) {
-        const seenContent = await this.failIfListDoesNotExist(userId);
+        const seenContent = await this.createIfListDoesNotExist(userId);
         const series = seenContent.series.find(series => series.seriesId === seriesId);
         await this.addSeasons(userId, seriesId, [new SeenSeason({ seasonId, episodes })], series);
         await seenContentRepository.addLastSeenEpisode(userId, seriesId,
@@ -80,7 +84,7 @@ export class SeenContentService {
     }
 
     public async removeSeason(userId: number, seriesId: number, seasonId: number) {
-        const seenContent: SeenContent = new SeenContent(await this.failIfListDoesNotExist(userId));
+        const seenContent: SeenContent = new SeenContent(await this.createIfListDoesNotExist(userId));
         const season = seenContent.series.find(series => series.seriesId === seriesId)
             ?.seasons.find(season => season.seasonId === seasonId);
         if (season) {
@@ -89,7 +93,7 @@ export class SeenContentService {
     }
 
     public async addEpisode(userId: number, seriesId: number, seasonId: number, episodeId: number) {
-        const seenContent = await this.failIfListDoesNotExist(userId);
+        const seenContent = await this.createIfListDoesNotExist(userId);
         const seenEpisodes: SeenEpisode[] = [{ seasonId, episodeId }];
         const series = seenContent.series.find(series => series.seriesId === seriesId);
 
@@ -109,31 +113,31 @@ export class SeenContentService {
     }
 
     public async removeEpisode(userId: number, seriesId: number, seasonId: number, episodeId: number) {
-        await this.failIfListDoesNotExist(userId);
+        await this.createIfListDoesNotExist(userId);
         await seenContentRepository.removeEpisode(userId, seriesId, seasonId, episodeId);
     }
 
     public async isASeenMovie(userId: number, movieId: number) {
-        await this.failIfListDoesNotExist(userId);
+        await this.createIfListDoesNotExist(userId);
         return await seenContentRepository.isASeenMovie(userId, movieId);
     }
 
     public async getTotalWatchedEpisodes(userId: number, seriesId: number) {
-        await this.failIfListDoesNotExist(userId);
+        await this.createIfListDoesNotExist(userId);
         return await seenContentRepository.getTotalWatchedEpisodes(userId, seriesId);
     }
 
     public async getLastSeenEpisode(userId: number, seriesId: number) {
-        await this.failIfListDoesNotExist(userId);
+        await this.createIfListDoesNotExist(userId);
         return await seenContentRepository.getLastSeenEpisode(userId, seriesId);
     }
 
     public async getSeenEpisodes(userId: number, seriesId: number, seasonId: number) {
-        await this.failIfListDoesNotExist(userId);
+        await this.createIfListDoesNotExist(userId);
         return await seenContentRepository.getSeenEpisodes(userId, seriesId, seasonId);
     }
 
-    private async failIfListDoesNotExist(userId: number) {
+    private async createIfListDoesNotExist(userId: number) {
         const seenContent = await seenContentRepository.get(userId);
         if (!seenContent) {
             await this.create(userId);
