@@ -1,4 +1,3 @@
-import { movieStatus } from "@config";
 import { MovieResult } from "moviedb-promise";
 
 export class MovieResume {

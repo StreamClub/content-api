@@ -1,4 +1,4 @@
-import { Page, SeenContent, SeenEpisode, SeenItemFactory, SeenSeason } from '@entities';
+import { Page, SeenContent, SeenContentResume, SeenEpisode, SeenItemFactory, SeenSeason } from '@entities';
 import { SeenContentModel } from './seenContentModel'
 import { SPECIALS_SEASON_ID } from '@config';
 
@@ -8,6 +8,28 @@ class SeenContentRepository {
         const seenContent = new SeenContentModel({ userId });
         await seenContent.save();
         return new SeenContent(seenContent);
+    }
+
+    async getAll(pageSize: number, pageNumber: number): Promise<any> {
+        // internal method, should not care about privacy settings
+        const oneMovieOrSeries = {
+            $or: [
+                { 'movies': { $exists: true, $not: { $size: 0 } } },
+                { 'series': { $exists: true, $not: { $size: 0 } } }
+            ]
+        }
+        const seenContents = await SeenContentModel.find(
+            oneMovieOrSeries,
+            { userId: 1, 'movies.movieId': 1, 'series.seriesId': 1 },
+            {
+                sort: { userId: 1 },
+                skip: (pageNumber - 1) * pageSize,
+                limit: pageSize
+            }
+        )
+        const totalItems = await SeenContentModel.countDocuments(oneMovieOrSeries);
+        const items = seenContents.map(seenContent => new SeenContentResume(seenContent));
+        return new Page(pageNumber, pageSize, totalItems, items)
     }
 
     async get(userId: number): Promise<SeenContent> {
