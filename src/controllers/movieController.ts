@@ -4,6 +4,7 @@ import { TmdbService } from '@services';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { contentTypes } from '@config';
+import { GetContentResumeDto } from '@dtos/content/getContentResumeDto';
 
 export class MovieController {
     private tmdbService: TmdbService;
@@ -25,6 +26,18 @@ export class MovieController {
         const query = req.query.query as string;
         const page = parseInt(req.query.page as string || '1');
         return await this.tmdbService.searchMovie(userId, query, page, country);
+    }
+
+    public async getMoviesResume(req: Request<GetContentResumeDto>) {
+        const query = (req.query.ids as string).split(',');
+        const moviesIds = query.map((ids) => Number(ids));
+        let movies = [];
+        for (const id of moviesIds) {
+            //TODO: si no existe la pelicula, no se debe agregar al array
+            const movie = await this.tmdbService.getMovieResume(id);
+            movies.push(movie);
+        }
+        return movies;
     }
 
     public async getMovieCredits(req: Request<GetMovieDto>, res: Response<any>) {

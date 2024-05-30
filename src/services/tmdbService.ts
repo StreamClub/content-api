@@ -64,6 +64,13 @@ export class TmdbService {
         })
     }
 
+    public async getMovieResume(movieId: number) {
+        return await this.getContentSafely(async () => {
+            const movie = await this.tmdb.movieInfo({ id: movieId, language: this.language });
+            return new MovieResume(movie);
+        });
+    }
+
     private async getStreamClubSeries(seriesId: number, country: string): Promise<Series> {
         return await this.getContentSafely(async () => {
             const serie = await this.tmdb.tvInfo({
