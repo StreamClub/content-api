@@ -1,4 +1,4 @@
-import { TvResult } from "moviedb-promise";
+import { ShowResponse, TvResult } from "moviedb-promise";
 
 export class SeriesResume {
     public id: number;
@@ -12,7 +12,7 @@ export class SeriesResume {
     public status: string;
     public lastEpisodeReleaseDate: string;
 
-    constructor(series: TvResult) {
+    constructor(series: TvResult | ShowResponse) {
         this.id = series.id;
         this.title = series.name;
         this.poster = series.poster_path;

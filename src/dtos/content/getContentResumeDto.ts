@@ -5,5 +5,5 @@ export class GetContentResumeDto {
 }
 
 export const GetContentResumeSchema = Joi.object({
-    ids: Joi.string().pattern(/^[0-9]+(,[0-9]+)*$/).required(),
+    ids: Joi.string().pattern(/^[0-9]+(,[0-9]+)*$/).optional().allow(''),
 });

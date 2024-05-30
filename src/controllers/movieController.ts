@@ -1,10 +1,9 @@
 
-import { GetMovieDto } from '@dtos';
+import { GetMovieDto, GetContentResumeDto } from '@dtos';
 import { TmdbService } from '@services';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { contentTypes } from '@config';
-import { GetContentResumeDto } from '@dtos/content/getContentResumeDto';
 
 export class MovieController {
     private tmdbService: TmdbService;
@@ -33,9 +32,8 @@ export class MovieController {
         const moviesIds = query.map((ids) => Number(ids));
         let movies = [];
         for (const id of moviesIds) {
-            //TODO: si no existe la pelicula, no se debe agregar al array
             const movie = await this.tmdbService.getMovieResume(id);
-            movies.push(movie);
+            if (movie) movies.push(movie);
         }
         return movies;
     }

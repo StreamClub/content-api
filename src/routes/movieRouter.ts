@@ -8,8 +8,7 @@ import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
 import { MovieController } from "@controllers";
-import { GetMovieCreditsSchema, GetMovieSchema, SearchContentSchema } from "@dtos";
-import { GetContentResumeSchema } from "@dtos/content/getContentResumeDto";
+import { GetMovieCreditsSchema, GetMovieSchema, SearchContentSchema, GetContentResumeSchema } from "@dtos";
 
 export function MovieRouter(dependencies: AppDependencies) {
     const router = Router();

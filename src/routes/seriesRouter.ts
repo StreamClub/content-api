@@ -7,7 +7,7 @@ import {
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
-import { GetSeasonSchema, GetSeriesCreditsSchema, GetSeriesSchema, SearchContentSchema } from "@dtos";
+import { GetContentResumeSchema, GetSeasonSchema, GetSeriesCreditsSchema, GetSeriesSchema, SearchContentSchema } from "@dtos";
 import { SeriesController } from "@controllers";
 
 export function SeriesRouter(dependencies: AppDependencies) {
@@ -23,6 +23,15 @@ export function SeriesRouter(dependencies: AppDependencies) {
             StatusCodes.OK
         )
     );
+
+    router.get(
+        "/resume",
+        validateSchema(GetContentResumeSchema, [FieldOptions.query]),
+        handleRequest(
+            (req) => seriesController.getSeriesResume(req),
+            StatusCodes.OK
+        )
+    )
 
     router.get(
         "/:seriesId",
