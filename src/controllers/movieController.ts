@@ -1,5 +1,5 @@
 
-import { GetMovieDto } from '@dtos';
+import { GetMovieDto, GetContentResumeDto } from '@dtos';
 import { TmdbService } from '@services';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
@@ -25,6 +25,17 @@ export class MovieController {
         const query = req.query.query as string;
         const page = parseInt(req.query.page as string || '1');
         return await this.tmdbService.searchMovie(userId, query, page, country);
+    }
+
+    public async getMoviesResume(req: Request<GetContentResumeDto>) {
+        const query = (req.query.ids as string).split(',');
+        const moviesIds = query.map((ids) => Number(ids));
+        let movies = [];
+        for (const id of moviesIds) {
+            const movie = await this.tmdbService.getMovieResume(id);
+            if (movie) movies.push(movie);
+        }
+        return movies;
     }
 
     public async getMovieCredits(req: Request<GetMovieDto>, res: Response<any>) {

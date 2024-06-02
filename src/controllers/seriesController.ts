@@ -1,5 +1,5 @@
 
-import { GetMovieDto } from '@dtos';
+import { GetContentResumeDto, GetMovieDto } from '@dtos';
 import { TmdbService } from '@services';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
@@ -26,6 +26,18 @@ export class SeriesController {
         const seriesId = Number(req.params.seriesId);
         return await this.tmdbService.getSeries(userId, seriesId, country);
     }
+
+    public async getSeriesResume(req: Request<GetContentResumeDto>) {
+        const query = (req.query.ids as string).split(',');
+        const seriesIds = query.map((ids) => Number(ids));
+        let series = [];
+        for (const id of seriesIds) {
+            const seriesResume = await this.tmdbService.getSeriesResume(id);
+            if (seriesResume) series.push(seriesResume);
+        }
+        return series;
+    }
+
 
     public async getSeason(req: Request<GetMovieDto>, res: Response<any>) {
         const userId = Number(res.locals.userId);

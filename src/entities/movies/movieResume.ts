@@ -1,4 +1,4 @@
-import { MovieResult } from "moviedb-promise";
+import { MovieResponse, MovieResult } from "moviedb-promise";
 
 export class MovieResume {
     public id: number;
@@ -11,7 +11,7 @@ export class MovieResume {
     public seen: boolean;
     public inWatchlist: boolean;
 
-    constructor(movie: MovieResult) {
+    constructor(movie: MovieResult | MovieResponse) {
         this.id = movie.id;
         this.title = movie.title;
         this.poster = movie.poster_path;

@@ -5,7 +5,7 @@ import {
 } from "@entities";
 import { NotFoundException } from "@exceptions";
 import { ReviewService, SeenContentService, StreamProviderService, WatchlistService } from "@services";
-import { getRedirectLinks } from "@utils";
+import { getRedirectLinks, logger } from "@utils";
 import AppDependencies from "appDependencies";
 import { MovieDb, MovieResponse, MovieResult, ShowResponse, TvResult, TvSeasonResponse } from 'moviedb-promise'
 
@@ -62,6 +62,20 @@ export class TmdbService {
             }) as TmdbMovie;
             return new Movie(movie, country);
         })
+    }
+
+    public async getMovieResume(movieId: number) {
+        return await this.getResumeSafely(movieId, async () => {
+            const movie = await this.tmdb.movieInfo({ id: movieId, language: this.language });
+            return new MovieResume(movie);
+        });
+    }
+
+    public async getSeriesResume(seriesId: number) {
+        return await this.getResumeSafely(seriesId, async () => {
+            const serie = await this.tmdb.tvInfo({ id: seriesId, language: this.language });
+            return new SeriesResume(serie);
+        });
     }
 
     private async getStreamClubSeries(seriesId: number, country: string): Promise<Series> {
@@ -239,6 +253,18 @@ export class TmdbService {
     private async getContentProviders(contentType: string, contentId: number, country: string) {
         const providersUrl = `https://www.themoviedb.org/${contentType}/${contentId}/watch?locale=${country}`;
         return await getRedirectLinks(providersUrl);
+    }
+
+    public async getResumeSafely(contentId: number, callback: Function) {
+        try {
+            return await this.getContentSafely(callback);
+        } catch (error) {
+            if (error?.code === 404) {
+                logger.warn('El contenido no existe. Id: ' + contentId);
+                return null;
+            }
+            throw error;
+        }
     }
 
     private async getContentSafely(callback: Function) {
