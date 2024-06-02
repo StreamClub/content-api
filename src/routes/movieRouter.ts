@@ -8,7 +8,7 @@ import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
 import { MovieController } from "@controllers";
-import { GetMovieCreditsSchema, GetMovieSchema, SearchContentSchema } from "@dtos";
+import { GetMovieCreditsSchema, GetMovieSchema, SearchContentSchema, GetContentResumeSchema } from "@dtos";
 
 export function MovieRouter(dependencies: AppDependencies) {
     const router = Router();
@@ -23,6 +23,15 @@ export function MovieRouter(dependencies: AppDependencies) {
             StatusCodes.OK
         )
     );
+
+    router.get(
+        "/resume",
+        validateSchema(GetContentResumeSchema, [FieldOptions.query]),
+        handleRequest(
+            (req) => movieController.getMoviesResume(req),
+            StatusCodes.OK
+        )
+    )
 
     router.get(
         "/:movieId",
