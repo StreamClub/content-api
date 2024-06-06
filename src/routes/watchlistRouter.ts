@@ -36,5 +36,11 @@ export function WatchlistRouter(dependencies: AppDependencies) {
         handleRequest((req, res) => watchlistController.removeContent(req, res), StatusCodes.OK)
     )
 
+    router.get(
+        "/privacy",
+        loadUserContext,
+        handleRequest((req) => watchlistController.getPrivacy(req), StatusCodes.OK)
+    )
+
     return router
 }

@@ -39,4 +39,9 @@ export class WatchlistController {
         const userId = Number(res.locals.userId);
         return await this.watchlistService.removeContent(userId, req.body.contentId, req.body.contentType);
     }
+
+    public async getPrivacy(req: Request<any>) {
+        const userId = Number(req.params.userId);
+        return await this.watchlistService.getPrivacy(userId);
+    }
 }
