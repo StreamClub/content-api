@@ -18,6 +18,10 @@ export class WatchlistService {
         return userPrivacy.isWatchlistPrivate;
     }
 
+    public async updatePrivacy(userId: number, isWatchlistPrivate: boolean) {
+        return await privacyRepository.updateWatchlistPrivacy(userId, isWatchlistPrivate);
+    }
+
     public async get(userId: number, pageSize: number, pageNumber: number) {
         await this.failIfWatchlistDoesNotExist(userId);
         return await watchlistRepository.get(userId, pageNumber, pageSize);
