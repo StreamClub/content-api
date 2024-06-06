@@ -15,7 +15,6 @@ export function WatchlistRouter(dependencies: AppDependencies) {
         handleRequest((req, res) => watchlistController.create(req, res), StatusCodes.CREATED)
     )
 
-
     router.get(
         "/privacy",
         loadUserContext,
@@ -33,7 +32,7 @@ export function WatchlistRouter(dependencies: AppDependencies) {
         '/:userId',
         loadUserContext,
         validateSchema(GetContentListSchema, [FieldOptions.params, FieldOptions.query]),
-        handleRequest((req) => watchlistController.get(req), StatusCodes.OK)
+        handleRequest((req, res) => watchlistController.get(req, res), StatusCodes.OK)
     )
 
     router.put(
