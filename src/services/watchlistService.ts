@@ -15,7 +15,7 @@ export class WatchlistService {
 
     public async getPrivacy(userId: number) {
         const userPrivacy = await privacyRepository.get(userId);
-        return userPrivacy.isWatchlistPrivate;
+        return { isWatchlistPrivate: userPrivacy.isWatchlistPrivate };
     }
 
     public async updatePrivacy(userId: number, isWatchlistPrivate: boolean) {

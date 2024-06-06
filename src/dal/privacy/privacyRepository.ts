@@ -16,16 +16,14 @@ class PrivacyRepository {
         return new Privacy(founded);
     }
 
-    private async find(userId: number): Promise<PrivacyModel> {
-        return await PrivacyModel.findOne({ userId })
-    }
-
-    async update(userId: number, isWatchlistPrivate: boolean): Promise<Privacy> {
-        const founded = await this.find(userId);
-
+    async updateWatchlistPrivacy(userId: number, isWatchlistPrivate: boolean): Promise<Privacy> {
+        const founded = await PrivacyModel.findOne({ userId });
+        if (!founded) {
+            return await this.create(userId, isWatchlistPrivate);
+        }
         founded.isWatchlistPrivate = isWatchlistPrivate;
         await founded.save();
-
+        return new Privacy(founded);
     }
 }
 

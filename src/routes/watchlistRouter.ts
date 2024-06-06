@@ -15,6 +15,20 @@ export function WatchlistRouter(dependencies: AppDependencies) {
         handleRequest((req, res) => watchlistController.create(req, res), StatusCodes.CREATED)
     )
 
+
+    router.get(
+        "/privacy",
+        loadUserContext,
+        handleRequest((req, res) => watchlistController.getPrivacy(req, res), StatusCodes.OK)
+    )
+
+    router.patch(
+        "/privacy",
+        loadUserContext,
+        validateSchema(UpdatePrivacySchema, [FieldOptions.body]),
+        handleRequest((req, res) => watchlistController.updatePrivacy(req, res), StatusCodes.OK)
+    )
+
     router.get(
         '/:userId',
         loadUserContext,
@@ -34,19 +48,6 @@ export function WatchlistRouter(dependencies: AppDependencies) {
         loadUserContext,
         validateSchema(AddContentSchema, [FieldOptions.params, FieldOptions.body]),
         handleRequest((req, res) => watchlistController.removeContent(req, res), StatusCodes.OK)
-    )
-
-    router.get(
-        "/privacy",
-        loadUserContext,
-        handleRequest((req, res) => watchlistController.getPrivacy(req, res), StatusCodes.OK)
-    )
-
-    router.patch(
-        "/privacy",
-        loadUserContext,
-        validateSchema(UpdatePrivacySchema, [FieldOptions.body]),
-        handleRequest((req, res) => watchlistController.updatePrivacy(req, res), StatusCodes.OK)
     )
 
     return router
