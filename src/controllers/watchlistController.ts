@@ -18,11 +18,12 @@ export class WatchlistController {
         return await this.watchlistService.create(userId);
     }
 
-    public async get(req: Request<GetContentListDto>) {
+    public async get(req: Request<GetContentListDto>, res: Response<any>) {
+        const requesterId = Number(res.locals.userId);
         const pageSize = Number(req.query.pageSize) || 20;
         const pageNumber = Number(req.query.page) || 1;
         const userId = Number(req.params.userId);
-        const userContent = await this.watchlistService.get(userId, pageSize, pageNumber);
+        const userContent = await this.watchlistService.get(userId, pageSize, pageNumber, requesterId);
         userContent.results = await Promise.all(userContent.results.map(async (content: WatchlistItem) => {
             const { poster, title } = await this.tmdbService.getNameAndPoster(content.contentType, content.id);
             return new WatchlistItemResume(content, poster, title);
@@ -39,4 +40,5 @@ export class WatchlistController {
         const userId = Number(res.locals.userId);
         return await this.watchlistService.removeContent(userId, req.body.contentId, req.body.contentType);
     }
+
 }

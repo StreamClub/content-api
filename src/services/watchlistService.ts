@@ -1,4 +1,5 @@
-import { watchlistRepository } from "@dal";
+import { privacyRepository, watchlistRepository } from "@dal";
+import { Page } from "@entities";
 import AppDependencies from "appDependencies";
 
 export class WatchlistService {
@@ -13,7 +14,12 @@ export class WatchlistService {
         return await watchlistRepository.create(userId);
     }
 
-    public async get(userId: number, pageSize: number, pageNumber: number) {
+    public async get(userId: number, pageSize: number, pageNumber: number, requesterId: number) {
+        const isOwner = userId === requesterId;
+        const userPrivacy = await privacyRepository.get(userId);
+        if (!isOwner && userPrivacy.isWatchlistPrivate) {
+            return new Page(1, pageSize, 0, []);
+        }
         await this.failIfWatchlistDoesNotExist(userId);
         return await watchlistRepository.get(userId, pageNumber, pageSize);
     }

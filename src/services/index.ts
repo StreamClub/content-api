@@ -3,3 +3,4 @@ export * from './watchlistService';
 export * from './seenContentService';
 export * from './reviewService';
 export * from './streamProviderService';
+export * from './privacyService';

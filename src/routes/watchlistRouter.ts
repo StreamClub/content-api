@@ -19,7 +19,7 @@ export function WatchlistRouter(dependencies: AppDependencies) {
         '/:userId',
         loadUserContext,
         validateSchema(GetContentListSchema, [FieldOptions.params, FieldOptions.query]),
-        handleRequest((req) => watchlistController.get(req), StatusCodes.OK)
+        handleRequest((req, res) => watchlistController.get(req, res), StatusCodes.OK)
     )
 
     router.put(
