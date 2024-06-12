@@ -2,7 +2,7 @@ import { FieldOptions, handleRequest, loadUserContext, validateSchema } from '@m
 import { Router } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import AppDependencies from 'appDependencies'
-import { AddContentSchema, GetContentListSchema, UpdateWatchlistPrivacySchema } from '@dtos'
+import { AddContentSchema, GetContentListSchema } from '@dtos'
 import { WatchlistController } from '@controllers'
 
 export function WatchlistRouter(dependencies: AppDependencies) {
@@ -13,19 +13,6 @@ export function WatchlistRouter(dependencies: AppDependencies) {
         '/',
         loadUserContext,
         handleRequest((req, res) => watchlistController.create(req, res), StatusCodes.CREATED)
-    )
-
-    router.get(
-        "/privacy",
-        loadUserContext,
-        handleRequest((req, res) => watchlistController.getPrivacy(req, res), StatusCodes.OK)
-    )
-
-    router.patch(
-        "/privacy",
-        loadUserContext,
-        validateSchema(UpdateWatchlistPrivacySchema, [FieldOptions.body]),
-        handleRequest((req, res) => watchlistController.updatePrivacy(req, res), StatusCodes.OK)
     )
 
     router.get(

@@ -14,15 +14,6 @@ export class WatchlistService {
         return await watchlistRepository.create(userId);
     }
 
-    public async getPrivacy(userId: number) {
-        const userPrivacy = await privacyRepository.get(userId);
-        return { isWatchlistPrivate: userPrivacy.isWatchlistPrivate };
-    }
-
-    public async updatePrivacy(userId: number, isWatchlistPrivate: boolean) {
-        return await privacyRepository.updateWatchlistPrivacy(userId, isWatchlistPrivate);
-    }
-
     public async get(userId: number, pageSize: number, pageNumber: number, requesterId: number) {
         const isOwner = userId === requesterId;
         const userPrivacy = await privacyRepository.get(userId);

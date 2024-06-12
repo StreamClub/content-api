@@ -31,16 +31,6 @@ export class SeenContentController {
         return await this.seenContentService.getAll(pageSize, pageNumber);
     }
 
-    public async getPrivacy(req: Request<any>, res: Response<any>) {
-        const userId = Number(res.locals.userId);
-        return await this.seenContentService.getPrivacy(userId);
-    }
-
-    public async updatePrivacy(req: Request<any>, res: Response<any>) {
-        const userId = Number(res.locals.userId);
-        return await this.seenContentService.updatePrivacy(userId, req.body.isSeenContentListPrivate);
-    }
-
     public async getSeenContent(req: Request<any>, res: Response<any>) {
         const userId = Number(req.params.userId);
         const pageSize = Number(req.query.pageSize) || 20;

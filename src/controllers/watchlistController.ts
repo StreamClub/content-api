@@ -41,14 +41,4 @@ export class WatchlistController {
         return await this.watchlistService.removeContent(userId, req.body.contentId, req.body.contentType);
     }
 
-    public async getPrivacy(req: Request<any>, res: Response<any>) {
-        const userId = Number(res.locals.userId);
-        return await this.watchlistService.getPrivacy(userId);
-    }
-
-    public async updatePrivacy(req: Request<any>, res: Response<any>) {
-        const userId = Number(res.locals.userId);
-        return await this.watchlistService.updatePrivacy(userId, req.body.isWatchlistPrivate);
-    }
-
 }

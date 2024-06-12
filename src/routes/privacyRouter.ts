@@ -23,7 +23,7 @@ export function PrivacyRouter(dependencies: AppDependencies) {
     )
 
     router.patch(
-        "/privacy",
+        "/seenContent",
         loadUserContext,
         validateSchema(UpdateSeenContentPrivacySchema, [FieldOptions.body]),
         handleRequest((req, res) => privacyController.updateSeenContentPrivacy(req, res), StatusCodes.OK)
