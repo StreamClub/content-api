@@ -38,7 +38,6 @@ export function SeenContentRouter(dependencies: AppDependencies) {
         handleRequest((req, res) => seenContentController.updatePrivacy(req, res), StatusCodes.OK)
     )
 
-
     router.get(
         '/:userId',
         loadUserContext,
