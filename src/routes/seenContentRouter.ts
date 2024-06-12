@@ -5,7 +5,8 @@ import AppDependencies from 'appDependencies'
 import { SeenContentController } from '@controllers'
 import {
     AddSeenEpisodeSchema, AddSeenMovieSchema,
-    AddSeenSeasonSchema, AddSeenSeriesSchema, GetAllContentListSchema, GetContentListSchema
+    AddSeenSeasonSchema, AddSeenSeriesSchema, GetAllContentListSchema, GetContentListSchema,
+    UpdateSeenContentPrivacySchema
 } from '@dtos'
 
 export function SeenContentRouter(dependencies: AppDependencies) {
@@ -29,6 +30,14 @@ export function SeenContentRouter(dependencies: AppDependencies) {
         loadUserContext,
         handleRequest((req, res) => seenContentController.getPrivacy(req, res), StatusCodes.OK)
     )
+
+    router.patch(
+        "/privacy",
+        loadUserContext,
+        validateSchema(UpdateSeenContentPrivacySchema, [FieldOptions.body]),
+        handleRequest((req, res) => seenContentController.updatePrivacy(req, res), StatusCodes.OK)
+    )
+
 
     router.get(
         '/:userId',

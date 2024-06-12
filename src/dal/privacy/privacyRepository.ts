@@ -25,6 +25,16 @@ class PrivacyRepository {
         await founded.save();
         return new Privacy(founded);
     }
+
+    async updateSeenContentListPrivacy(userId: number, isSeenContentListPrivate: boolean): Promise<Privacy> {
+        const founded = await PrivacyModel.findOne({ userId });
+        if (!founded) {
+            return await this.create(userId, isSeenContentListPrivate);
+        }
+        founded.isSeenContentListPrivate = isSeenContentListPrivate;
+        await founded.save();
+        return new Privacy(founded);
+    }
 }
 
 export const privacyRepository = new PrivacyRepository();

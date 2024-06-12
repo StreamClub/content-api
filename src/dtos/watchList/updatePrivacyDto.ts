@@ -1,9 +1,9 @@
 import Joi from "joi";
 
-export class UpdatePrivacyDto {
+export class UpdateWatchlistPrivacyDto {
     isWatchlistPrivate: boolean;
 }
 
-export const UpdatePrivacySchema = Joi.object({
+export const UpdateWatchlistPrivacySchema = Joi.object({
     isWatchlistPrivate: Joi.boolean().required(),
 });

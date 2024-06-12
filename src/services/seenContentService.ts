@@ -27,6 +27,10 @@ export class SeenContentService {
         return { isSeenContentListPrivate: userPrivacy.isSeenContentListPrivate };
     }
 
+    public async updatePrivacy(userId: number, isSeenContentListPrivate: boolean) {
+        return await privacyRepository.updateSeenContentListPrivacy(userId, isSeenContentListPrivate);
+    }
+
     public async getSeenContent(userId: number, pageSize: number, pageNumber: number) {
         await this.createIfListDoesNotExist(userId);
         return await seenContentRepository.getContentList(userId, pageSize, pageNumber);
