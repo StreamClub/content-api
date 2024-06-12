@@ -32,10 +32,11 @@ export class SeenContentController {
     }
 
     public async getSeenContent(req: Request<any>, res: Response<any>) {
+        const requesterId = Number(res.locals.userId);
         const userId = Number(req.params.userId);
         const pageSize = Number(req.query.pageSize) || 20;
         const pageNumber = Number(req.query.page) || 1;
-        const seenContent = await this.seenContentService.getSeenContent(userId, pageSize, pageNumber);
+        const seenContent = await this.seenContentService.getSeenContent(userId, pageSize, pageNumber, requesterId);
         seenContent.results = await Promise.all(seenContent.results.map(async (content: SeenItem) => {
             const review = await this.reviewService.getReview(userId, content.id, content.contentType);
             if (content.contentType === 'series') {
