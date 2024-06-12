@@ -5,3 +5,4 @@ export * from './artistController';
 export * from './seenContentController';
 export * from './streamProviderController';
 export * from './reviewController';
+export * from './privacyController';

@@ -4,4 +4,5 @@ export * from "./content";
 export * from "./series";
 export * from "./artists";
 export * from "./seenContent";
-export * from "./reviews"
+export * from "./reviews";
+export * from "./privacy";
