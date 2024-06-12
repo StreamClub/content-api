@@ -25,6 +25,12 @@ export function SeenContentRouter(dependencies: AppDependencies) {
     )
 
     router.get(
+        "/privacy",
+        loadUserContext,
+        handleRequest((req, res) => seenContentController.getPrivacy(req, res), StatusCodes.OK)
+    )
+
+    router.get(
         '/:userId',
         loadUserContext,
         validateSchema(GetContentListSchema, [FieldOptions.params, FieldOptions.query]),

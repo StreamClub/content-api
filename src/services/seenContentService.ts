@@ -1,4 +1,4 @@
-import { seenContentRepository } from "@dal";
+import { privacyRepository, seenContentRepository } from "@dal";
 import {
     Page, SeasonEpisode, SeenContent, SeenEpisode,
     SeenMovie,
@@ -20,6 +20,11 @@ export class SeenContentService {
 
     public async getAll(pageSize: number, pageNumber: number) {
         return await seenContentRepository.getAll(pageSize, pageNumber);
+    }
+
+    public async getPrivacy(userId: number) {
+        const userPrivacy = await privacyRepository.get(userId);
+        return { isSeenContentListPrivate: userPrivacy.isSeenContentListPrivate };
     }
 
     public async getSeenContent(userId: number, pageSize: number, pageNumber: number) {
