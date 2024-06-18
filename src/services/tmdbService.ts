@@ -230,6 +230,31 @@ export class TmdbService {
         return new PaginatedResult(result.page, result.total_pages, result.total_results, series);
     }
 
+    public async discoverSeries(userId: number, page: number
+        , country: string, genderIds: string[], runtimeGte: number, runtimeLte: number, inMyPlatforms: boolean
+    ) {
+        const platforms = inMyPlatforms ? (await this.streamProviderService.getAll(userId)).providerId : [];
+        const result = await this.tmdb.discoverTv({
+            language: this.language, page, watch_region: country, with_watch_providers: platforms.join(','),
+            with_genres: genderIds.join(','), "with_runtime.gte": runtimeGte, "with_runtime.lte": runtimeLte
+        });
+        const series = await Promise.all(result.results.map(async (serie: TvResult) => {
+            const serieResume = new SeriesResume(serie)
+            serieResume.inWatchlist = await this.watchlistService
+                .isInWatchlist(userId, serie.id.toString(), contentTypes.SERIES);
+            const totalWatchedEpisodes = await this.seenContentService
+                .getTotalWatchedEpisodes(userId, serie.id)
+            const scSeries = await this.getStreamClubSeries(serie.id, country);
+            serieResume.setSeen(scSeries.numberOfEpisodes, totalWatchedEpisodes)
+            serieResume.status = scSeries.status;
+            serieResume.lastEpisodeReleaseDate = scSeries.lastAirDate;
+            const providersIds = scSeries.platforms.map(platform => platform.providerId);
+            serieResume.available = await this.streamProviderService.doesUserHaveOneOf(userId, providersIds)
+            return serieResume;
+        }));
+        return new PaginatedResult(result.page, result.total_pages, result.total_results, series);
+    }
+
     public async searchArtist(userId: number, query: string, page: number) {
         const result = await this.tmdb.searchPerson({ query, language: this.language, page });
         const artists = await Promise.all(result.results.map(async (artist) => {

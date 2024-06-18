@@ -20,6 +20,18 @@ export class SeriesController {
         return await this.tmdbService.searchSeries(userId, query, page, country);
     }
 
+    public async discoverSeries(req: Request<GetMovieDto>, res: Response<any>) {
+        const country = req.query.country as string;
+        const userId = Number(res.locals.userId);
+        const page = parseInt(req.query.page as string || '1');
+        const genderIds = (req.query.genderIds ? req.query.genderIds as string : '').split(',');
+        const runtimeGte = parseInt(req.query.runtimeGte as string || '0');
+        const runtimeLte = parseInt(req.query.runtimeLte as string || '2147483647');
+        const inMyPlatforms = req.query.inMyPlatforms === 'true';
+        return await this.tmdbService.discoverSeries(userId, page, country, genderIds,
+            runtimeGte, runtimeLte, inMyPlatforms);
+    }
+
     public async getSeries(req: Request<GetMovieDto>, res: Response<any>) {
         const userId = Number(res.locals.userId);
         const country = req.query.country as string;
