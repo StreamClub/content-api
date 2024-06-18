@@ -27,6 +27,18 @@ export class MovieController {
         return await this.tmdbService.searchMovie(userId, query, page, country);
     }
 
+    public async discoverMovies(req: Request<GetMovieDto>, res: Response<any>) {
+        const country = req.query.country as string;
+        const userId = Number(res.locals.userId);
+        const page = parseInt(req.query.page as string || '1');
+        const genderIds = (req.query.genderIds ? req.query.genderIds as string : '').split(',');
+        const runtimeGte = parseInt(req.query.runtimeGte as string || '0');
+        const runtimeLte = parseInt(req.query.runtimeLte as string || '2147483647');
+        const inMyPlatforms = req.query.inMyPlatforms === 'true';
+        return await this.tmdbService.discoverMovies(userId, page, country, genderIds,
+            runtimeGte, runtimeLte, inMyPlatforms);
+    }
+
     public async getMoviesResume(req: Request<GetContentResumeDto>) {
         const query = (req.query.ids as string).split(',');
         const moviesIds = query.map((ids) => Number(ids));

@@ -188,8 +188,56 @@ export class TmdbService {
         return new PaginatedResult(result.page, result.total_pages, result.total_results, movies);
     }
 
+    public async discoverMovies(userId: number, page: number, country: string, genderIds: string[],
+        runtimeGte: number, runtimeLte: number, inMyPlatforms: boolean
+    ) {
+        const platforms = inMyPlatforms ? (await this.streamProviderService.getAll(userId)).providerId : [];
+        const result = await this.tmdb.discoverMovie({
+            language: this.language, page, watch_region: country, with_watch_providers: platforms.join(','),
+            with_genres: genderIds.join(','), "with_runtime.gte": runtimeGte, "with_runtime.lte": runtimeLte
+        });
+        const movies = await Promise.all(result.results.map(async (movie: MovieResult) => {
+            const movieResume = new MovieResume(movie)
+            movieResume.inWatchlist = await this.watchlistService
+                .isInWatchlist(userId, movie.id.toString(), contentTypes.MOVIE);
+            movieResume.seen = await this.seenContentService
+                .isASeenMovie(userId, movie.id);
+            const scMovie = await this.getStreamClubMovie(movie.id, country);
+            movieResume.status = scMovie.status;
+            const providersIds = scMovie.platforms.map(platform => platform.providerId);
+            movieResume.available = await this.streamProviderService.doesUserHaveOneOf(userId, providersIds)
+            return movieResume;
+        }));
+        return new PaginatedResult(result.page, result.total_pages, result.total_results, movies);
+    }
+
     public async searchSeries(userId: number, query: string, page: number, country: string) {
         const result = await this.tmdb.searchTv({ query, language: this.language, page });
+        const series = await Promise.all(result.results.map(async (serie: TvResult) => {
+            const serieResume = new SeriesResume(serie)
+            serieResume.inWatchlist = await this.watchlistService
+                .isInWatchlist(userId, serie.id.toString(), contentTypes.SERIES);
+            const totalWatchedEpisodes = await this.seenContentService
+                .getTotalWatchedEpisodes(userId, serie.id)
+            const scSeries = await this.getStreamClubSeries(serie.id, country);
+            serieResume.setSeen(scSeries.numberOfEpisodes, totalWatchedEpisodes)
+            serieResume.status = scSeries.status;
+            serieResume.lastEpisodeReleaseDate = scSeries.lastAirDate;
+            const providersIds = scSeries.platforms.map(platform => platform.providerId);
+            serieResume.available = await this.streamProviderService.doesUserHaveOneOf(userId, providersIds)
+            return serieResume;
+        }));
+        return new PaginatedResult(result.page, result.total_pages, result.total_results, series);
+    }
+
+    public async discoverSeries(userId: number, page: number
+        , country: string, genderIds: string[], runtimeGte: number, runtimeLte: number, inMyPlatforms: boolean
+    ) {
+        const platforms = inMyPlatforms ? (await this.streamProviderService.getAll(userId)).providerId : [];
+        const result = await this.tmdb.discoverTv({
+            language: this.language, page, watch_region: country, with_watch_providers: platforms.join(','),
+            with_genres: genderIds.join(','), "with_runtime.gte": runtimeGte, "with_runtime.lte": runtimeLte
+        });
         const series = await Promise.all(result.results.map(async (serie: TvResult) => {
             const serieResume = new SeriesResume(serie)
             serieResume.inWatchlist = await this.watchlistService
