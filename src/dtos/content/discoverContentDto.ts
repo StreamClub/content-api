@@ -8,6 +8,7 @@ export class DiscoverContentDto {
     genderIds: string;
     runtimeGte: number;
     runtimeLte: number;
+    inMyPlatforms: boolean; //should only be true if passed in the query
 }
 
 export const DiscoverContentSchema = Joi.object({
@@ -16,4 +17,5 @@ export const DiscoverContentSchema = Joi.object({
     genderIds: Joi.string().pattern(/^[0-9]+(,[0-9]+)*$/).optional().allow(''),
     runtimeGte: Joi.number().integer().min(0).optional(),
     runtimeLte: Joi.number().integer().min(0).optional(),
+    inMyPlatforms: Joi.boolean().optional()
 });

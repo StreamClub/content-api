@@ -189,10 +189,11 @@ export class TmdbService {
     }
 
     public async discoverMovies(userId: number, page: number, country: string, genderIds: string[],
-        runtimeGte: number, runtimeLte: number
+        runtimeGte: number, runtimeLte: number, inMyPlatforms: boolean
     ) {
+        const platforms = inMyPlatforms ? (await this.streamProviderService.getAll(userId)).providerId : [];
         const result = await this.tmdb.discoverMovie({
-            language: this.language, page,
+            language: this.language, page, watch_region: country, with_watch_providers: platforms.join(','),
             with_genres: genderIds.join(','), "with_runtime.gte": runtimeGte, "with_runtime.lte": runtimeLte
         });
         const movies = await Promise.all(result.results.map(async (movie: MovieResult) => {

@@ -34,7 +34,9 @@ export class MovieController {
         const genderIds = (req.query.genderIds ? req.query.genderIds as string : '').split(',');
         const runtimeGte = parseInt(req.query.runtimeGte as string || '0');
         const runtimeLte = parseInt(req.query.runtimeLte as string || '2147483647');
-        return await this.tmdbService.discoverMovies(userId, page, country, genderIds, runtimeGte, runtimeLte);
+        const inMyPlatforms = req.query.inMyPlatforms === 'true';
+        return await this.tmdbService.discoverMovies(userId, page, country, genderIds,
+            runtimeGte, runtimeLte, inMyPlatforms);
     }
 
     public async getMoviesResume(req: Request<GetContentResumeDto>) {
