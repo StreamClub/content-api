@@ -188,6 +188,23 @@ export class TmdbService {
         return new PaginatedResult(result.page, result.total_pages, result.total_results, movies);
     }
 
+    public async discoverMovies(userId: number, page: number, country: string, genderIds: string[]) {
+        const result = await this.tmdb.discoverMovie({ language: this.language, page, with_genres: genderIds.join(',') });
+        const movies = await Promise.all(result.results.map(async (movie: MovieResult) => {
+            const movieResume = new MovieResume(movie)
+            movieResume.inWatchlist = await this.watchlistService
+                .isInWatchlist(userId, movie.id.toString(), contentTypes.MOVIE);
+            movieResume.seen = await this.seenContentService
+                .isASeenMovie(userId, movie.id);
+            const scMovie = await this.getStreamClubMovie(movie.id, country);
+            movieResume.status = scMovie.status;
+            const providersIds = scMovie.platforms.map(platform => platform.providerId);
+            movieResume.available = await this.streamProviderService.doesUserHaveOneOf(userId, providersIds)
+            return movieResume;
+        }));
+        return new PaginatedResult(result.page, result.total_pages, result.total_results, movies);
+    }
+
     public async searchSeries(userId: number, query: string, page: number, country: string) {
         const result = await this.tmdb.searchTv({ query, language: this.language, page });
         const series = await Promise.all(result.results.map(async (serie: TvResult) => {
