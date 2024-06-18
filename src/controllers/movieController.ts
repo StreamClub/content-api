@@ -32,7 +32,9 @@ export class MovieController {
         const userId = Number(res.locals.userId);
         const page = parseInt(req.query.page as string || '1');
         const genderIds = (req.query.genderIds ? req.query.genderIds as string : '').split(',');
-        return await this.tmdbService.discoverMovies(userId, page, country, genderIds);
+        const runtimeGte = parseInt(req.query.runtimeGte as string || '0');
+        const runtimeLte = parseInt(req.query.runtimeLte as string || '2147483647');
+        return await this.tmdbService.discoverMovies(userId, page, country, genderIds, runtimeGte, runtimeLte);
     }
 
     public async getMoviesResume(req: Request<GetContentResumeDto>) {

@@ -188,8 +188,13 @@ export class TmdbService {
         return new PaginatedResult(result.page, result.total_pages, result.total_results, movies);
     }
 
-    public async discoverMovies(userId: number, page: number, country: string, genderIds: string[]) {
-        const result = await this.tmdb.discoverMovie({ language: this.language, page, with_genres: genderIds.join(',') });
+    public async discoverMovies(userId: number, page: number, country: string, genderIds: string[],
+        runtimeGte: number, runtimeLte: number
+    ) {
+        const result = await this.tmdb.discoverMovie({
+            language: this.language, page,
+            with_genres: genderIds.join(','), "with_runtime.gte": runtimeGte, "with_runtime.lte": runtimeLte
+        });
         const movies = await Promise.all(result.results.map(async (movie: MovieResult) => {
             const movieResume = new MovieResume(movie)
             movieResume.inWatchlist = await this.watchlistService
