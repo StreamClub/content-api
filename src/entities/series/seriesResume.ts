@@ -17,7 +17,7 @@ export class SeriesResume {
         this.title = series.name;
         this.poster = series.poster_path;
         this.releaseDate = series.first_air_date;
-        this.score = series.vote_average; //TODO: cambiar el score por el de la base de datos
+        this.score = series.vote_average;
     }
 
     public setSeen(totalEpisodes: number, totalWatchedEpisodes: number) {

@@ -6,7 +6,6 @@ export class MovieRecommendation {
     public poster: string;
     public releaseDate: string;
     public score: number;
-
     public genres: string[];
     public duration: number;
     public inWatchlist: boolean;

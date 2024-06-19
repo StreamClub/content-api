@@ -39,12 +39,13 @@ export class SeriesController {
         return await this.tmdbService.getSeries(userId, seriesId, country);
     }
 
-    public async getSeriesResume(req: Request<GetContentResumeDto>) {
+    public async getSeriesResume(req: Request<GetContentResumeDto>, res: Response<any>) {
         const query = (req.query.ids as string).split(',');
+        const userId = Number(res.locals.userId);
         const seriesIds = query.map((ids) => Number(ids));
         let series = [];
         for (const id of seriesIds) {
-            const seriesResume = await this.tmdbService.getSeriesResume(id);
+            const seriesResume = await this.tmdbService.getSeriesResume(id, userId);
             if (seriesResume) series.push(seriesResume);
         }
         return series;
