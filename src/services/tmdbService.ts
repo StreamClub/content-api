@@ -1,7 +1,8 @@
 import { config, contentTypes } from "@config";
 import {
     Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult,
-    TmdbSeries, Series, LastSeenEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode, SeriesBasicInfo, Platform, ContentCredits
+    TmdbSeries, Series, LastSeenEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode, SeriesBasicInfo, Platform, ContentCredits,
+    MovieRecommendation
 } from "@entities";
 import { NotFoundException } from "@exceptions";
 import { ReviewService, SeenContentService, StreamProviderService, WatchlistService } from "@services";
@@ -64,10 +65,13 @@ export class TmdbService {
         })
     }
 
-    public async getMovieResume(movieId: number) {
+    public async getMovieResume(movieId: number, userId: number) {
         return await this.getResumeSafely(movieId, async () => {
             const movie = await this.tmdb.movieInfo({ id: movieId, language: this.language });
-            return new MovieResume(movie);
+            const recommendation = new MovieRecommendation(movie);
+            recommendation.inWatchlist = await this.watchlistService
+                .isInWatchlist(userId, recommendation.id.toString(), contentTypes.MOVIE);
+            return recommendation;
         });
     }
 

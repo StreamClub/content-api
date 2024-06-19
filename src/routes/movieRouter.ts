@@ -36,9 +36,10 @@ export function MovieRouter(dependencies: AppDependencies) {
 
     router.get(
         "/resume",
+        loadUserContext,
         validateSchema(GetContentResumeSchema, [FieldOptions.query]),
         handleRequest(
-            (req) => movieController.getMoviesResume(req),
+            (req, res) => movieController.getMoviesResume(req, res),
             StatusCodes.OK
         )
     )

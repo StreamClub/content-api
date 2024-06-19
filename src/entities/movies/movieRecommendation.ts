@@ -1,21 +1,23 @@
-import { MovieResponse, MovieResult } from "moviedb-promise";
+import { MovieResponse } from "moviedb-promise";
 
-export class MovieResume {
+export class MovieRecommendation {
     public id: number;
     public title: string;
     public poster: string;
-    public available: boolean;
     public releaseDate: string;
-    public status: string;
     public score: number;
-    public seen: boolean;
+
+    public genres: string[];
+    public duration: number;
     public inWatchlist: boolean;
 
-    constructor(movie: MovieResult | MovieResponse) {
+    constructor(movie: MovieResponse) {
         this.id = movie.id;
         this.title = movie.title;
         this.poster = movie.poster_path;
         this.releaseDate = movie.release_date;
         this.score = movie.vote_average;
+        this.genres = movie.genres.map((genre) => genre.name);
+        this.duration = movie.runtime;
     }
 }
