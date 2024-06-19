@@ -5,3 +5,4 @@ export * from './tmdbSeries';
 export * from './season';
 export * from './episode';
 export * from './seriesBasicInfo';
+export * from './seriesRecommendation';

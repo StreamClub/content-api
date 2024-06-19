@@ -36,9 +36,10 @@ export function SeriesRouter(dependencies: AppDependencies) {
 
     router.get(
         "/resume",
+        loadUserContext,
         validateSchema(GetContentResumeSchema, [FieldOptions.query]),
         handleRequest(
-            (req) => seriesController.getSeriesResume(req),
+            (req, res) => seriesController.getSeriesResume(req, res),
             StatusCodes.OK
         )
     )

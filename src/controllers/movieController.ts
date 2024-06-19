@@ -39,12 +39,13 @@ export class MovieController {
             runtimeGte, runtimeLte, inMyPlatforms);
     }
 
-    public async getMoviesResume(req: Request<GetContentResumeDto>) {
+    public async getMoviesResume(req: Request<GetContentResumeDto>, res: Response<any>) {
         const query = (req.query.ids as string).split(',');
+        const userId = Number(res.locals.userId);
         const moviesIds = query.map((ids) => Number(ids));
         let movies = [];
         for (const id of moviesIds) {
-            const movie = await this.tmdbService.getMovieResume(id);
+            const movie = await this.tmdbService.getMovieResume(id, userId);
             if (movie) movies.push(movie);
         }
         return movies;
