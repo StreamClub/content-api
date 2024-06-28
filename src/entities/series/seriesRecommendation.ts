@@ -1,6 +1,6 @@
 import { ShowResponse } from "moviedb-promise";
 
-export class seriesRecommendation {
+export class SeriesRecommendation {
     public id: number;
     public title: string;
     public poster: string;
@@ -17,6 +17,6 @@ export class seriesRecommendation {
         this.releaseDate = series.first_air_date;
         this.score = series.vote_average;
         this.genres = series.genres.map((genre) => genre.name);
-        this.duration = series.episode_run_time[0];
+        this.duration = series.number_of_seasons;
     }
 }

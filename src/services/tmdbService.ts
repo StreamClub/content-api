@@ -3,7 +3,7 @@ import {
     Movie, TmdbMovie, MovieResume, SeriesResume, PaginatedResult,
     TmdbSeries, Series, LastSeenEpisode, Season, ArtistResume, TmdbPerson, Artist, SeenEpisode, SeriesBasicInfo, Platform, ContentCredits,
     MovieRecommendation,
-    seriesRecommendation
+    SeriesRecommendation
 } from "@entities";
 import { NotFoundException } from "@exceptions";
 import { ReviewService, SeenContentService, StreamProviderService, WatchlistService } from "@services";
@@ -79,7 +79,7 @@ export class TmdbService {
     public async getSeriesResume(seriesId: number, userId: number) {
         return await this.getResumeSafely(seriesId, async () => {
             const serie = await this.tmdb.tvInfo({ id: seriesId, language: this.language });
-            const recommendation = new seriesRecommendation(serie);
+            const recommendation = new SeriesRecommendation(serie);
             recommendation.inWatchlist = await this.watchlistService
                 .isInWatchlist(userId, recommendation.id.toString(), contentTypes.SERIES);
             return recommendation;
