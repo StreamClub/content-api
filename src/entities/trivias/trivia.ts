@@ -6,5 +6,7 @@ export class Trivia extends MongoObject {
 
     constructor(trivia: Trivia) {
         super(trivia);
+        this.contentId = trivia.contentId;
+        this.contentType = trivia.contentType
     }
 }
