@@ -1,15 +1,15 @@
 
 export const TRIVIAS = [
     {
-        contentId: 1,
+        contentId: 808,
         contentType: 'movie',
     },
     {
-        contentId: 2,
+        contentId: 10693,
         contentType: 'movie',
     },
     {
-        contentId: 3,
-        contentType: 'movie',
+        contentId: 37854,
+        contentType: 'series',
     },
 ]

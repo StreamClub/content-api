@@ -306,6 +306,18 @@ export class TmdbService {
         }));
     }
 
+    public async getTriviaContent(contentId: number, contentType: string) {
+        return await this.getContentSafely(async () => {
+            const tmdbContent = contentType == contentTypes.MOVIE ?
+                await this.tmdb.movieInfo({ id: contentId, language: this.language }) :
+                await this.tmdb.tvInfo({ id: contentId, language: this.language });
+            return {
+                title: this.getTmdbContentName(tmdbContent, contentType),
+                poster: tmdbContent.poster_path
+            };
+        });
+    }
+
     private async getContentProviders(contentType: string, contentId: number, country: string) {
         const providersUrl = `https://www.themoviedb.org/${contentType}/${contentId}/watch?locale=${country}`;
         return await getRedirectLinks(providersUrl);
