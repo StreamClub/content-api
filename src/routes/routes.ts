@@ -3,7 +3,8 @@ import AppDependencies from 'appDependencies'
 import {
     MovieRouter, WatchlistRouter, SeriesRouter,
     ArtistRouter, SeenContentRouter, StreamProviderRouter, ReviewRouter,
-    PrivacyRouter
+    PrivacyRouter,
+    TriviaRouter
 } from '@routes';
 
 export function registerRouters(app: Express, dependencies: AppDependencies) {
@@ -16,4 +17,5 @@ export function registerRouters(app: Express, dependencies: AppDependencies) {
     app.use("/streamProviders", StreamProviderRouter(dependencies));
     app.use("/reviews", ReviewRouter(dependencies));
     app.use("/privacy", PrivacyRouter(dependencies));
+    app.use("/trivias", TriviaRouter(dependencies));
 }

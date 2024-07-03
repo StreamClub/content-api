@@ -4,3 +4,4 @@ export * from './seenContentService';
 export * from './reviewService';
 export * from './streamProviderService';
 export * from './privacyService';
+export * from './triviaService';
