@@ -17,8 +17,4 @@ export class PrivacyService {
         return await privacyRepository.updateSeenContentListPrivacy(userId, isSeenContentListPrivate);
     }
 
-    // public async updatePrivacy(userId: number, isWatchlistPrivate: boolean) {
-    //     return await privacyRepository.updateWatchlistPrivacy(userId, isWatchlistPrivate);
-    // }
-
 }

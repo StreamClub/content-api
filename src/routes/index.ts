@@ -7,3 +7,4 @@ export * from "./seenContentRouter";
 export * from "./streamProviderRouter";
 export * from "./reviewRouter";
 export * from "./privacyRouter";
+export * from "./triviaRouter";

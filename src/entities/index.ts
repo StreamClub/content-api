@@ -6,3 +6,4 @@ export * from "./artists";
 export * from "./seenContent";
 export * from "./reviews";
 export * from "./privacy";
+export * from "./trivias";
