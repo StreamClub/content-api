@@ -6,3 +6,4 @@ export * from './seenContentController';
 export * from './streamProviderController';
 export * from './reviewController';
 export * from './privacyController';
+export * from './triviaController';
