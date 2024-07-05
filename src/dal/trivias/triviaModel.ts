@@ -1,5 +1,6 @@
 import { Trivia } from '@entities'
 import { Document, model, Schema } from 'mongoose'
+import { TriviaQuestionSchema } from './triviaQuestionModel'
 
 type TriviaType = Trivia & Document
 
@@ -11,6 +12,10 @@ const TriviaSchema = new Schema<TriviaType>({
     },
     contentType: {
         type: String,
+        required: true,
+    },
+    questions: {
+        type: [TriviaQuestionSchema],
         required: true,
     },
 

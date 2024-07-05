@@ -1,20 +1,12 @@
-import { MongoObject } from "@dtos";
-import { Content } from "@entities";
+import { TriviaQuestion } from "@entities";
+import { TriviaResume } from "./triviaResume";
 
-export class Trivia extends MongoObject {
-    contentId: number;
-    contentType: string;
-    poster: string;
-    title: string;
+export class Trivia extends TriviaResume {
+    questions: TriviaQuestion[];
 
     constructor(trivia: Trivia) {
         super(trivia);
-        this.contentId = trivia.contentId;
-        this.contentType = trivia.contentType
+        this.questions = trivia.questions.map((question) => new TriviaQuestion(question));
     }
 
-    public setContentInfo(title: string, poster: string) {
-        this.poster = poster;
-        this.title = title;
-    }
 }
