@@ -9,4 +9,8 @@ export class TriviaService {
         return await triviaRepository.getAll();
     }
 
+    public async getTrivia(contentId: number, contentType: string) {
+        return await triviaRepository.getOne(contentId, contentType);
+    }
+
 }

@@ -19,8 +19,16 @@ export class TriviaController {
             trivia.setContentInfo(content.title, content.poster);
         });
         await Promise.all(promises);
-        return trivias
+        return trivias;
+    }
 
+    public async getTrivia(req: Request<any>, res: Response<any>) {
+        const contentId = Number(req.params.contentId);
+        const contentType = req.params.contentType;
+        const trivia = await this.triviaService.getTrivia(contentId, contentType);
+        const content = await this.tmdbService.getTriviaContent(trivia.contentId, trivia.contentType);
+        trivia.setContentInfo(content.title, content.poster);
+        return trivia;
     }
 
 }
