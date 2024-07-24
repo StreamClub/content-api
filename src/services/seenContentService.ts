@@ -101,7 +101,7 @@ export class SeenContentService {
         const series = seenContent.series.find(series => series.seriesId === seriesId);
 
         if (!series) {
-            const seenSeasons = [new SeenSeason({ seasonId, episodes: seenEpisodes })];
+            const seenSeasons = [new SeenSeason(seasonId, seenEpisodes)];
             await seenContentRepository.addSeries(userId, seriesId, seenSeasons);
         } else {
             const seasonIndex = series.seasons.findIndex(season => season.seasonId === seasonId);

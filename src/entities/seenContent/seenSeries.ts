@@ -8,7 +8,7 @@ export class SeenSeries {
 
     public constructor(seenSeries: SeenSeries) {
         this.seriesId = seenSeries.seriesId;
-        this.seasons = seenSeries.seasons.map((season) => new SeenSeason(season));
+        this.seasons = seenSeries.seasons.map((season) => new SeenSeason(season.seasonId, season.episodes));
         this.totalWatchedEpisodes = seenSeries.totalWatchedEpisodes;
         this.lastSeenEpisode = seenSeries.lastSeenEpisode;
     }

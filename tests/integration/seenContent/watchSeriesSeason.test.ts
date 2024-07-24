@@ -2,9 +2,9 @@
 /**
 * @group seenContent
 */
-import { generateTestJwt, testSeason01, testSpecialSeason01 } from '../../helpers';
+import { generateTestJwt, testSeason01, testSeries02, testSpecialSeason01 } from '../../helpers';
 import { createSeenContentList, getSeenContentList, seeEpisode } from '../../helpers/seenContentHelper';
-import { mockGetSeasonDetails } from '../../setup/mocksSetUp';
+import { mockGetSeasonDetails, mockGetShowDetails } from '../../setup/mocksSetUp';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
 const endpoint = '/seenContent/series';
@@ -50,7 +50,8 @@ describe('Add Season To Seen Content List', () => {
     });
 
     it('should return 201 when adding a season to seen content', async () => {
-        mockGetSeasonDetails.mockReturnValue(testSeason01)
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
+        mockGetShowDetails.mockReturnValue(testSeries02);
         const userId = 1;
         const seriesId = 1;
         const seasonId = 1;
@@ -79,7 +80,8 @@ describe('Add Season To Seen Content List', () => {
     });
 
     it('should add the remaining episodes to seen content when adding a season to seen content', async () => {
-        mockGetSeasonDetails.mockReturnValue(testSeason01)
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
+        mockGetShowDetails.mockReturnValue(testSeries02);
         const userId = 1;
         const seriesId = 1;
         const seasonId = 1;
@@ -107,7 +109,8 @@ describe('Add Season To Seen Content List', () => {
     });
 
     it('should add the special season but totalWatchedEpisodes should be 0', async () => {
-        mockGetSeasonDetails.mockReturnValue(testSpecialSeason01)
+        mockGetSeasonDetails.mockReturnValue(testSpecialSeason01);
+        mockGetShowDetails.mockReturnValue(testSeries02);
         const userId = 1;
         const seriesId = 1;
         const seasonId = 0;
@@ -132,7 +135,8 @@ describe('Add Season To Seen Content List', () => {
     });
 
     it('should add the special season but not modify the last episode watched', async () => {
-        mockGetSeasonDetails.mockReturnValue(testSpecialSeason01)
+        mockGetSeasonDetails.mockReturnValue(testSpecialSeason01);
+        mockGetShowDetails.mockReturnValue(testSeries02);
         const userId = 1;
         const seriesId = 1;
         const seasonId = 0;

@@ -8,7 +8,6 @@ import {
 import moment from 'moment';
 import { SPECIALS_SEASON_ID } from '@config';
 import { EpisodeHasNotAiredException } from '@exceptions';
-import { getUnseenSeasonEpisodes } from '@utils/getUnseenEpisodes';
 
 export class SeenContentController {
     private seenContentService: SeenContentService;
@@ -97,14 +96,14 @@ export class SeenContentController {
             if (seasonInfo.episodes.length !== 0) {
                 const episodes: SeenEpisode[] = seasonInfo.toSeenEpisodes();
                 latestSeenEpisode = seasonInfo.getLatestEpisode(latestSeenEpisode);
-                return new SeenSeason({ seasonId: season.id, episodes });
+                return new SeenSeason(season.id, episodes);
             }
         }));
         const filteredSeenSeasons = seenSeasons.filter(season => season !== undefined);
         const seenContent = await this.seenContentService.getSeenContentList(userId);
         const seenSeries = seenContent.series.find(series => series.seriesId === seriesId);
         const totalWatchedTime = filteredSeenSeasons.map(season => {
-            const unseenEpisodes = getUnseenSeasonEpisodes(season, seenSeries);
+            const unseenEpisodes = season.getUnseenSeasonEpisodes(seenSeries);
             return unseenEpisodes
                 .reduce((acc, episode) => acc + Number(episode.runtime), 0);
         }).reduce((acc, runtime) => acc + runtime, 0);
@@ -130,9 +129,9 @@ export class SeenContentController {
             const seenContent = await this.seenContentService.getSeenContentList(userId);
             const seenSeries = seenContent.series.find(series => series.seriesId === seriesId);
             const episodes: SeenEpisode[] = season.toSeenEpisodes();
-            const seenSeason = new SeenSeason({ seasonId, episodes });
+            const seenSeason = new SeenSeason(seasonId, episodes);
             const lastSeenEpisode = season.getLatestEpisode(null);
-            const unseenEpisodes = getUnseenSeasonEpisodes(seenSeason, seenSeries);
+            const unseenEpisodes = seenSeason.getUnseenSeasonEpisodes(seenSeries);
             const totalWatchedTime = unseenEpisodes
                 .reduce((acc, episode) => acc + Number(episode.runtime), 0);
             await this.streamProviderService.addWatchedTime(userId, totalWatchedTime,
