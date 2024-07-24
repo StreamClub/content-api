@@ -6,3 +6,4 @@ export * from "./tmdbContent";
 export * from "./page";
 export * from "./credits";
 export * from "./userStreamProviders";
+export * from "./streamProviders";

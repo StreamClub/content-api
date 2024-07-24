@@ -80,16 +80,14 @@ export class SeenContentService {
         }
     }
 
-    public async addSeason(userId: number, seriesId: number, seasonId: number, episodes: SeenEpisode[], latestSeenEpisode: SeasonEpisode) {
-        const seenContent = await this.createIfListDoesNotExist(userId);
-        const series = seenContent.series.find(series => series.seriesId === seriesId);
-        await this.addSeasons(userId, seriesId, [new SeenSeason({ seasonId, episodes })], series);
+    public async addSeason(userId: number, seriesId: number, series: SeenSeries, seenSeason: SeenSeason, latestSeenEpisode: SeasonEpisode) {
+        await this.addSeasons(userId, seriesId, [seenSeason], series);
         await seenContentRepository.addLastSeenEpisode(userId, seriesId,
             latestSeenEpisode.seasonId, latestSeenEpisode.episodeId);
     }
 
     public async removeSeason(userId: number, seriesId: number, seasonId: number) {
-        const seenContent: SeenContent = new SeenContent(await this.createIfListDoesNotExist(userId));
+        const seenContent: SeenContent = await this.createIfListDoesNotExist(userId);
         const season = seenContent.series.find(series => series.seriesId === seriesId)
             ?.seasons.find(season => season.seasonId === seasonId);
         if (season) {
@@ -99,11 +97,11 @@ export class SeenContentService {
 
     public async addEpisode(userId: number, seriesId: number, seasonId: number, episodeId: number) {
         const seenContent = await this.createIfListDoesNotExist(userId);
-        const seenEpisodes: SeenEpisode[] = [{ seasonId, episodeId }];
+        const seenEpisodes: SeenEpisode[] = [{ seasonId, episodeId, runtime: '' }];
         const series = seenContent.series.find(series => series.seriesId === seriesId);
 
         if (!series) {
-            const seenSeasons = [new SeenSeason({ seasonId, episodes: seenEpisodes })];
+            const seenSeasons = [new SeenSeason(seasonId, seenEpisodes)];
             await seenContentRepository.addSeries(userId, seriesId, seenSeasons);
         } else {
             const seasonIndex = series.seasons.findIndex(season => season.seasonId === seasonId);
@@ -127,6 +125,11 @@ export class SeenContentService {
         return await seenContentRepository.isASeenMovie(userId, movieId);
     }
 
+    public async isASeenEpisode(userId: number, seriesId: number, seasonId: number, episodeId: number) {
+        await this.createIfListDoesNotExist(userId);
+        return await seenContentRepository.isASeenEpisode(userId, seriesId, seasonId, episodeId);
+    }
+
     public async getTotalWatchedEpisodes(userId: number, seriesId: number) {
         await this.createIfListDoesNotExist(userId);
         return await seenContentRepository.getTotalWatchedEpisodes(userId, seriesId);
@@ -140,6 +143,10 @@ export class SeenContentService {
     public async getSeenEpisodes(userId: number, seriesId: number, seasonId: number) {
         await this.createIfListDoesNotExist(userId);
         return await seenContentRepository.getSeenEpisodes(userId, seriesId, seasonId);
+    }
+
+    public async getSeenContentList(userId: number) {
+        return await this.createIfListDoesNotExist(userId);
     }
 
     private async createIfListDoesNotExist(userId: number) {

@@ -4,7 +4,7 @@
 */
 import { generateTestJwt, testSeason01, testSeason02, testSeries02, testSpecialSeason01 } from '../../helpers';
 import { createSeenContentList, getSeenContentList, seeEpisode } from '../../helpers/seenContentHelper';
-import { mockGetSeasonDetails } from '../../setup/mocksSetUp';
+import { mockGetSeasonDetails, mockGetShowDetails } from '../../setup/mocksSetUp';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
 const endpoint = '/seenContent/series';
@@ -73,6 +73,7 @@ describe('Add Episode To Seen Content List', () => {
 
     it('should add an episode to an empty seen list of the user', async () => {
         mockGetSeasonDetails.mockReturnValue(testSeason01)
+        mockGetShowDetails.mockReturnValue(testSeries02);
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 1;
@@ -97,7 +98,8 @@ describe('Add Episode To Seen Content List', () => {
     });
 
     it('should not add an episode to the seen list of the user if it is already there', async () => {
-        mockGetSeasonDetails.mockReturnValue(testSeason01)
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
+        mockGetShowDetails.mockReturnValue(testSeries02);
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 1;
@@ -123,7 +125,8 @@ describe('Add Episode To Seen Content List', () => {
     });
 
     it('should add an episode to a seen list with an episode of that season', async () => {
-        mockGetSeasonDetails.mockReturnValue(testSeason01)
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
+        mockGetShowDetails.mockReturnValue(testSeries02);
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 1;
@@ -153,7 +156,8 @@ describe('Add Episode To Seen Content List', () => {
     });
 
     it('should add an episode ta a seen list with an episode of another season', async () => {
-        mockGetSeasonDetails.mockReturnValue(testSeason01)
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
+        mockGetShowDetails.mockReturnValue(testSeries02);
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 1;
@@ -187,7 +191,8 @@ describe('Add Episode To Seen Content List', () => {
     });
 
     it('should add an episode of an special season but should not increment the total watched episodes', async () => {
-        mockGetSeasonDetails.mockReturnValue(testSpecialSeason01)
+        mockGetSeasonDetails.mockReturnValue(testSpecialSeason01);
+        mockGetShowDetails.mockReturnValue(testSeries02);
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 0;
@@ -212,7 +217,8 @@ describe('Add Episode To Seen Content List', () => {
     });
 
     it('should not modify the next episode if a special episode is watched', async () => {
-        mockGetSeasonDetails.mockReturnValue(testSpecialSeason01)
+        mockGetSeasonDetails.mockReturnValue(testSpecialSeason01);
+        mockGetShowDetails.mockReturnValue(testSeries02);
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 0;
@@ -235,7 +241,8 @@ describe('Add Episode To Seen Content List', () => {
     });
 
     it('should return an error if the episode has not aired', async () => {
-        mockGetSeasonDetails.mockReturnValue(testSeason02)
+        mockGetSeasonDetails.mockReturnValue(testSeason02);
+        mockGetShowDetails.mockReturnValue(testSeries02);
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 22;

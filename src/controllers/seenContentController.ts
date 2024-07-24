@@ -1,6 +1,6 @@
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
-import { ReviewService, SeenContentService, TmdbService } from '@services';
+import { ReviewService, SeenContentService, StreamProviderService, TmdbService } from '@services';
 import {
     Season, SeasonEpisode, SeenEpisode, SeenItem, SeenMovieItemResume,
     SeenSeason, SeenSeriesItem, SeenSeriesItemResume
@@ -13,11 +13,13 @@ export class SeenContentController {
     private seenContentService: SeenContentService;
     private reviewService: ReviewService;
     private tmdbService: TmdbService;
+    private streamProviderService: StreamProviderService;
 
     public constructor(dependencies: AppDependencies) {
         this.seenContentService = new SeenContentService(dependencies);
         this.tmdbService = new TmdbService(dependencies);
         this.reviewService = new ReviewService(dependencies);
+        this.streamProviderService = new StreamProviderService(dependencies);
     }
 
     public async create(req: Request<any>, res: Response<any>) {
@@ -67,12 +69,19 @@ export class SeenContentController {
     public async addMovie(req: Request<any>, res: Response<any>) {
         const userId = Number(res.locals.userId);
         const movieId = req.params.movieId;
+        const movie = await this.tmdbService.getMovie(userId, Number(movieId), 'AR');
+        const isSeenMovie = await this.seenContentService.isASeenMovie(userId, Number(movieId));
+        if (!isSeenMovie) {
+            await this.streamProviderService.addWatchedTime(userId, movie.runtime,
+                movie.platforms.map(platform => platform.providerId));
+        }
         return await this.seenContentService.addMovie(userId, Number(movieId));
     }
 
     public async removeMovie(req: Request<any>, res: Response<any>) {
         const userId = Number(res.locals.userId);
         const movieId = req.params.movieId;
+        //TODO: VERIFICAR SI SE DEBE QUITAR EL TIEMPO DE PELÍCULA VISTA
         return await this.seenContentService.removeMovie(userId, Number(movieId));
     }
 
@@ -87,10 +96,19 @@ export class SeenContentController {
             if (seasonInfo.episodes.length !== 0) {
                 const episodes: SeenEpisode[] = seasonInfo.toSeenEpisodes();
                 latestSeenEpisode = seasonInfo.getLatestEpisode(latestSeenEpisode);
-                return new SeenSeason({ seasonId: season.id, episodes });
+                return new SeenSeason(season.id, episodes);
             }
         }));
         const filteredSeenSeasons = seenSeasons.filter(season => season !== undefined);
+        const seenContent = await this.seenContentService.getSeenContentList(userId);
+        const seenSeries = seenContent.series.find(series => series.seriesId === seriesId);
+        const totalWatchedTime = filteredSeenSeasons.map(season => {
+            const unseenEpisodes = season.getUnseenSeasonEpisodes(seenSeries);
+            return unseenEpisodes
+                .reduce((acc, episode) => acc + Number(episode.runtime), 0);
+        }).reduce((acc, runtime) => acc + runtime, 0);
+        await this.streamProviderService.addWatchedTime(userId, totalWatchedTime,
+            series.platforms.map(platform => platform.providerId));
         return await this.seenContentService
             .addSeries(userId, seriesId, filteredSeenSeasons, latestSeenEpisode);
     }
@@ -106,10 +124,20 @@ export class SeenContentController {
         const seriesId = Number(req.params.seriesId);
         const seasonId = Number(req.params.seasonId);
         const season = await this.tmdbService.getSeason(seriesId, seasonId);
+        const series = await this.tmdbService.getSeries(userId, seriesId, 'AR');
         if (season.episodes.length !== 0) {
+            const seenContent = await this.seenContentService.getSeenContentList(userId);
+            const seenSeries = seenContent.series.find(series => series.seriesId === seriesId);
             const episodes: SeenEpisode[] = season.toSeenEpisodes();
+            const seenSeason = new SeenSeason(seasonId, episodes);
             const lastSeenEpisode = season.getLatestEpisode(null);
-            return await this.seenContentService.addSeason(userId, seriesId, seasonId, episodes, lastSeenEpisode);
+            const unseenEpisodes = seenSeason.getUnseenSeasonEpisodes(seenSeries);
+            const totalWatchedTime = unseenEpisodes
+                .reduce((acc, episode) => acc + Number(episode.runtime), 0);
+            await this.streamProviderService.addWatchedTime(userId, totalWatchedTime,
+                series.platforms.map(platform => platform.providerId));
+            return await this.seenContentService
+                .addSeason(userId, seriesId, seenSeries, seenSeason, lastSeenEpisode);
         }
     }
 
@@ -125,9 +153,15 @@ export class SeenContentController {
         const seriesId = Number(req.params.seriesId);
         const seasonId = Number(req.params.seasonId);
         const episodeId = Number(req.params.episodeId);
+        const series = await this.tmdbService.getSeries(userId, seriesId, 'AR');
         const episode: SeasonEpisode = await this.tmdbService.getEpisode(seriesId, seasonId, episodeId);
         if (moment(episode.airDate).format('YYYY-MM-DD') > moment().format('YYYY-MM-DD')) {
             throw new EpisodeHasNotAiredException();
+        }
+        const isSeenEpisode = await this.seenContentService.isASeenEpisode(userId, seriesId, seasonId, episodeId);
+        if (!isSeenEpisode) {
+            await this.streamProviderService.addWatchedTime(userId, Number(episode.runtime),
+                series.platforms.map(platform => platform.providerId));
         }
         return await this.seenContentService.addEpisode(userId, seriesId, seasonId, episodeId);
     }
