@@ -387,6 +387,18 @@ class SeenContentRepository {
         return !!seenContent;
     }
 
+    public async getMovieSeenDate(userId: number, movieId: number) {
+        const seenContent = await SeenContentModel.findOne({
+            userId,
+            'movies.movieId': movieId
+        });
+        if (seenContent) {
+            const movie = seenContent.movies.find(movie => movie.movieId === movieId);
+            return movie.createdAt;
+        }
+        return null;
+    }
+
 }
 
 export const seenContentRepository = new SeenContentRepository();

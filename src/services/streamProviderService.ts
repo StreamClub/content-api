@@ -44,6 +44,14 @@ export class StreamProviderService {
         return await streamProviderRepository.addWatchedTime(userId, watchedTime / 60, providerIds);
     }
 
+    public async removeWatchedTime(userId: number, watchedTime: number, providerIds: number[],
+        seenDate: Date) {
+        const year = seenDate.getFullYear();
+        const month = seenDate.getMonth();
+        await this.failIfWatchlistDoesNotExist(userId);
+        return await streamProviderRepository.removeWatchedTime(userId, watchedTime / 60, providerIds, year, month);
+    }
+
     private async failIfWatchlistDoesNotExist(userId: number) {
         const streamProvidersList = await streamProviderRepository.doesUserHaveProviderList(userId);
         if (!streamProvidersList) {

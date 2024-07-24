@@ -116,6 +116,31 @@ class StreamProviderRepository {
         }
     }
 
+    async removeWatchedTime(userId: number, watchedTime: number, providerIds: number[], year: number, month: number): Promise<void> {
+        for (const providerId of providerIds) {
+            await StreamProvidersModel.updateOne(
+                {
+                    userId,
+                    'streamProviders.providerId': providerId,
+                    'streamProviders.watchedTime.year': year,
+                    'streamProviders.watchedTime.month': month,
+                    'streamProviders.watchedTime.timeWatched': { $gte: watchedTime }
+                },
+                {
+                    $inc: {
+                        'streamProviders.$[outer].watchedTime.$[inner].timeWatched': -watchedTime
+                    }
+                },
+                {
+                    arrayFilters: [
+                        { 'outer.providerId': providerId },
+                        { 'inner.year': year, 'inner.month': month }
+                    ]
+                }
+            );
+        }
+    }
+
 }
 
 export const streamProviderRepository = new StreamProviderRepository();

@@ -120,6 +120,11 @@ export class SeenContentService {
         await seenContentRepository.removeEpisode(userId, seriesId, seasonId, episodeId);
     }
 
+    public async getMovieSeenDate(userId: number, movieId: number) {
+        await this.createIfListDoesNotExist(userId);
+        return await seenContentRepository.getMovieSeenDate(userId, movieId);
+    }
+
     public async isASeenMovie(userId: number, movieId: number) {
         await this.createIfListDoesNotExist(userId);
         return await seenContentRepository.isASeenMovie(userId, movieId);

@@ -81,7 +81,12 @@ export class SeenContentController {
     public async removeMovie(req: Request<any>, res: Response<any>) {
         const userId = Number(res.locals.userId);
         const movieId = req.params.movieId;
-        //TODO: VERIFICAR SI SE DEBE QUITAR EL TIEMPO DE PELÍCULA VISTA
+        const movie = await this.tmdbService.getMovie(userId, Number(movieId), 'AR');
+        const seenDate = await this.seenContentService.getMovieSeenDate(userId, Number(movieId));
+        if (seenDate) {
+            await this.streamProviderService.removeWatchedTime(userId, movie.runtime,
+                movie.platforms.map(platform => platform.providerId), seenDate);
+        }
         return await this.seenContentService.removeMovie(userId, Number(movieId));
     }
 
