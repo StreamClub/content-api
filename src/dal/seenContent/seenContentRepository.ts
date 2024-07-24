@@ -377,6 +377,16 @@ class SeenContentRepository {
         return result.length > 0 ? result[0].episodes : [];
     }
 
+    public async isASeenEpisode(userId: number, seriesId: number, seasonId: number, episodeId: number): Promise<boolean> {
+        const seenContent = await SeenContentModel.findOne({
+            userId,
+            'series.seriesId': seriesId,
+            'series.seasons.seasonId': seasonId,
+            'series.seasons.episodes.episodeId': episodeId
+        });
+        return !!seenContent;
+    }
+
 }
 
 export const seenContentRepository = new SeenContentRepository();

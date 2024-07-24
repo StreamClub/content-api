@@ -71,9 +71,11 @@ export class SeenContentController {
         const userId = Number(res.locals.userId);
         const movieId = req.params.movieId;
         const movie = await this.tmdbService.getMovie(userId, Number(movieId), 'AR');
-        //TODO: VERIFICAR SI SE DEBE AGREGAR EL TIEMPO DE PELÍCULA VISTA
-        await this.streamProviderService.addWatchedTime(userId, movie.runtime,
-            movie.platforms.map(platform => platform.providerId));
+        const isSeenMovie = await this.seenContentService.isASeenMovie(userId, Number(movieId));
+        if (!isSeenMovie) {
+            await this.streamProviderService.addWatchedTime(userId, movie.runtime,
+                movie.platforms.map(platform => platform.providerId));
+        }
         return await this.seenContentService.addMovie(userId, Number(movieId));
     }
 
@@ -157,9 +159,11 @@ export class SeenContentController {
         if (moment(episode.airDate).format('YYYY-MM-DD') > moment().format('YYYY-MM-DD')) {
             throw new EpisodeHasNotAiredException();
         }
-        //TODO: VERIFICAR SI SE DEBE AGREGAR EL TIEMPO DE CAPITULO VISTO
-        await this.streamProviderService.addWatchedTime(userId, Number(episode.runtime),
-            series.platforms.map(platform => platform.providerId))
+        const isSeenEpisode = await this.seenContentService.isASeenEpisode(userId, seriesId, seasonId, episodeId);
+        if (!isSeenEpisode) {
+            await this.streamProviderService.addWatchedTime(userId, Number(episode.runtime),
+                series.platforms.map(platform => platform.providerId));
+        }
         return await this.seenContentService.addEpisode(userId, seriesId, seasonId, episodeId);
     }
 

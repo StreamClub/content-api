@@ -125,6 +125,11 @@ export class SeenContentService {
         return await seenContentRepository.isASeenMovie(userId, movieId);
     }
 
+    public async isASeenEpisode(userId: number, seriesId: number, seasonId: number, episodeId: number) {
+        await this.createIfListDoesNotExist(userId);
+        return await seenContentRepository.isASeenEpisode(userId, seriesId, seasonId, episodeId);
+    }
+
     public async getTotalWatchedEpisodes(userId: number, seriesId: number) {
         await this.createIfListDoesNotExist(userId);
         return await seenContentRepository.getTotalWatchedEpisodes(userId, seriesId);
