@@ -8,7 +8,7 @@ import {
 import moment from 'moment';
 import { SPECIALS_SEASON_ID } from '@config';
 import { EpisodeHasNotAiredException } from '@exceptions';
-import { getUnseenSeasonEpisodes } from '@services/getUnseenEpisodes';
+import { getUnseenSeasonEpisodes } from '@utils/getUnseenEpisodes';
 
 export class SeenContentController {
     private seenContentService: SeenContentService;
