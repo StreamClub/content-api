@@ -1,19 +1,16 @@
-import { UserStreamProviders } from '@entities'
-import { Document, model, Schema } from 'mongoose'
+import { StreamProvider } from '@entities'
+import { Document, Schema } from 'mongoose'
+import { WatchedTimeTypeSchema } from './watchedTimeModel'
 
-type StreamProvidersType = UserStreamProviders & Document
+type StreamProviderType = StreamProvider & Document
 
-const StreamProvidersTypeSchema = new Schema<StreamProvidersType>({
-    userId: {
+export const StreamProviderTypeSchema = new Schema<StreamProviderType>({
+    providerId: {
         type: Number,
         required: true,
-        unique: true,
     },
-    providerId: {
-        type: [Number],
+    watchedTime: {
+        type: [WatchedTimeTypeSchema],
         default: [],
     }
-})
-StreamProvidersTypeSchema.index({ userId: 1 }, { unique: true })
-
-export const StreamProvidersModel = model<StreamProvidersType>('StreamProvider', StreamProvidersTypeSchema)
+}, { _id: false })

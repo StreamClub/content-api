@@ -28,7 +28,6 @@ export const getRedirectLinks = async (providersUrl: string) => {
 
 const safeGet = async (url: string): Promise<AxiosResponse<any, any>> => {
     try {
-        console.log(url)
         return await axios.get(url);
     } catch (error) {
         if (error.response.status == 429) {

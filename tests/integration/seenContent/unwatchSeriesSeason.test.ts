@@ -2,9 +2,9 @@
 /**
 * @group seenContent
 */
-import { generateTestJwt, testSeason01 } from '../../helpers';
+import { generateTestJwt, testSeason01, testSeries01 } from '../../helpers';
 import { createSeenContentList, getSeenContentList, seeEpisode } from '../../helpers/seenContentHelper';
-import { mockGetSeasonDetails } from '../../setup/mocksSetUp';
+import { mockGetSeasonDetails, mockGetShowDetails } from '../../setup/mocksSetUp';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
 const endpoint = '/seenContent/series';
@@ -51,6 +51,8 @@ describe('Remove Season From Seen Content List', () => {
 
     it('should delete a whole season from the seen content list', async () => {
         mockGetSeasonDetails.mockReturnValue(testSeason01)
+        mockGetShowDetails.mockReturnValue(testSeries01);
+
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 1;
