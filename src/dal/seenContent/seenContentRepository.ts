@@ -347,7 +347,8 @@ class SeenContentRepository {
             if (series && series.lastSeenEpisode.seasonId) {
                 return {
                     seasonId: series.lastSeenEpisode.seasonId,
-                    episodeId: series.lastSeenEpisode.episodeId
+                    episodeId: series.lastSeenEpisode.episodeId,
+                    runtime: ''
                 };
             }
         }

@@ -7,7 +7,7 @@ export class StreamProviderService {
     }
 
     public async create(userId: number) {
-        const providers = await streamProviderRepository.doesUserHaveWatchlist(userId);
+        const providers = await streamProviderRepository.doesUserHaveProviderList(userId);
         if (providers) {
             return;
         }
@@ -39,8 +39,13 @@ export class StreamProviderService {
         return await streamProviderRepository.deleteProvider(userId, providerId);
     }
 
+    public async addWatchedTime(userId: number, watchedTime: number, providerIds: number[]) {
+        await this.failIfWatchlistDoesNotExist(userId);
+        return await streamProviderRepository.addWatchedTime(userId, watchedTime / 60, providerIds);
+    }
+
     private async failIfWatchlistDoesNotExist(userId: number) {
-        const streamProvidersList = await streamProviderRepository.doesUserHaveWatchlist(userId);
+        const streamProvidersList = await streamProviderRepository.doesUserHaveProviderList(userId);
         if (!streamProvidersList) {
             await this.create(userId);
         }
