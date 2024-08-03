@@ -43,7 +43,6 @@ export class StreamProviderService {
         await this.createIfWatchlistDoesNotExist(userId);
         const added = await streamProviderRepository.addWatchedTime(userId, watchedTime / 60, providerIds);
         if (!added) {
-            console.log('Adding watched time to other providers');
             await otherStreamProvidersRepository.addWatchedTime(userId, watchedTime / 60);
         }
     }
@@ -53,7 +52,10 @@ export class StreamProviderService {
         const year = seenDate.getFullYear();
         const month = seenDate.getMonth();
         await this.createIfWatchlistDoesNotExist(userId);
-        return await streamProviderRepository.removeWatchedTime(userId, watchedTime / 60, providerIds, year, month);
+        const removed = await streamProviderRepository.removeWatchedTime(userId, watchedTime / 60, providerIds, year, month);
+        if (!removed) {
+            await otherStreamProvidersRepository.removeWatchedTime(userId, watchedTime / 60, year, month);
+        }
     }
 
     private async createIfWatchlistDoesNotExist(userId: number) {

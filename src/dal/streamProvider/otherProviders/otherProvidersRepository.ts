@@ -60,30 +60,26 @@ class OtherStreamProvidersRepository {
         }
     }
 
-    // async removeWatchedTime(userId: number, watchedTime: number, providerIds: number[], year: number, month: number): Promise<void> {
-    //     for (const providerId of providerIds) {
-    //         await StreamProvidersModel.updateOne(
-    //             {
-    //                 userId,
-    //                 'streamProviders.providerId': providerId,
-    //                 'streamProviders.watchedTime.year': year,
-    //                 'streamProviders.watchedTime.month': month,
-    //                 'streamProviders.watchedTime.timeWatched': { $gte: watchedTime }
-    //             },
-    //             {
-    //                 $inc: {
-    //                     'streamProviders.$[outer].watchedTime.$[inner].timeWatched': -watchedTime
-    //                 }
-    //             },
-    //             {
-    //                 arrayFilters: [
-    //                     { 'outer.providerId': providerId },
-    //                     { 'inner.year': year, 'inner.month': month }
-    //                 ]
-    //             }
-    //         );
-    //     }
-    // }
+    async removeWatchedTime(userId: number, watchedTime: number, year: number, month: number): Promise<void> {
+        await OtherStreamProvidersModel.updateOne(
+            {
+                userId,
+                'watchedTime.year': year,
+                'watchedTime.month': month,
+                'watchedTime.timeWatched': { $gte: watchedTime }
+            },
+            {
+                $inc: {
+                    'watchedTime.$[inner].timeWatched': -watchedTime
+                }
+            },
+            {
+                arrayFilters: [
+                    { 'inner.year': year, 'inner.month': month }
+                ]
+            }
+        );
+    }
 
 }
 

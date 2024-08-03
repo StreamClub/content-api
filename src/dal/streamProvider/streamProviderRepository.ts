@@ -121,9 +121,11 @@ class StreamProviderRepository {
         return added;
     }
 
-    async removeWatchedTime(userId: number, watchedTime: number, providerIds: number[], year: number, month: number): Promise<void> {
+    async removeWatchedTime(userId: number, watchedTime: number, providerIds: number[],
+        year: number, month: number): Promise<boolean> {
+        let removed = false;
         for (const providerId of providerIds) {
-            await StreamProvidersModel.updateOne(
+            const modified = await StreamProvidersModel.updateOne(
                 {
                     userId,
                     'streamProviders.providerId': providerId,
@@ -143,7 +145,11 @@ class StreamProviderRepository {
                     ]
                 }
             );
+            if (modified.modifiedCount > 0) {
+                removed = true;
+            }
         }
+        return removed;
     }
 
 }
