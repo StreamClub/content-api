@@ -1,4 +1,4 @@
-import { Page, Platform, UserStreamProviders } from '@entities'
+import { Page, Platform, UserStreamProviders, WatchedTime } from '@entities'
 import { StreamProvidersModel } from './streamProvidersModel';
 
 class StreamProviderRepository {
@@ -54,6 +54,14 @@ class StreamProviderRepository {
             'streamProviders.providerId': { $in: providerIds }
         });
         return count > 0;
+    }
+
+    async getWatchedTimes(userId: number, providerId: number): Promise<WatchedTime[]> {
+        const user = await StreamProvidersModel.findOne({
+            userId
+        });
+        const provider = user.streamProviders.find(provider => provider.providerId === providerId);
+        return provider.watchedTime
     }
 
     async deleteProvider(userId: number, providerId: number): Promise<void> {

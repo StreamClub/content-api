@@ -20,11 +20,8 @@ class OtherStreamProvidersRepository {
         }
     }
 
-    async addWatchedTime(userId: number, watchedTime: number): Promise<void> {
+    async addWatchedTime(userId: number, watchedTime: number, year: number, month: number): Promise<void> {
         await this.createIfWatchlistDoesNotExist(userId);
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = now.getMonth();
         const modified = await OtherStreamProvidersModel.updateOne(
             {
                 userId,

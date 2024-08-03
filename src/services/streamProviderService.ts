@@ -36,6 +36,10 @@ export class StreamProviderService {
 
     public async deleteProvider(userId: number, providerId: number) {
         await this.createIfWatchlistDoesNotExist(userId);
+        const watchedTimes = await streamProviderRepository.getWatchedTimes(userId, providerId);
+        for (const watchedTime of watchedTimes) {
+            await otherStreamProvidersRepository.addWatchedTime(userId, watchedTime.timeWatched, watchedTime.year, watchedTime.month);
+        }
         return await streamProviderRepository.deleteProvider(userId, providerId);
     }
 
@@ -43,7 +47,10 @@ export class StreamProviderService {
         await this.createIfWatchlistDoesNotExist(userId);
         const added = await streamProviderRepository.addWatchedTime(userId, watchedTime / 60, providerIds);
         if (!added) {
-            await otherStreamProvidersRepository.addWatchedTime(userId, watchedTime / 60);
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            await otherStreamProvidersRepository.addWatchedTime(userId, watchedTime / 60, year, month);
         }
     }
 
