@@ -72,12 +72,13 @@ class StreamProviderRepository {
         );
     }
 
-    async addWatchedTime(userId: number, watchedTime: number, providerIds: number[]): Promise<void> {
+    async addWatchedTime(userId: number, watchedTime: number, providerIds: number[]): Promise<boolean> {
         const now = new Date();
         const year = now.getFullYear();
         const month = now.getMonth();
+        let added = false;
         for (const providerId of providerIds) {
-            const modified = await StreamProvidersModel.updateOne(
+            let modified = await StreamProvidersModel.updateOne(
                 {
                     userId,
                     'streamProviders.providerId': providerId,
@@ -97,7 +98,7 @@ class StreamProviderRepository {
                 }
             );
             if (modified.modifiedCount === 0 && watchedTime > 0) {
-                await StreamProvidersModel.updateOne(
+                modified = await StreamProvidersModel.updateOne(
                     {
                         userId,
                         'streamProviders.providerId': providerId
@@ -113,7 +114,11 @@ class StreamProviderRepository {
                     }
                 );
             }
+            if (modified.modifiedCount > 0) {
+                added = true;
+            }
         }
+        return added;
     }
 
     async removeWatchedTime(userId: number, watchedTime: number, providerIds: number[], year: number, month: number): Promise<void> {

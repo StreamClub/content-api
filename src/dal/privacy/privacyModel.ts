@@ -3,7 +3,7 @@ import { Document, model, Schema } from 'mongoose'
 
 type PrivacyType = Privacy & Document
 
-const WatchlistSchema = new Schema<PrivacyType>({
+const PrivacySchema = new Schema<PrivacyType>({
     userId: {
         type: Number,
         required: true,
@@ -18,6 +18,6 @@ const WatchlistSchema = new Schema<PrivacyType>({
         default: false,
     },
 })
-WatchlistSchema.index({ userId: 1 }, { unique: true })
+PrivacySchema.index({ userId: 1 }, { unique: true })
 
-export const PrivacyModel = model<PrivacyType>('Privacy', WatchlistSchema)
+export const PrivacyModel = model<PrivacyType>('Privacy', PrivacySchema)
