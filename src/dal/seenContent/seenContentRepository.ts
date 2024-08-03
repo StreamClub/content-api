@@ -191,7 +191,10 @@ class SeenContentRepository {
     public async addSeries(userId: number, seriesId: number, seenSeasons: SeenSeason[]) {
         const seasonsData = seenSeasons.map(seenSeason => ({
             'seasonId': seenSeason.seasonId,
-            'episodes': seenSeason.episodes.map(seenEpisode => ({ 'episodeId': seenEpisode.episodeId })),
+            'episodes': seenSeason.episodes.map(seenEpisode => ({
+                'episodeId': seenEpisode.episodeId,
+                'createdAt': new Date(), 'updatedAt': new Date()
+            })),
         }));
 
         const totalWatchedEpisodes = seasonsData.reduce((total, season) => {
@@ -235,7 +238,10 @@ class SeenContentRepository {
                 $push: {
                     'series.$.seasons': {
                         seasonId,
-                        'episodes': seenEpisodes.map(seenEpisode => ({ 'episodeId': seenEpisode.episodeId })),
+                        'episodes': seenEpisodes.map(seenEpisode => ({
+                            'episodeId': seenEpisode.episodeId,
+                            'createdAt': new Date(), 'updatedAt': new Date()
+                        })),
                     }
                 }
             }
@@ -255,7 +261,10 @@ class SeenContentRepository {
             {
                 $push: {
                     'series.$.seasons.$[season].episodes': {
-                        $each: seenEpisodes.map(seenEpisode => ({ 'episodeId': seenEpisode.episodeId })),
+                        $each: seenEpisodes.map(seenEpisode => ({
+                            'episodeId': seenEpisode.episodeId,
+                            'createdAt': new Date(), 'updatedAt': new Date()
+                        })),
                     }
                 }
             },
@@ -292,6 +301,8 @@ class SeenContentRepository {
                 $push: {
                     'series.$.seasons.$[season].episodes': {
                         'episodeId': episodeId,
+                        'createdAt': new Date(),
+                        'updatedAt': new Date()
                     }
                 }
             },
@@ -348,7 +359,8 @@ class SeenContentRepository {
                 return {
                     seasonId: series.lastSeenEpisode.seasonId,
                     episodeId: series.lastSeenEpisode.episodeId,
-                    runtime: ''
+                    runtime: '',
+                    createdAt: new Date()
                 };
             }
         }
@@ -395,6 +407,22 @@ class SeenContentRepository {
         if (seenContent) {
             const movie = seenContent.movies.find(movie => movie.movieId === movieId);
             return movie.createdAt;
+        }
+        return null;
+    }
+
+    public async getEpisodeSeenDate(userId: number, seriesId: number, seasonId: number, episodeId: number) {
+        const seenContent = await SeenContentModel.findOne({
+            userId,
+            'series.seriesId': seriesId,
+            'series.seasons.seasonId': seasonId,
+            'series.seasons.episodes.episodeId': episodeId
+        });
+        if (seenContent) {
+            const series = seenContent.series.find(series => series.seriesId === seriesId);
+            const season = series.seasons.find(season => season.seasonId === seasonId);
+            const episode = season.episodes.find(episode => episode.episodeId === episodeId);
+            return episode.createdAt;
         }
         return null;
     }

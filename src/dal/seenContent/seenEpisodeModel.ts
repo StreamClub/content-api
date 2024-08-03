@@ -8,4 +8,4 @@ export const SeenEpisodeSchema = new Schema<SeenEpisodeType>({
         type: Number,
         required: true,
     },
-}, { _id: false })
+}, { _id: false, timestamps: true })
