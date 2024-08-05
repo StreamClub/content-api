@@ -1,5 +1,6 @@
 import { OtherStreamProviders } from "@entities";
 import { OtherStreamProvidersModel } from "./otherProvidersModel";
+import moment from "moment";
 
 class OtherStreamProvidersRepository {
     private async create(userId: number): Promise<OtherStreamProviders> {
@@ -76,6 +77,37 @@ class OtherStreamProvidersRepository {
                 ]
             }
         );
+    }
+
+    async getStats(userId: number, months: number): Promise<any> {
+        const then = moment().subtract(months - 1, 'months').toDate();
+        const timeWatched = await OtherStreamProvidersModel.aggregate([
+            {
+                $match: {
+                    userId
+                }
+            },
+            {
+                $unwind: '$watchedTime'
+            },
+            {
+                $match: {
+                    'watchedTime.year': {
+                        $gte: then.getFullYear()
+                    },
+                    'watchedTime.month': {
+                        $gte: then.getMonth()
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: 'userId',
+                    watchedTime: { $sum: '$watchedTime.timeWatched' }
+                }
+            }
+        ]);
+        return timeWatched.length === 0 ? 0 : timeWatched[0].watchedTime;
     }
 
 }

@@ -7,7 +7,7 @@ import {
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
-import { AddProviderSchema, GetUserStreamServiceSchema, GetStreamServiceSchema } from "@dtos";
+import { AddProviderSchema, GetUserStreamServiceSchema, GetStreamServiceSchema, GetStreamServicesStatsSchema } from "@dtos";
 import { StreamProviderController } from "@controllers";
 
 export function StreamProviderRouter(dependencies: AppDependencies) {
@@ -50,6 +50,16 @@ export function StreamProviderRouter(dependencies: AppDependencies) {
     )
 
     router.get(
+        "/stats",
+        loadUserContext,
+        validateSchema(GetStreamServicesStatsSchema, [FieldOptions.query]),
+        handleRequest(
+            (req, res) => streamProviderController.getStats(req, res),
+            StatusCodes.OK
+        )
+    )
+
+    router.get(
         "/:userId",
         loadUserContext,
         validateSchema(GetUserStreamServiceSchema, [FieldOptions.params, FieldOptions.query]),
@@ -58,6 +68,7 @@ export function StreamProviderRouter(dependencies: AppDependencies) {
             StatusCodes.OK
         )
     )
+
 
     return router;
 }

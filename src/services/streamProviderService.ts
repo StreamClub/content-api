@@ -65,6 +65,17 @@ export class StreamProviderService {
         }
     }
 
+    public async getStats(userId: number, months: number) {
+        await this.createIfWatchlistDoesNotExist(userId);
+        const timeWatched = await streamProviderRepository.getStats(userId, months);
+        const sortedTimeWatched = timeWatched.sort((a, b) => b.timeWatched - a.timeWatched);
+        const top = sortedTimeWatched.slice(0, 3);
+        const timeInPlatforms = timeWatched.reduce((acc, curr) => acc + curr.timeWatched, 0);
+        const others = top.reduce((acc, curr) => acc - curr.timeWatched, timeInPlatforms);
+        const timeOutsidePlatforms = await otherStreamProvidersRepository.getStats(userId, months);
+        return { top, timeInPlatforms, others, timeOutsidePlatforms };
+    }
+
     private async createIfWatchlistDoesNotExist(userId: number) {
         const streamProvidersList = await streamProviderRepository.doesUserHaveProviderList(userId);
         if (!streamProvidersList) {

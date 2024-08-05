@@ -1,5 +1,6 @@
-import { Page, Platform, UserStreamProviders, WatchedTime } from '@entities'
+import { Page, Platform, StreamServiceStats, UserStreamProviders, WatchedTime } from '@entities'
 import { StreamProvidersModel } from './streamProvidersModel';
+import moment from 'moment';
 
 class StreamProviderRepository {
     async create(userId: number): Promise<UserStreamProviders> {
@@ -159,6 +160,43 @@ class StreamProviderRepository {
         }
         return removed;
     }
+
+    async getStats(userId: number, months: number): Promise<StreamServiceStats[]> {
+        const then = moment().subtract(months - 1, 'months').toDate();
+        const timeWatched = await StreamProvidersModel.aggregate([
+            {
+                $match: {
+                    userId
+                }
+            },
+            {
+                $unwind: '$streamProviders'
+            },
+            {
+                $unwind: '$streamProviders.watchedTime'
+            },
+            {
+                $match: {
+                    'streamProviders.watchedTime.year': {
+                        $gte: then.getFullYear()
+                    },
+                    'streamProviders.watchedTime.month': {
+                        $gte: then.getMonth()
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: '$streamProviders.providerId',
+                    watchedTime: { $sum: '$streamProviders.watchedTime.timeWatched' }
+                }
+            }
+        ]);
+        return timeWatched.map((time: any) => {
+            return new StreamServiceStats(time._id, time.watchedTime);
+        });
+    }
+
 
 }
 
