@@ -422,7 +422,7 @@ class SeenContentRepository {
             const series = seenContent.series.find(series => series.seriesId === seriesId);
             const season = series.seasons.find(season => season.seasonId === seasonId);
             const episode = season.episodes.find(episode => episode.episodeId === episodeId);
-            return episode.createdAt;
+            return episode?.createdAt ? episode.createdAt : null;
         }
         return null;
     }

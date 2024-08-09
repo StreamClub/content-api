@@ -62,7 +62,7 @@ class StreamProviderRepository {
             userId
         });
         const provider = user.streamProviders.find(provider => provider.providerId === providerId);
-        return provider.watchedTime
+        return provider?.watchedTime ? provider.watchedTime : [];
     }
 
     async deleteProvider(userId: number, providerId: number): Promise<void> {
