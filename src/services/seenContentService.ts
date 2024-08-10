@@ -97,7 +97,7 @@ export class SeenContentService {
 
     public async addEpisode(userId: number, seriesId: number, seasonId: number, episodeId: number) {
         const seenContent = await this.createIfListDoesNotExist(userId);
-        const seenEpisodes: SeenEpisode[] = [{ seasonId, episodeId, runtime: '' }];
+        const seenEpisodes: SeenEpisode[] = [{ seasonId, episodeId, runtime: '', createdAt: new Date() }];
         const series = seenContent.series.find(series => series.seriesId === seriesId);
 
         if (!series) {
@@ -118,6 +118,16 @@ export class SeenContentService {
     public async removeEpisode(userId: number, seriesId: number, seasonId: number, episodeId: number) {
         await this.createIfListDoesNotExist(userId);
         await seenContentRepository.removeEpisode(userId, seriesId, seasonId, episodeId);
+    }
+
+    public async getMovieSeenDate(userId: number, movieId: number) {
+        await this.createIfListDoesNotExist(userId);
+        return await seenContentRepository.getMovieSeenDate(userId, movieId);
+    }
+
+    public async getEpisodeSeenDate(userId: number, seriesId: number, seasonId: number, episodeId: number) {
+        await this.createIfListDoesNotExist(userId);
+        return await seenContentRepository.getEpisodeSeenDate(userId, seriesId, seasonId, episodeId);
     }
 
     public async isASeenMovie(userId: number, movieId: number) {

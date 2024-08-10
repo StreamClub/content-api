@@ -1,6 +1,7 @@
 import { StreamProviderService, TmdbService } from '@services';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
+import { StreamServiceStats } from '@entities';
 
 export class StreamProviderController {
     private tmdbService: TmdbService;
@@ -42,6 +43,18 @@ export class StreamProviderController {
         const userId = Number(res.locals.userId);
         const providerId = Number(req.body.providerId);
         return await this.streamProviderService.deleteProvider(userId, providerId);
+    }
+
+    public async getStats(req: Request<any>, res: Response<any>) {
+        const userId = Number(res.locals.userId);
+        const months = Number(req.query.months) || 1;
+        const stats = await this.streamProviderService.getStats(userId, months);
+        const providers = await this.tmdbService.getStreamProviders('AR');
+        stats.top.map((stat: StreamServiceStats) => {
+            const platform = providers.find(provider => provider.providerId === stat.providerId);
+            stat.setPlatform(platform);
+        });
+        return stats;
     }
 
 }

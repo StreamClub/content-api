@@ -2,8 +2,9 @@
 /**
 * @group seenContent
 */
-import { generateTestJwt } from '../../helpers';
+import { generateTestJwt, testProviders01, testSeason01, testSeries01 } from '../../helpers';
 import { createSeenContentList, getSeenContentList, seeEpisode } from '../../helpers/seenContentHelper';
+import { mockGetRedirectLinks, mockGetSeasonDetails, mockGetShowDetails } from '../../setup/mocksSetUp';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
 const endpoint = '/seenContent/series';
@@ -71,6 +72,9 @@ describe('Remove Episode From Seen Content List', () => {
     });
 
     it('should delete an episode from the seen content list', async () => {
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
+        mockGetRedirectLinks.mockResolvedValue(testProviders01);
+        mockGetShowDetails.mockReturnValue(testSeries01);
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 1;
@@ -88,6 +92,9 @@ describe('Remove Episode From Seen Content List', () => {
     });
 
     it('should return ok when trying to delete an episode that is not in the seen content list', async () => {
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
+        mockGetRedirectLinks.mockResolvedValue(testProviders01);
+        mockGetShowDetails.mockReturnValue(testSeries01);
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 1;
@@ -101,6 +108,9 @@ describe('Remove Episode From Seen Content List', () => {
     });
 
     it('should delete just the specified episode from the season', async () => {
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
+        mockGetRedirectLinks.mockResolvedValue(testProviders01);
+        mockGetShowDetails.mockReturnValue(testSeries01);
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 1;
@@ -118,8 +128,11 @@ describe('Remove Episode From Seen Content List', () => {
         expect(seenContent.series[0].totalWatchedEpisodes).toBe(1);
         expect(seenContent.series[0].seasons[0].episodes[0].episodeId).toBe(episodeId + 1);
     });
-    
+
     it('should delete the episode from the specified season', async () => {
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
+        mockGetRedirectLinks.mockResolvedValue(testProviders01);
+        mockGetShowDetails.mockReturnValue(testSeries01);
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 1;
@@ -144,6 +157,9 @@ describe('Remove Episode From Seen Content List', () => {
     });
 
     it('should delete an episode from the special season and totalWatchedEpisodes should be 0', async () => {
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
+        mockGetRedirectLinks.mockResolvedValue(testProviders01);
+        mockGetShowDetails.mockReturnValue(testSeries01);
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 0;
@@ -161,6 +177,9 @@ describe('Remove Episode From Seen Content List', () => {
     });
 
     it('should delete an episode from the special season and totalWatchedEpisodes not change', async () => {
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
+        mockGetRedirectLinks.mockResolvedValue(testProviders01);
+        mockGetShowDetails.mockReturnValue(testSeries01);
         const userId = 1;
         const seriesId = 37854;
         const seasonId = 0;

@@ -34,7 +34,7 @@ describe('Remove Series from Seen Content List', () => {
     it('should delete a whole series from the seen content list', async () => {
         mockGetShowDetails.mockReturnValue(testSeries02);
         mockGetRedirectLinks.mockReturnValue(testProviders01);
-        mockGetSeasonDetails.mockReturnValueOnce(testSeason01);
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
         mockGetSeasonDetails.mockReturnValueOnce(testSeason01);
         mockGetSeasonDetails.mockReturnValueOnce(testSeason02);
         const userId = 1;
@@ -55,6 +55,9 @@ describe('Remove Series from Seen Content List', () => {
     });
 
     it('should return ok when trying to delete a series that is not in the seen content list', async () => {
+        mockGetShowDetails.mockReturnValue(testSeries02);
+        mockGetRedirectLinks.mockReturnValue(testProviders01);
+        mockGetSeasonDetails.mockReturnValue(testSeason01);
         const userId = 1;
         const seriesId = 37854;
         await createSeenContentList(userId);
