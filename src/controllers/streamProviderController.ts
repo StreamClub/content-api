@@ -70,4 +70,21 @@ export class StreamProviderController {
         };
     }
 
+    public async getSubscribeRecommendations(req: Request<any>, res: Response<any>) {
+        const userId = Number(res.locals.userId);
+        const friendsIds = (req.query.friendsIds as string).split(',').map((id: string) => Number(id));
+        const friendsServices = await Promise.all(friendsIds.map(id => this.streamProviderService.getAll(id)));
+        const userServices = await this.streamProviderService.getAll(userId);
+        const userProviders = userServices.providerId;
+        const recommendations: number[] = [];
+        for (const friendServices of friendsServices) {
+            for (const providerId of friendServices.providerId) {
+                if (!userProviders.includes(providerId) && !recommendations.includes(providerId)) {
+                    recommendations.push(providerId);
+                }
+            }
+        }
+        return recommendations;
+    }
+
 }
