@@ -2,6 +2,7 @@ import { StreamProviderService, TmdbService } from '@services';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { StreamServiceStats } from '@entities';
+import { time } from 'console';
 
 export class StreamProviderController {
     private tmdbService: TmdbService;
@@ -60,7 +61,13 @@ export class StreamProviderController {
             const platform = providers.find(provider => provider.providerId === stat.providerId);
             stat.setPlatform(platform);
         });
-        return { ...stats, unsubscribeRecommendations };
+        return {
+            top: stats.top,
+            timeInPlatforms: stats.timeInPlatforms,
+            others: stats.others,
+            timeOutsidePlatforms: stats.timeOutsidePlatforms,
+            unsubscribeRecommendations
+        };
     }
 
 }
