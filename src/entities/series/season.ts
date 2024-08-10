@@ -38,10 +38,14 @@ export class Season {
         return this.episodes.filter(episode => moment(episode.airDate).format('YYYY-MM-DD') <= moment().format('YYYY-MM-DD'));
     }
 
+    //only use when adding content to user
     toSeenEpisodes = () => {
         const airedEpisodes = this.getAiredEpisodes();
         return airedEpisodes.map(episode => {
-            return { episodeId: episode.episodeId, seasonId: this.id, runtime: episode.runtime };
+            return {
+                episodeId: episode.episodeId, seasonId: this.id, runtime: episode.runtime,
+                createdAt: new Date()
+            };
         })
     }
 

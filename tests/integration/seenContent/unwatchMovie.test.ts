@@ -2,8 +2,9 @@
 /**
 * @group seenContent
 */
-import { generateTestJwt } from '../../helpers';
+import { generateTestJwt, testMovie1, testProviders01 } from '../../helpers';
 import { createSeenContentList, seeMovie } from '../../helpers/seenContentHelper';
+import { mockGetRedirectLinks, mockMovieInfo } from '../../setup/mocksSetUp';
 import { server, setupBeforeAndAfter } from '../../setup/testsSetup';
 
 const endpoint = '/seenContent/movies';
@@ -29,6 +30,8 @@ describe('Remove Movie From Seen Content List', () => {
     });
 
     it('should remove a movie from the seen list of the user', async () => {
+        mockMovieInfo.mockReturnValue(testMovie1);
+        mockGetRedirectLinks.mockResolvedValue(testProviders01);
         const userId = 1;
         const movieId = 2150;
         const testJwt = generateTestJwt(1, "test@test.com");
@@ -48,6 +51,8 @@ describe('Remove Movie From Seen Content List', () => {
     });
 
     it('should delete just the movie with the given id from the seen list of the user', async () => {
+        mockMovieInfo.mockReturnValue(testMovie1);
+        mockGetRedirectLinks.mockResolvedValue(testProviders01);
         const userId = 1;
         const movieId = 2150;
         const testJwt = generateTestJwt(1, "test@test.com");
@@ -70,6 +75,8 @@ describe('Remove Movie From Seen Content List', () => {
     });
 
     it('should return 200 when trying to remove a movie that is not in the seen list', async () => {
+        mockMovieInfo.mockReturnValue(testMovie1);
+        mockGetRedirectLinks.mockResolvedValue(testProviders01);
         const userId = 1;
         const movieId = 2150;
         const testJwt = generateTestJwt(1, "test@test.com");

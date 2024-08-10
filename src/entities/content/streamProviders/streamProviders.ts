@@ -1,6 +1,5 @@
 import { StreamProvider } from "./streamProvider";
 
-
 export class StreamProviders {
     public userId: number;
     public streamProviders: StreamProvider[];
