@@ -1,5 +1,5 @@
 import { otherStreamProvidersRepository, streamProviderRepository } from "@dal";
-import { Platform } from "@entities";
+import { Platform, StreamServiceStats } from "@entities";
 import AppDependencies from "appDependencies";
 
 export class StreamProviderService {
@@ -67,13 +67,23 @@ export class StreamProviderService {
 
     public async getStats(userId: number, months: number) {
         await this.createIfWatchlistDoesNotExist(userId);
+        const allUserProviders = await streamProviderRepository.getAll(userId);
         const timeWatched = await streamProviderRepository.getStats(userId, months);
         const sortedTimeWatched = timeWatched.sort((a, b) => b.timeWatched - a.timeWatched);
+        for (const providerId of allUserProviders.providerId) {
+            if (!sortedTimeWatched.find((tw) => tw.providerId === providerId)) {
+                sortedTimeWatched.push(new StreamServiceStats(providerId, 0));
+            }
+        }
         const top = sortedTimeWatched.slice(0, 3);
         const timeInPlatforms = timeWatched.reduce((acc, curr) => acc + curr.timeWatched, 0);
         const others = top.reduce((acc, curr) => acc - curr.timeWatched, timeInPlatforms);
         const timeOutsidePlatforms = await otherStreamProvidersRepository.getStats(userId, months);
-        return { top, timeInPlatforms, others, timeOutsidePlatforms };
+        return { top, timeInPlatforms, others, timeOutsidePlatforms, servicesStats: sortedTimeWatched };
+    }
+
+    public async getUnsubscribedRecommendations(streamServicesStats: StreamServiceStats[], timeInPlatforms: number) {
+        return streamServicesStats.filter((provider) => provider.timeWatched < 0.1 * timeInPlatforms);
     }
 
     private async createIfWatchlistDoesNotExist(userId: number) {

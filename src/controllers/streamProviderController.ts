@@ -54,7 +54,13 @@ export class StreamProviderController {
             const platform = providers.find(provider => provider.providerId === stat.providerId);
             stat.setPlatform(platform);
         });
-        return stats;
+        const unsubscribeRecommendations = await this.streamProviderService
+            .getUnsubscribedRecommendations(stats.servicesStats, stats.timeInPlatforms);
+        unsubscribeRecommendations.map((stat: StreamServiceStats) => {
+            const platform = providers.find(provider => provider.providerId === stat.providerId);
+            stat.setPlatform(platform);
+        });
+        return { ...stats, unsubscribeRecommendations };
     }
 
 }
