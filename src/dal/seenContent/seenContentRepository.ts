@@ -232,7 +232,11 @@ class SeenContentRepository {
             {
                 userId,
                 'series.seriesId': seriesId,
-                'series.seasons.seasonId': { $ne: seasonId },
+                'series.seasons': {
+                    $elemMatch: {
+                        seasonId: { $ne: seasonId }
+                    }
+                }
             },
             {
                 $push: {
@@ -294,8 +298,12 @@ class SeenContentRepository {
             {
                 userId,
                 'series.seriesId': seriesId,
-                'series.seasons.seasonId': seasonId,
-                'series.seasons.episodes.episodeId': { $ne: episodeId }
+                'series.seasons': {
+                    $elemMatch: {
+                        seasonId: seasonId,
+                        'episodes.episodeId': { $ne: episodeId }
+                    }
+                }
             },
             {
                 $push: {

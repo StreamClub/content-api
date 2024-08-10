@@ -115,8 +115,9 @@ export class SeenContentController {
         }).reduce((acc, runtime) => acc + runtime, 0);
         await this.streamProviderService.addWatchedTime(userId, totalWatchedTime,
             series.platforms.map(platform => platform.providerId));
-        return await this.seenContentService
+        await this.seenContentService
             .addSeries(userId, seriesId, filteredSeenSeasons, latestSeenEpisode);
+        return await this.tmdbService.getSeriesSeenPercentage(userId, seriesId);
     }
 
     public async removeSeries(req: Request<any>, res: Response<any>) {
@@ -126,7 +127,9 @@ export class SeenContentController {
         for (const season of series.seasons) {
             await this.removeSeasonWatchedTime(userId, series, season.id);
         }
-        return await this.seenContentService.removeSeries(userId, seriesId);
+        await this.seenContentService.removeSeries(userId, seriesId);
+        return await this.tmdbService.getSeriesSeenPercentage(userId, seriesId);
+
     }
 
     public async addSeason(req: Request<any>, res: Response<any>) {
@@ -146,8 +149,9 @@ export class SeenContentController {
                 .reduce((acc, episode) => acc + Number(episode.runtime), 0);
             await this.streamProviderService.addWatchedTime(userId, totalWatchedTime,
                 series.platforms.map(platform => platform.providerId));
-            return await this.seenContentService
+            await this.seenContentService
                 .addSeason(userId, seriesId, seenSeries, seenSeason, lastSeenEpisode);
+            return await this.tmdbService.getSeriesSeenPercentage(userId, seriesId);
         }
     }
 
@@ -157,7 +161,8 @@ export class SeenContentController {
         const seasonId = Number(req.params.seasonId);
         const series = await this.tmdbService.getSeries(userId, seriesId, 'AR');
         await this.removeSeasonWatchedTime(userId, series, seasonId);
-        return await this.seenContentService.removeSeason(userId, seriesId, seasonId);
+        await this.seenContentService.removeSeason(userId, seriesId, seasonId);
+        return await this.tmdbService.getSeriesSeenPercentage(userId, seriesId);
     }
 
     public async addEpisode(req: Request<any>, res: Response<any>) {
@@ -175,7 +180,8 @@ export class SeenContentController {
             await this.streamProviderService.addWatchedTime(userId, Number(episode.runtime),
                 series.platforms.map(platform => platform.providerId));
         }
-        return await this.seenContentService.addEpisode(userId, seriesId, seasonId, episodeId);
+        await this.seenContentService.addEpisode(userId, seriesId, seasonId, episodeId);
+        return await this.tmdbService.getSeriesSeenPercentage(userId, seriesId);
     }
 
     public async removeEpisode(req: Request<any>, res: Response<any>) {
@@ -185,7 +191,9 @@ export class SeenContentController {
         const episodeId = Number(req.params.episodeId);
         const series = await this.tmdbService.getSeries(userId, seriesId, 'AR');
         await this.removeEpisodeWatchedTime(userId, series, seasonId, episodeId);
-        return await this.seenContentService.removeEpisode(userId, Number(seriesId), Number(seasonId), Number(episodeId));
+        await this.seenContentService.removeEpisode(userId, seriesId, seasonId, episodeId);
+        return await this.tmdbService.getSeriesSeenPercentage(userId, seriesId);
+
     }
 
     private async removeSeasonWatchedTime(userId: number, series: Series, seasonId: number) {

@@ -112,6 +112,14 @@ export class TmdbService {
         return scSeries;
     }
 
+    public async getSeriesSeenPercentage(userId: number, seriesId: number) {
+        const scSeries = await this.getStreamClubSeries(seriesId, 'AR');
+        const totalWatchedEpisodes = await this.seenContentService
+            .getTotalWatchedEpisodes(userId, scSeries.id)
+        scSeries.setSeen(scSeries.numberOfEpisodes, totalWatchedEpisodes)
+        return { seen: scSeries.seen };
+    }
+
     public async getSeriesBasicInfo(seriesId: number) {
         return await this.getContentSafely(async () => {
             const serie = await this.tmdb.tvInfo({ id: seriesId, language: this.language });
