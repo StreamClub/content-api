@@ -45,6 +45,15 @@ export function MovieRouter(dependencies: AppDependencies) {
     )
 
     router.get(
+        "/recommendations",
+        loadUserContext,
+        handleRequest(
+            (req, res) => movieController.getFriendsRecommendations(req, res),
+            StatusCodes.OK
+        )
+    )
+
+    router.get(
         "/:movieId",
         loadUserContext,
         validateSchema(GetMovieSchema, [FieldOptions.params, FieldOptions.query]),

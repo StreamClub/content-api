@@ -419,6 +419,70 @@ class SeenContentRepository {
         return null;
     }
 
+    public async getFriendsRecommendations(userId: number, friendsIds: number[], contentType: string): Promise<number[]> {
+        const contentId = contentType === 'movie' ? 'movieId' : 'seriesId';
+        const query = [
+            {
+                $match: {
+                    userId: { $in: friendsIds },
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    contentIds: `$${contentType}.${contentId}`,
+                },
+            },
+            {
+                $unwind: '$contentIds',
+            },
+            {
+                $group: {
+                    _id: 1,
+                    allContentIds: { $addToSet: '$contentIds' },
+                },
+            },
+            {
+                $lookup: {
+                    from: 'seencontents',
+                    let: { userId: userId },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$userId', '$$userId'] } } },
+                        {
+                            $project: {
+                                _id: 0,
+                                userContentIds: `$${contentType}.${contentId}`,
+                            },
+                        },
+                    ],
+                    as: 'userContent',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$userContent',
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+            {
+                $project: {
+                    friendContentIds: '$allContentIds',
+                    userContentIds: { $ifNull: ['$userContent.userContentIds', [] as number[]] },
+                },
+            },
+            {
+                $project: {
+                    contentNotSeenByUser: {
+                        $setDifference: ['$friendContentIds', '$userContentIds'],
+                    },
+                },
+            },
+        ];
+
+        const result = await SeenContentModel.aggregate(query);
+        return result.length > 0 ? result[0].contentNotSeenByUser : [];
+    }
+
     public async getEpisodeSeenDate(userId: number, seriesId: number, seasonId: number, episodeId: number) {
         const seenContent = await SeenContentModel.findOne({
             userId,
