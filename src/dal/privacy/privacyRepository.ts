@@ -16,6 +16,14 @@ class PrivacyRepository {
         return new Privacy(founded);
     }
 
+    async filterIdsWithSeenContentListPublic(ids: number[]): Promise<number[]> {
+        const privacies = await PrivacyModel.find({
+            userId: { $in: ids },
+            isSeenContentListPrivate: false
+        });
+        return privacies.map((privacy) => privacy.userId);
+    }
+
     async updateWatchlistPrivacy(userId: number, isWatchlistPrivate: boolean): Promise<Privacy> {
         const founded = await PrivacyModel.findOne({ userId });
         if (!founded) {

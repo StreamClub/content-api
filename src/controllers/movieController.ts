@@ -1,6 +1,6 @@
 
 import { GetMovieDto, GetContentResumeDto } from '@dtos';
-import { SeenContentService, TmdbService } from '@services';
+import { PrivacyService, SeenContentService, TmdbService } from '@services';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { contentTypes } from '@config';
@@ -8,10 +8,12 @@ import { contentTypes } from '@config';
 export class MovieController {
     private tmdbService: TmdbService;
     private seenContentService: SeenContentService;
+    private privacyService: PrivacyService;
 
     public constructor(dependencies: AppDependencies) {
         this.tmdbService = new TmdbService(dependencies);
         this.seenContentService = new SeenContentService(dependencies);
+        this.privacyService = new PrivacyService(dependencies);
     }
 
     public async getMovie(req: Request<GetMovieDto>, res: Response<any>) {
@@ -54,10 +56,12 @@ export class MovieController {
     }
 
     public async getFriendsRecommendations(req: Request<GetMovieDto>, res: Response<any>) {
-        const userId = Number(res.locals.userId);
+        // const userId = Number(res.locals.userId);
+        const userId = 1;
         const friendsIds = (req.query.friendsIds as string).split(',').map((id: string) => Number(id));
+        const filteredFriendsIds = await this.privacyService.filterIdsWithSeenContentListPublic(friendsIds);
         const recommendations = await this.seenContentService
-            .getFriendsRecommendations(userId, friendsIds, contentTypes.MOVIE);
+            .getFriendsRecommendations(userId, filteredFriendsIds, contentTypes.MOVIE);
         let movies = [];
         for (const id of recommendations.recommendations) {
             const movie = await this.tmdbService.getMovieResume(id, userId);

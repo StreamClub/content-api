@@ -17,4 +17,8 @@ export class PrivacyService {
         return await privacyRepository.updateSeenContentListPrivacy(userId, isSeenContentListPrivate);
     }
 
+    public async filterIdsWithSeenContentListPublic(ids: number[]) {
+        return await privacyRepository.filterIdsWithSeenContentListPublic(ids);
+    }
+
 }
