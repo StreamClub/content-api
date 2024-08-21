@@ -1,15 +1,19 @@
 
 import { GetContentResumeDto, GetMovieDto } from '@dtos';
-import { TmdbService } from '@services';
+import { PrivacyService, SeenContentService, TmdbService } from '@services';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { contentTypes } from '@config';
 
 export class SeriesController {
     private tmdbService: TmdbService;
+    private seenContentService: SeenContentService;
+    private privacyService: PrivacyService;
 
     public constructor(dependencies: AppDependencies) {
         this.tmdbService = new TmdbService(dependencies);
+        this.seenContentService = new SeenContentService(dependencies);
+        this.privacyService = new PrivacyService(dependencies);
     }
 
     public async searchSeries(req: Request<GetMovieDto>, res: Response<any>) {
@@ -51,6 +55,19 @@ export class SeriesController {
         return series;
     }
 
+    public async getFriendsRecommendations(req: Request<GetMovieDto>, res: Response<any>) {
+        const userId = Number(res.locals.userId);
+        const friendsIds = (req.query.friendsIds as string).split(',').map((id: string) => Number(id));
+        const filteredFriendsIds = await this.privacyService.filterIdsWithSeenContentListPublic(friendsIds);
+        const recommendations = await this.seenContentService
+            .getFriendsRecommendations(userId, filteredFriendsIds, contentTypes.SERIES);
+        let series = [];
+        for (const id of recommendations.recommendations) {
+            const serie = await this.tmdbService.getSeriesResume(id, userId);
+            if (serie) series.push(serie);
+        }
+        return { recommendations: series };
+    }
 
     public async getSeason(req: Request<GetMovieDto>, res: Response<any>) {
         const userId = Number(res.locals.userId);

@@ -7,7 +7,7 @@ import {
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
-import { DiscoverContentSchema, GetContentResumeSchema, GetSeasonSchema, GetSeriesCreditsSchema, GetSeriesSchema, SearchContentSchema } from "@dtos";
+import { DiscoverContentSchema, GetContentResumeSchema, GetSeasonSchema, GetSeriesCreditsSchema, GetSeriesSchema, GetSubscribeRecommendationsSchema, SearchContentSchema } from "@dtos";
 import { SeriesController } from "@controllers";
 
 export function SeriesRouter(dependencies: AppDependencies) {
@@ -42,7 +42,17 @@ export function SeriesRouter(dependencies: AppDependencies) {
             (req, res) => seriesController.getSeriesResume(req, res),
             StatusCodes.OK
         )
-    )
+    );
+
+    router.get(
+        "/recommendations",
+        loadUserContext,
+        validateSchema(GetSubscribeRecommendationsSchema, [FieldOptions.query]),
+        handleRequest(
+            (req, res) => seriesController.getFriendsRecommendations(req, res),
+            StatusCodes.OK
+        )
+    );
 
     router.get(
         "/:seriesId",
