@@ -84,7 +84,7 @@ export class StreamProviderController {
                 }
             }
         }
-        return recommendations;
+        return { recommendations };
     }
 
 }
