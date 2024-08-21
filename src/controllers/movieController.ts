@@ -56,8 +56,7 @@ export class MovieController {
     }
 
     public async getFriendsRecommendations(req: Request<GetMovieDto>, res: Response<any>) {
-        // const userId = Number(res.locals.userId);
-        const userId = 1;
+        const userId = Number(res.locals.userId);
         const friendsIds = (req.query.friendsIds as string).split(',').map((id: string) => Number(id));
         const filteredFriendsIds = await this.privacyService.filterIdsWithSeenContentListPublic(friendsIds);
         const recommendations = await this.seenContentService
