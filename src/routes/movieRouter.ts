@@ -8,7 +8,7 @@ import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
 import { MovieController } from "@controllers";
-import { GetMovieCreditsSchema, GetMovieSchema, SearchContentSchema, GetContentResumeSchema, DiscoverContentSchema } from "@dtos";
+import { GetMovieCreditsSchema, GetMovieSchema, SearchContentSchema, GetContentResumeSchema, DiscoverContentSchema, GetSubscribeRecommendationsSchema } from "@dtos";
 
 export function MovieRouter(dependencies: AppDependencies) {
     const router = Router();
@@ -40,6 +40,16 @@ export function MovieRouter(dependencies: AppDependencies) {
         validateSchema(GetContentResumeSchema, [FieldOptions.query]),
         handleRequest(
             (req, res) => movieController.getMoviesResume(req, res),
+            StatusCodes.OK
+        )
+    )
+
+    router.get(
+        "/recommendations",
+        loadUserContext,
+        validateSchema(GetSubscribeRecommendationsSchema, [FieldOptions.query]),
+        handleRequest(
+            (req, res) => movieController.getFriendsRecommendations(req, res),
             StatusCodes.OK
         )
     )

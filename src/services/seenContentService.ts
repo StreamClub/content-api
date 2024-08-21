@@ -159,6 +159,14 @@ export class SeenContentService {
         return await this.createIfListDoesNotExist(userId);
     }
 
+    public async getFriendsRecommendations(userId: number, friendsIds: number[], contentType: string) {
+        await this.createIfListDoesNotExist(userId);
+        const recommendations = await seenContentRepository.getFriendsRecommendations(userId, friendsIds, contentType);
+        recommendations.sort(() => Math.random() - 0.5);
+        recommendations.splice(5);
+        return { recommendations };
+    }
+
     private async createIfListDoesNotExist(userId: number) {
         const seenContent = await seenContentRepository.get(userId);
         if (!seenContent) {
@@ -166,4 +174,5 @@ export class SeenContentService {
         }
         return seenContent;
     }
+
 }

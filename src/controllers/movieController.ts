@@ -1,15 +1,19 @@
 
 import { GetMovieDto, GetContentResumeDto } from '@dtos';
-import { TmdbService } from '@services';
+import { PrivacyService, SeenContentService, TmdbService } from '@services';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { contentTypes } from '@config';
 
 export class MovieController {
     private tmdbService: TmdbService;
+    private seenContentService: SeenContentService;
+    private privacyService: PrivacyService;
 
     public constructor(dependencies: AppDependencies) {
         this.tmdbService = new TmdbService(dependencies);
+        this.seenContentService = new SeenContentService(dependencies);
+        this.privacyService = new PrivacyService(dependencies);
     }
 
     public async getMovie(req: Request<GetMovieDto>, res: Response<any>) {
@@ -49,6 +53,20 @@ export class MovieController {
             if (movie) movies.push(movie);
         }
         return movies;
+    }
+
+    public async getFriendsRecommendations(req: Request<GetMovieDto>, res: Response<any>) {
+        const userId = Number(res.locals.userId);
+        const friendsIds = (req.query.friendsIds as string).split(',').map((id: string) => Number(id));
+        const filteredFriendsIds = await this.privacyService.filterIdsWithSeenContentListPublic(friendsIds);
+        const recommendations = await this.seenContentService
+            .getFriendsRecommendations(userId, filteredFriendsIds, contentTypes.MOVIE);
+        let movies = [];
+        for (const id of recommendations.recommendations) {
+            const movie = await this.tmdbService.getMovieResume(id, userId);
+            if (movie) movies.push(movie);
+        }
+        return { recommendations: movies };
     }
 
     public async getMovieCredits(req: Request<GetMovieDto>, res: Response<any>) {

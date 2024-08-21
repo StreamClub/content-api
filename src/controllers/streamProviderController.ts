@@ -2,6 +2,7 @@ import { StreamProviderService, TmdbService } from '@services';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
 import { StreamServiceStats } from '@entities';
+import { time } from 'console';
 
 export class StreamProviderController {
     private tmdbService: TmdbService;
@@ -54,7 +55,36 @@ export class StreamProviderController {
             const platform = providers.find(provider => provider.providerId === stat.providerId);
             stat.setPlatform(platform);
         });
-        return stats;
+        const unsubscribeRecommendations = await this.streamProviderService
+            .getUnsubscribedRecommendations(stats.servicesStats, stats.timeInPlatforms);
+        unsubscribeRecommendations.map((stat: StreamServiceStats) => {
+            const platform = providers.find(provider => provider.providerId === stat.providerId);
+            stat.setPlatform(platform);
+        });
+        return {
+            top: stats.top,
+            timeInPlatforms: stats.timeInPlatforms,
+            others: stats.others,
+            timeOutsidePlatforms: stats.timeOutsidePlatforms,
+            unsubscribeRecommendations
+        };
+    }
+
+    public async getSubscribeRecommendations(req: Request<any>, res: Response<any>) {
+        const userId = Number(res.locals.userId);
+        const friendsIds = (req.query.friendsIds as string).split(',').map((id: string) => Number(id));
+        const friendsServices = await Promise.all(friendsIds.map(id => this.streamProviderService.getAll(id)));
+        const userServices = await this.streamProviderService.getAll(userId);
+        const userProviders = userServices.providerId;
+        const recommendations: number[] = [];
+        for (const friendServices of friendsServices) {
+            for (const providerId of friendServices.providerId) {
+                if (!userProviders.includes(providerId) && !recommendations.includes(providerId)) {
+                    recommendations.push(providerId);
+                }
+            }
+        }
+        return { recommendations };
     }
 
 }

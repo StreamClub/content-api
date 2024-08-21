@@ -7,7 +7,7 @@ import {
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
-import { AddProviderSchema, GetUserStreamServiceSchema, GetStreamServiceSchema, GetStreamServicesStatsSchema } from "@dtos";
+import { AddProviderSchema, GetUserStreamServiceSchema, GetStreamServiceSchema, GetStreamServicesStatsSchema, GetSubscribeRecommendationsSchema } from "@dtos";
 import { StreamProviderController } from "@controllers";
 
 export function StreamProviderRouter(dependencies: AppDependencies) {
@@ -55,6 +55,16 @@ export function StreamProviderRouter(dependencies: AppDependencies) {
         validateSchema(GetStreamServicesStatsSchema, [FieldOptions.query]),
         handleRequest(
             (req, res) => streamProviderController.getStats(req, res),
+            StatusCodes.OK
+        )
+    )
+
+    router.get(
+        "/subscribeRecommendations",
+        loadUserContext,
+        validateSchema(GetSubscribeRecommendationsSchema, [FieldOptions.query]),
+        handleRequest(
+            (req, res) => streamProviderController.getSubscribeRecommendations(req, res),
             StatusCodes.OK
         )
     )
