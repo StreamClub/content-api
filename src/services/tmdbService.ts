@@ -66,7 +66,7 @@ export class TmdbService {
         })
     }
 
-    public async getMovieResume(movieId: number, userId: number) {
+    public async getMovieResume(movieId: number, userId: number): Promise<MovieRecommendation> {
         return await this.getResumeSafely(movieId, async () => {
             const movie = await this.tmdb.movieInfo({ id: movieId, language: this.language });
             const recommendation = new MovieRecommendation(movie);
@@ -76,7 +76,7 @@ export class TmdbService {
         });
     }
 
-    public async getSeriesResume(seriesId: number, userId: number) {
+    public async getSeriesResume(seriesId: number, userId: number): Promise<SeriesRecommendation> {
         return await this.getResumeSafely(seriesId, async () => {
             const serie = await this.tmdb.tvInfo({ id: seriesId, language: this.language });
             const recommendation = new SeriesRecommendation(serie);

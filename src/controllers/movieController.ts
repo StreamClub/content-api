@@ -69,6 +69,27 @@ export class MovieController {
         return { recommendations: movies };
     }
 
+    public async getSimilarMovies(req: Request<GetMovieDto>, res: Response<any>) {
+        const userId = Number(res.locals.userId);
+        const movieIds = (req.query.movieIds as string).split(',').map((id: string) => Number(id));
+        let genders: string[] = [];
+        let minDuration = 2147483647;
+        let maxDuration = 0;
+        for (const id of movieIds) {
+            const movie = await this.tmdbService.getMovieResume(id, userId);
+            if (movie) {
+                if (movie.duration < minDuration) minDuration = movie.duration;
+                if (movie.duration > maxDuration) maxDuration = movie.duration;
+                for (const genre of movie.genresIds) {
+                    if (!genders.includes(genre)) genders.push(genre);
+                }
+
+            }
+        }
+        return await this.tmdbService.discoverMovies(userId, 1, 'AR', genders,
+            minDuration, maxDuration, false);
+    }
+
     public async getMovieCredits(req: Request<GetMovieDto>, res: Response<any>) {
         const movieId = parseInt(req.params.movieId);
         return await this.tmdbService.getContentCredits(movieId, contentTypes.MOVIE);
