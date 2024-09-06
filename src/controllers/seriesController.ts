@@ -1,5 +1,5 @@
 
-import { GetContentResumeDto, GetMovieDto } from '@dtos';
+import { GetContentResumeDto, GetMovieDto, GetSimilarSeriesDto } from '@dtos';
 import { PrivacyService, SeenContentService, TmdbService } from '@services';
 import AppDependencies from 'appDependencies';
 import { Request, Response } from '@models';
@@ -74,6 +74,27 @@ export class SeriesController {
         const seriesId = Number(req.params.seriesId);
         const seasonId = Number(req.params.seasonId);
         return await this.tmdbService.getUserSeason(userId, seriesId, seasonId);
+    }
+
+    public async getSimilarSeries(req: Request<GetSimilarSeriesDto>, res: Response<any>) {
+        const userId = Number(res.locals.userId);
+        const seriesIds = (req.query.seriesIds as string).split(',').map((id: string) => Number(id));
+        let genders: string[] = [];
+        let minDuration = 2147483647;
+        let maxDuration = 0;
+        for (const id of seriesIds) {
+            const series = await this.tmdbService.getSeriesResume(id, userId);
+            if (series) {
+                if (series.duration < minDuration) minDuration = series.duration;
+                if (series.duration > maxDuration) maxDuration = series.duration;
+                for (const genre of series.genresIds) {
+                    if (!genders.includes(genre)) genders.push(genre);
+                }
+
+            }
+        }
+        return await this.tmdbService.discoverSeries(userId, 1, 'AR', genders,
+            minDuration, maxDuration, false);
     }
 
     public async getSeriesCredits(req: Request<GetMovieDto>, res: Response<any>) {

@@ -7,7 +7,7 @@ import {
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
-import { DiscoverContentSchema, GetContentResumeSchema, GetSeasonSchema, GetSeriesCreditsSchema, GetSeriesSchema, GetSubscribeRecommendationsSchema, SearchContentSchema } from "@dtos";
+import { DiscoverContentSchema, GetContentResumeSchema, GetSeasonSchema, GetSeriesCreditsSchema, GetSeriesSchema, GetSimilarSeriesSchema, GetSubscribeRecommendationsSchema, SearchContentSchema } from "@dtos";
 import { SeriesController } from "@controllers";
 
 export function SeriesRouter(dependencies: AppDependencies) {
@@ -50,6 +50,16 @@ export function SeriesRouter(dependencies: AppDependencies) {
         validateSchema(GetSubscribeRecommendationsSchema, [FieldOptions.query]),
         handleRequest(
             (req, res) => seriesController.getFriendsRecommendations(req, res),
+            StatusCodes.OK
+        )
+    );
+
+    router.get(
+        "/similar",
+        loadUserContext,
+        validateSchema(GetSimilarSeriesSchema, [FieldOptions.query]),
+        handleRequest(
+            (req, res) => seriesController.getSimilarSeries(req, res),
             StatusCodes.OK
         )
     );
