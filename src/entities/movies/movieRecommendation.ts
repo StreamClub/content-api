@@ -7,6 +7,7 @@ export class MovieRecommendation {
     public releaseDate: string;
     public score: number;
     public genres: string[];
+    public genresIds: string[];
     public duration: number;
     public inWatchlist: boolean;
 
@@ -17,6 +18,7 @@ export class MovieRecommendation {
         this.releaseDate = movie.release_date;
         this.score = movie.vote_average;
         this.genres = movie.genres.map((genre) => genre.name);
+        this.genresIds = movie.genres.map((genre) => genre.id.toString());
         this.duration = movie.runtime;
     }
 }

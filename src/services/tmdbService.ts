@@ -66,7 +66,7 @@ export class TmdbService {
         })
     }
 
-    public async getMovieResume(movieId: number, userId: number) {
+    public async getMovieResume(movieId: number, userId: number): Promise<MovieRecommendation> {
         return await this.getResumeSafely(movieId, async () => {
             const movie = await this.tmdb.movieInfo({ id: movieId, language: this.language });
             const recommendation = new MovieRecommendation(movie);
