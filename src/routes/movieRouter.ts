@@ -8,7 +8,7 @@ import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import AppDependencies from "appDependencies";
 import { MovieController } from "@controllers";
-import { GetMovieCreditsSchema, GetMovieSchema, SearchContentSchema, GetContentResumeSchema, DiscoverContentSchema, GetSubscribeRecommendationsSchema } from "@dtos";
+import { GetMovieCreditsSchema, GetMovieSchema, SearchContentSchema, GetContentResumeSchema, DiscoverContentSchema, GetSubscribeRecommendationsSchema, GetSimilarMoviesSchema } from "@dtos";
 
 export function MovieRouter(dependencies: AppDependencies) {
     const router = Router();
@@ -32,7 +32,7 @@ export function MovieRouter(dependencies: AppDependencies) {
             (req, res) => movieController.discoverMovies(req, res),
             StatusCodes.OK
         )
-    )
+    );
 
     router.get(
         "/resume",
@@ -42,7 +42,7 @@ export function MovieRouter(dependencies: AppDependencies) {
             (req, res) => movieController.getMoviesResume(req, res),
             StatusCodes.OK
         )
-    )
+    );
 
     router.get(
         "/recommendations",
@@ -52,7 +52,17 @@ export function MovieRouter(dependencies: AppDependencies) {
             (req, res) => movieController.getFriendsRecommendations(req, res),
             StatusCodes.OK
         )
-    )
+    );
+
+    router.get(
+        "/similar",
+        loadUserContext,
+        validateSchema(GetSimilarMoviesSchema, [FieldOptions.query]),
+        handleRequest(
+            (req, res) => movieController.getSimilarMovies(req, res),
+            StatusCodes.OK
+        )
+    );
 
     router.get(
         "/:movieId",

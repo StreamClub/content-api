@@ -7,6 +7,7 @@ export class SeriesRecommendation {
     public releaseDate: string;
     public score: number;
     public genres: string[];
+    public genresIds: string[];
     public duration: number;
     public inWatchlist: boolean;
 
@@ -17,6 +18,7 @@ export class SeriesRecommendation {
         this.releaseDate = series.first_air_date;
         this.score = series.vote_average;
         this.genres = series.genres.map((genre) => genre.name);
+        this.genresIds = series.genres.map((genre) => genre.id.toString());
         this.duration = series.number_of_seasons;
     }
 }
