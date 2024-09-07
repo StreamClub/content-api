@@ -84,7 +84,10 @@ export class StreamProviderController {
                 }
             }
         }
-        return { recommendations };
+        const providers = await this.tmdbService.getStreamProviders('AR');
+        const recommendationsProviders = recommendations
+            .map(providerId => providers.find(provider => provider.providerId === providerId));
+        return { recommendations: recommendationsProviders };
     }
 
 }
