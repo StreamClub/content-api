@@ -57,14 +57,10 @@ export class MovieController {
 
     public async getFriendsRecommendations(req: Request<GetMovieDto>, res: Response<any>) {
         const userId = Number(res.locals.userId);
-        console.log('userId', userId);
         const friendsIds = (req.query.friendsIds as string).split(',').map((id: string) => Number(id));
-        console.log('friendsIds', friendsIds);
         const filteredFriendsIds = await this.privacyService.filterIdsWithSeenContentListPublic(friendsIds);
-        console.log('filteredFriendsIds', filteredFriendsIds);
         const recommendations = await this.seenContentService
             .getFriendsRecommendations(userId, filteredFriendsIds, contentTypes.MOVIE);
-        console.log('recommendations', recommendations);
         let movies = [];
         for (const id of recommendations.recommendations) {
             const movie = await this.tmdbService.getMovieResume(id, userId);

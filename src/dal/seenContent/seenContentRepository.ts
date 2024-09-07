@@ -421,6 +421,7 @@ class SeenContentRepository {
 
     public async getFriendsRecommendations(userId: number, friendsIds: number[], contentType: string): Promise<number[]> {
         const contentId = contentType === 'movie' ? 'movieId' : 'seriesId';
+        const type = contentType === 'movie' ? 'movies' : 'series';
         const query = [
             {
                 $match: {
@@ -430,7 +431,7 @@ class SeenContentRepository {
             {
                 $project: {
                     _id: 0,
-                    contentIds: `$${contentType}.${contentId}`,
+                    contentIds: `$${type}.${contentId}`,
                 },
             },
             {
@@ -451,7 +452,7 @@ class SeenContentRepository {
                         {
                             $project: {
                                 _id: 0,
-                                userContentIds: `$${contentType}.${contentId}`,
+                                userContentIds: `$${type}.${contentId}`,
                             },
                         },
                     ],
