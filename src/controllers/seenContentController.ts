@@ -7,7 +7,7 @@ import {
     Series
 } from '@entities';
 import moment from 'moment';
-import { SPECIALS_SEASON_ID } from '@config';
+import { SPECIALS_SEASON_ID, contentTypes } from '@config';
 import { EpisodeHasNotAiredException } from '@exceptions';
 
 export class SeenContentController {
@@ -39,7 +39,8 @@ export class SeenContentController {
         const userId = Number(req.params.userId);
         const pageSize = Number(req.query.pageSize) || 20;
         const pageNumber = Number(req.query.page) || 1;
-        const seenContent = await this.seenContentService.getSeenContent(userId, pageSize, pageNumber, requesterId);
+        const types = req.query.contentTypes ? (req.query.contentTypes as string).split(',') : [contentTypes.MOVIE, contentTypes.SERIES];
+        const seenContent = await this.seenContentService.getSeenContent(userId, pageSize, pageNumber, requesterId, types);
         seenContent.results = await Promise.all(seenContent.results.map(async (content: SeenItem) => {
             const review = await this.reviewService.getReview(userId, content.id, content.contentType);
             if (content.contentType === 'series') {

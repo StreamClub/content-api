@@ -1,6 +1,6 @@
 import { Page, SeenContent, SeenContentResume, SeenEpisode, SeenItemFactory, SeenSeason } from '@entities';
 import { SeenContentModel } from './seenContentModel'
-import { SPECIALS_SEASON_ID } from '@config';
+import { contentTypes, SPECIALS_SEASON_ID } from '@config';
 
 class SeenContentRepository {
 
@@ -36,7 +36,7 @@ class SeenContentRepository {
         return await SeenContentModel.findOne({ userId });
     }
 
-    async getContentList(userId: number, pageSize: number, pageNumber: number): Promise<Page> {
+    async getContentList(userId: number, pageSize: number, pageNumber: number, contentTypes: string[]): Promise<Page> {
         const seenContent = await SeenContentModel.aggregate([
             { $match: { userId: userId } },
             {
@@ -105,6 +105,11 @@ class SeenContentRepository {
                     ]
                 }
             },
+            {
+                $match: {
+                    contentType: { $in: contentTypes }
+                }
+            },
             { $unwind: "$content" },
             { $sort: { "content.updatedAt": -1 } },
             { $skip: (pageNumber - 1) * pageSize },
@@ -113,21 +118,26 @@ class SeenContentRepository {
         const items = seenContent.map((content) => {
             return SeenItemFactory.create(content.contentType, content.content);
         });
-        const totalItems = await this.getSeenContentSize(userId);
+        const totalItems = await this.getSeenContentSize(userId, contentTypes);
         return new Page(pageNumber, pageSize, totalItems, items);
 
     }
 
-    async getSeenContentSize(userId: number): Promise<number> {
+    async getSeenContentSize(userId: number, types: string[]): Promise<number> {
+        let add = [];
+        for (const type of types) {
+            if (type == contentTypes.MOVIE) {
+                add.push({ $size: "$movies" });
+            } else if (type == contentTypes.SERIES) {
+                add.push({ $size: "$series" });
+            }
+        }
         const result = await SeenContentModel.aggregate([
             { $match: { userId: userId } },
             {
                 $project: {
                     totalSize: {
-                        $add: [
-                            { $size: "$movies" },
-                            { $size: "$series" }
-                        ]
+                        $add: add
                     }
                 }
             }

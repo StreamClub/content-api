@@ -22,14 +22,14 @@ export class SeenContentService {
         return await seenContentRepository.getAll(pageSize, pageNumber);
     }
 
-    public async getSeenContent(userId: number, pageSize: number, pageNumber: number, requesterId: number) {
+    public async getSeenContent(userId: number, pageSize: number, pageNumber: number, requesterId: number, contentTypes: string[]) {
         await this.createIfListDoesNotExist(userId);
         const isOwner = userId === requesterId;
         const userPrivacy = await privacyRepository.get(userId);
         if (!isOwner && userPrivacy.isSeenContentListPrivate) {
             return new Page(1, pageSize, 0, []);
         }
-        return await seenContentRepository.getContentList(userId, pageSize, pageNumber);
+        return await seenContentRepository.getContentList(userId, pageSize, pageNumber, contentTypes);
     }
 
     //TODO: eliminar este método
