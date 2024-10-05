@@ -59,8 +59,10 @@ export class StreamProviderController {
             .getUnsubscribedRecommendations(stats.servicesStats, stats.timeInPlatforms);
         unsubscribeRecommendations.map((stat: StreamServiceStats) => {
             const platform = providers.find(provider => provider.providerId === stat.providerId);
-            stat.setPlatform(platform);
+            if (platform) stat.setPlatform(platform);
+            else stat.exists = false;
         });
+        unsubscribeRecommendations.filter(stat => stat.exists);
         return {
             top: stats.top,
             timeInPlatforms: stats.timeInPlatforms,

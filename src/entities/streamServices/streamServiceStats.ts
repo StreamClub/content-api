@@ -6,6 +6,7 @@ export class StreamServiceStats {
     public logoPath?: string;
     public providerName?: string;
     public displayPriority?: number;
+    public exists?: boolean;
 
     constructor(providerId: number, timeWatched: number) {
         this.providerId = providerId;
