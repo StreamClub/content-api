@@ -309,7 +309,6 @@ export class TmdbService {
             language: this.language,
             watch_region: country
         });
-        console.log(streamServices)
         return await Promise.all(streamServices.results.map(async (result) => {
             return new Platform(result);
         }));
