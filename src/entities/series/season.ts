@@ -50,7 +50,7 @@ export class Season {
     }
 
     getLastAiredEpisode = () => {
-        if (!this.episodes || this.episodes.length === 0) {
+        if (this.getAiredEpisodes().length === 0) {
             return null;
         }
         return this.getAiredEpisodes().reduce((prev, current) => (prev.airDate > current.airDate) ? prev : current);
@@ -60,7 +60,7 @@ export class Season {
         if (!seenEpisode) {
             seenEpisode = this.getLastAiredEpisode();
         }
-        if (seenEpisode.seasonId < this.getLastAiredEpisode().seasonId) {
+        if (seenEpisode.seasonId < this.getLastAiredEpisode()?.seasonId) {
             seenEpisode = this.getLastAiredEpisode();
         }
         return seenEpisode;
