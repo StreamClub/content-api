@@ -49,18 +49,24 @@ export class StreamProviderController {
     public async getStats(req: Request<any>, res: Response<any>) {
         const userId = Number(res.locals.userId);
         const months = Number(req.query.months) || 1;
+        console.log('hola')
         const stats = await this.streamProviderService.getStats(userId, months);
+        console.log('hola')
         const providers = await this.tmdbService.getStreamProviders('AR');
+        console.log('hola')
         stats.top.map((stat: StreamServiceStats) => {
             const platform = providers.find(provider => provider.providerId === stat.providerId);
             stat.setPlatform(platform);
         });
+        console.log('hola')
         const unsubscribeRecommendations = await this.streamProviderService
             .getUnsubscribedRecommendations(stats.servicesStats, stats.timeInPlatforms);
+        console.log('hola')
         unsubscribeRecommendations.map((stat: StreamServiceStats) => {
             const platform = providers.find(provider => provider.providerId === stat.providerId);
             stat.setPlatform(platform);
         });
+        console.log('hola')
         return {
             top: stats.top,
             timeInPlatforms: stats.timeInPlatforms,
