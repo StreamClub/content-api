@@ -188,7 +188,7 @@ export class TmdbService {
     }
 
     public async searchMovie(userId: number, query: string, page: number, country: string) {
-        const result = await this.tmdb.searchMovie({ query, language: this.language, page });
+        const result = await this.tmdb.searchMovie({ query, language: this.language, page, include_adult: false });
         const movies = await Promise.all(result.results.map(async (movie: MovieResult) => {
             const movieResume = new MovieResume(movie)
             movieResume.inWatchlist = await this.watchlistService
