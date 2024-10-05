@@ -26,6 +26,7 @@ export class Series extends Content {
         this.numberOfEpisodes = tmdbShow.number_of_episodes;
         this.numberOfSeasons = tmdbShow.number_of_seasons;
         this.seasons = tmdbShow.seasons.map((season) => new SeasonResume(season));
+        if (this.seasons.find((season) => season.id === 0)) this.seasons.push(this.seasons.shift());
         this.similar = tmdbShow.recommendations.results.slice(0, 10).map((series) => new SimilarSeries(series));
         this.releaseDate = tmdbShow.first_air_date;
     }
