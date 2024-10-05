@@ -10,8 +10,7 @@ export class Platform {
     doesUserHaveAccess: boolean;
 
     constructor(platform: WatchProvider) {
-        console.log(platform.provider_name);
-        console.log(platform.logo_path);
+        console.log(`${platform.provider_name} ${platform.logo_path}`);
         this.displayPriority = platform.display_priority;
         this.logoPath = platform.logo_path;
         this.providerId = platform.provider_id;

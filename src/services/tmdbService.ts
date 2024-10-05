@@ -310,6 +310,7 @@ export class TmdbService {
             watch_region: country
         });
         return await Promise.all(streamServices.results.map(async (result) => {
+            console.log(result);
             return new Platform(result);
         }));
     }
