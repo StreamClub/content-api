@@ -3,6 +3,7 @@ export class Page {
     totalPages: number;
     totalResults: number;
     results: any[];
+    isPublic?: boolean;
 
     constructor(page: number, pageSize: number, totalResults: number, results: any[]) {
         this.page = page;

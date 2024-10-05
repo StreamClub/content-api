@@ -18,10 +18,14 @@ export class WatchlistService {
         const isOwner = userId === requesterId;
         const userPrivacy = await privacyRepository.get(userId);
         if (!isOwner && userPrivacy.isWatchlistPrivate) {
-            return new Page(1, pageSize, 0, []);
+            const page = new Page(1, pageSize, 0, []);
+            page.isPublic = !userPrivacy.isWatchlistPrivate;
+            return page;
         }
         await this.failIfWatchlistDoesNotExist(userId);
-        return await watchlistRepository.get(userId, pageNumber, pageSize);
+        const page = await watchlistRepository.get(userId, pageNumber, pageSize);
+        page.isPublic = !userPrivacy.isWatchlistPrivate;
+        return page;
     }
 
     public async addContent(userId: number, contentId: string, contentType: string) {

@@ -27,9 +27,13 @@ export class SeenContentService {
         const isOwner = userId === requesterId;
         const userPrivacy = await privacyRepository.get(userId);
         if (!isOwner && userPrivacy.isSeenContentListPrivate) {
-            return new Page(1, pageSize, 0, []);
+            const page = new Page(1, pageSize, 0, []);
+            page.isPublic = !userPrivacy.isSeenContentListPrivate;
+            return page;
         }
-        return await seenContentRepository.getContentList(userId, pageSize, pageNumber, contentTypes);
+        const page = await seenContentRepository.getContentList(userId, pageSize, pageNumber, contentTypes);
+        page.isPublic = !userPrivacy.isSeenContentListPrivate;
+        return page;
     }
 
     //TODO: eliminar este método
