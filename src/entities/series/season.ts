@@ -60,7 +60,7 @@ export class Season {
         if (!seenEpisode) {
             seenEpisode = this.getLastAiredEpisode();
         }
-        if (seenEpisode.seasonId < this.getLastAiredEpisode()?.seasonId) {
+        if (seenEpisode && seenEpisode.seasonId < this.getLastAiredEpisode()?.seasonId) {
             seenEpisode = this.getLastAiredEpisode();
         }
         return seenEpisode;

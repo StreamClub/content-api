@@ -85,9 +85,11 @@ export class SeenContentService {
     }
 
     public async addSeason(userId: number, seriesId: number, series: SeenSeries, seenSeason: SeenSeason, latestSeenEpisode: SeasonEpisode) {
-        await this.addSeasons(userId, seriesId, [seenSeason], series);
-        await seenContentRepository.addLastSeenEpisode(userId, seriesId,
-            latestSeenEpisode.seasonId, latestSeenEpisode.episodeId);
+        if (latestSeenEpisode) {
+            await this.addSeasons(userId, seriesId, [seenSeason], series);
+            await seenContentRepository.addLastSeenEpisode(userId, seriesId,
+                latestSeenEpisode.seasonId, latestSeenEpisode.episodeId);
+        }
     }
 
     public async removeSeason(userId: number, seriesId: number, seasonId: number) {
