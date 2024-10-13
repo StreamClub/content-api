@@ -114,10 +114,12 @@ export class SeenContentController {
             return unseenEpisodes
                 .reduce((acc, episode) => acc + Number(episode.runtime), 0);
         }).reduce((acc, runtime) => acc + runtime, 0);
-        await this.streamProviderService.addWatchedTime(userId, totalWatchedTime,
-            series.platforms.map(platform => platform.providerId));
-        await this.seenContentService
-            .addSeries(userId, seriesId, filteredSeenSeasons, latestSeenEpisode);
+        if (latestSeenEpisode) {
+            await this.streamProviderService.addWatchedTime(userId, totalWatchedTime,
+                series.platforms.map(platform => platform.providerId));
+            await this.seenContentService
+                .addSeries(userId, seriesId, filteredSeenSeasons, latestSeenEpisode);
+        }
         return await this.tmdbService.getSeriesSeenPercentage(userId, seriesId);
     }
 
