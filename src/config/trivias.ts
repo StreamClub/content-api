@@ -5,7 +5,7 @@ export const TRIVIAS = [
         questions: [
             {
                 question: '¿Cuál es el nombre del burro que acompaña a Shrek en su aventura?',
-                options: ['Asno', 'Burro', 'Mulo', 'Pony'],
+                options: ['Asno', 'Burro', 'Mulo', 'Ricardo'],
                 correctAnswer: 'Burro'
             },
             {
@@ -14,19 +14,19 @@ export const TRIVIAS = [
                 correctAnswer: 'Mike Myers'
             },
             {
-                question: '¿En qué reino vive la princesa Fiona antes de ser rescatada por Shrek?',
-                options: ['Duloc', 'Muy Muy Lejano', 'Torre del Dragón ', 'Tule'],
-                correctAnswer: 'Torre del Dragón '
+                question: '¿En qué se convierte Fiona cada noche?',
+                options: ['En un dragón', 'En una ogra', 'En una bruja ', 'En el señor de la noche'],
+                correctAnswer: 'En una ogra'
             },
             {
-                question: '¿Cómo se llama el villano de la película?',
-                options: ['Lord Farquaad', 'Lord Farkuad', 'Lord Farquard', 'Lord Farkuad'],
-                correctAnswer: 'Lord Farquaad'
+                question: '¿Según Shrek, ¿qué tienen en común los ogros y las cebollas?',
+                options: ['Que son difíciles de pelar', 'Que tienen capas', 'Que tienen un olor fuerte', 'Que hacen llorar a las personas'],
+                correctAnswer: 'Que tienen capas'
             },
             {
                 question: '¿Qué criatura protege a la princesa Fiona en la torre?',
-                options: ['Dragón', 'Unicorno', 'Ogro', 'Hada'],
-                correctAnswer: 'Dragón'
+                options: ['Un Dragón', 'Un Unicorno', 'Un Ogro', 'Un Hada'],
+                correctAnswer: 'Un Dragón'
             }
         ]
     },
